@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Downforce Notebook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky pit-wall header + chapter rail on wide screens; each chapter is a hash view. Palette borrows a CFD pressure map: blue = suction, amber = high pressure. */
+:root{
+  --bg:#0b0e13;          /* carbon */
+  --bg-2:#121721;        /* raised panel */
+  --line:#232b3a;        /* hairline */
+  --fg:#e7ebf2;          /* body text */
+  --muted:#8d97aa;       /* secondary text */
+  --suction:#4cc3ff;     /* low pressure / downforce */
+  --pressure:#ffb547;    /* high pressure / drag */
+  --lift:#ff5d6c;        /* lift / danger */
+  --good:#5fe0a1;
+  --display:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px),
+    repeating-linear-gradient(-45deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px);}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--suction)}
+:focus-visible{outline:2px solid var(--suction);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(11,14,19,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--fg);display:flex;align-items:center;gap:10px}
+.brand svg{width:34px;height:18px}
+.brand small{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.08em}
+nav.quick{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+nav.quick a{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-decoration:none;padding:6px 10px;border:1px solid transparent;border-radius:4px}
+nav.quick a:hover,nav.quick a[aria-current="page"]{color:var(--fg);border-color:var(--line)}
+
+/* Shell */
+.shell{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;padding-block:32px 80px}
+@media (max-width:860px){.shell{grid-template-columns:minmax(0,1fr)} .rail{display:none}}
+.rail{position:sticky;top:76px;align-self:start;font-size:14px}
+.rail h4{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.rail a{display:grid;grid-template-columns:28px 1fr auto;gap:6px;align-items:center;padding:7px 8px;border-radius:4px;text-decoration:none;color:var(--muted)}
+.rail a:hover{background:var(--bg-2);color:var(--fg)}
+.rail a[aria-current="page"]{background:var(--bg-2);color:var(--fg);box-shadow:inset 2px 0 0 var(--suction)}
+.rail .n{font-family:var(--mono);font-size:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dot.live{background:var(--good);box-shadow:0 0 8px var(--good)}
+
+main{min-width:0}
+.view[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.05;margin:0}
+h1{font-size:clamp(44px,7vw,84px);font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+h2{font-size:clamp(28px,3.6vw,40px);font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+h3{font-size:22px;font-weight:700;letter-spacing:.02em}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--suction)}
+.lede{font-size:20px;color:#c9d0dc;max-width:62ch}
+p{max-width:68ch}
+section.block{margin-top:64px;display:grid;gap:18px}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono)}
+
+/* Hero */
+.hero{display:grid;gap:18px}
+.hero-art{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:
+  radial-gradient(120% 90% at 50% 120%,rgba(76,195,255,.14),transparent 60%),linear-gradient(#0e131b,#0a0d12)}
+.hero-art svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;margin-right:7px;vertical-align:middle;background:currentColor}
+.legend .s{color:var(--suction)} .legend .p{color:var(--pressure)} .legend .l{color:var(--lift)}
+
+
+/* Circuit map */
+.circuit{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:stretch}
+@media (max-width:900px){.circuit{grid-template-columns:minmax(0,1fr)}}
+.circuit-map{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:radial-gradient(90% 80% at 60% 40%,rgba(76,195,255,.08),transparent 70%),#0a0d12;min-width:0}
+.circuit-map svg{display:block;width:100%;height:auto}
+.turn{cursor:pointer}
+.turn circle.hit{fill:transparent}
+.turn circle.badge{fill:var(--bg-2);stroke:var(--muted);stroke-width:2;transition:transform .15s}
+.turn text{font-family:var(--display);font-weight:800;font-size:22px;fill:var(--fg);pointer-events:none}
+.turn.read circle.badge{stroke:var(--good);fill:#0f241b}
+.turn.read text{fill:var(--good)}
+.turn:hover circle.badge,.turn:focus-visible circle.badge,.turn.active circle.badge{stroke:var(--suction);fill:#0e2333}
+.turn:focus{outline:none}
+.turn:focus-visible circle.badge{stroke-width:3.5}
+.turn .apex{fill:var(--pressure)}
+.turn-card{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:18px;display:grid;gap:10px;align-content:start;min-width:0}
+.turn-card .tnum{font-family:var(--display);font-weight:800;font-size:56px;line-height:.9;color:var(--pressure)}
+.turn-card h3{font-size:26px}
+.turn-card p{margin:0;font-size:15px;color:#c3cad6}
+.turn-card .btn{justify-self:start;text-decoration:none}
+
+/* Chapter grid on home */
+.chgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.chcard{display:grid;gap:6px;padding:16px;border:1px solid var(--line);border-radius:8px;background:var(--bg-2);text-decoration:none;color:var(--fg);min-width:0}
+.chcard:hover{border-color:#36425a}
+.chcard .n{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+.chcard h3{font-size:21px}
+.chcard p{margin:0;font-size:14px;color:var(--muted)}
+.pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.pill.live{color:var(--good);border-color:rgba(95,224,161,.4)}
+
+/* Timeline */
+.tl-controls{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{color:var(--bg);background:var(--fg);border-color:var(--fg)}
+.years{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.years button{flex:0 0 auto;font-family:var(--mono);font-size:13px;background:var(--bg-2);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:8px 10px;cursor:pointer}
+.years button[aria-selected="true"]{color:var(--fg);border-color:var(--suction);box-shadow:inset 0 -2px 0 var(--suction)}
+.years button[hidden]{display:none}
+.stage{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:20px}
+@media (max-width:760px){.stage{grid-template-columns:minmax(0,1fr)}}
+.stage .art{align-self:start;border-radius:8px;background:radial-gradient(100% 80% at 50% 110%,rgba(76,195,255,.10),transparent 60%),#0c1017;border:1px solid var(--line)}
+.stage .art svg{display:block;width:100%;height:auto}
+.stage .yr{font-family:var(--display);font-weight:800;font-size:64px;line-height:.9;color:var(--pressure)}
+.stage .tag{margin-top:4px}
+.stage .take{border-left:2px solid var(--suction);padding-left:12px;color:#cfe9fb;font-size:15px}
+.stage .nav{display:flex;gap:8px;margin-top:6px}
+.btn{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:8px 12px;cursor:pointer}
+.btn:hover{border-color:var(--suction)}
+.caption{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding:8px 12px;border-top:1px solid var(--line)}
+
+/* Concepts */
+.concepts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.concept{padding:18px;border:1px solid var(--line);border-radius:8px;display:grid;gap:8px;align-content:start;min-width:0}
+.concept svg{width:100%;height:auto;display:block}
+.concept h3{font-size:20px}
+.concept p{margin:0;font-size:15px;color:#c3cad6}
+
+/* Grip lab */
+.lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;border:1px solid var(--line);border-radius:10px;padding:20px;background:var(--bg-2)}
+@media (max-width:760px){.lab{grid-template-columns:minmax(0,1fr)}}
+.lab label{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:6px}
+.lab input[type=range]{width:100%;accent-color:var(--suction)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.readout div{border:1px solid var(--line);border-radius:6px;padding:10px;min-width:0}
+.readout b{display:block;font-family:var(--display);font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+.readout span{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.gauge{height:14px;border-radius:99px;background:#0b0f15;border:1px solid var(--line);overflow:hidden}
+.gauge i{display:block;height:100%;background:linear-gradient(90deg,var(--suction),#9be1ff);width:30%;transition:width .25s}
+.gauge.neg i{background:linear-gradient(90deg,var(--lift),#ff9aa4)}
+.formula{font-family:var(--mono);font-size:13px;background:#0b0f15;border:1px solid var(--line);border-radius:6px;padding:10px 12px;overflow-x:auto;white-space:nowrap}
+
+/* Quiz */
+.quiz{display:grid;gap:12px}
+.q{border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px}
+.q p{margin:0;font-weight:600}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{font:inherit;font-size:15px;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:8px 12px;cursor:pointer;text-align:left}
+.opts button.right{border-color:var(--good);color:var(--good)}
+.opts button.wrong{border-color:var(--lift);color:var(--lift)}
+.why{font-size:14.5px;color:var(--muted)}
+.score{font-family:var(--mono);font-size:13px;color:var(--muted)}
+
+/* Notes slot */
+.notes{border:1px dashed #36425a;border-radius:10px;padding:20px;display:grid;gap:8px}
+.notes .pill{justify-self:start}
+
+/* Beyond */
+.beyond{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.beyond article{border:1px solid var(--line);border-radius:8px;overflow:hidden;min-width:0}
+.beyond article svg{display:block;width:100%;height:auto;background:#0c1017;border-bottom:1px solid var(--line)}
+.beyond article div{padding:14px 16px;display:grid;gap:6px}
+.beyond article p{margin:0;font-size:15px;color:#c3cad6}
+.beyond article .pill{justify-self:start}
+
+/* Glossary */
+.gsearch{width:100%;max-width:420px;font:inherit;background:var(--bg-2);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+dl.gloss{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:0;margin:0;border-top:1px solid var(--line)}
+@media (max-width:600px){dl.gloss{grid-template-columns:minmax(0,1fr)} dl.gloss dd{padding-top:0!important}}
+dl.gloss dt,dl.gloss dd{padding:12px 0;border-bottom:1px solid var(--line);margin:0}
+dl.gloss dt{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.02em;padding-right:16px}
+dl.gloss dd{color:#c3cad6}
+dl.gloss dd .mono{font-size:11px;color:var(--muted)}
+
+.stub{border:1px solid var(--line);border-radius:10px;padding:28px;display:grid;gap:12px;background:var(--bg-2)}
+footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:var(--muted)}
+
+/* Airflow animation */
+.flow{stroke-dasharray:6 10;animation:flow 1.6s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-32}}
+@media (prefers-reduced-motion:reduce){.flow{animation:none}.gauge i{transition:none}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home">
+      <svg viewBox="0 0 34 18" aria-hidden="true"><path d="M1 13 Q8 5 17 5 Q26 5 33 13" fill="none" stroke="#4cc3ff" stroke-width="2.2"/><path d="M4 16 H30" stroke="#ffb547" stroke-width="2"/></svg>
+      Downforce Notebook <small>McBEATH · 3E</small>
+    </a>
+    <nav class="quick" aria-label="Sections">
+      <a href="#home">Home</a>
+      <a href="#ch1">Chapter 1</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap shell">
+  <aside class="rail" aria-label="Chapters">
+    <h4>Chapters</h4>
+    <ol id="rail"></ol>
+  </aside>
+
+  <main>
+    <!-- HOME -->
+    <div class="view" id="v-home">
+      <div class="hero">
+        <span class="eyebrow">A study companion to Competition Car Aerodynamics, 3rd edition</span>
+        <h1>Ten turns,<br>ten chapters</h1>
+        <p class="lede">Notes, drawings and small experiments built chapter by chapter while reading Simon McBeath's book. Pick a corner to open its chapter.</p>
+        <div class="circuit">
+          <div class="circuit-map" id="circuit"></div>
+          <aside class="turn-card" id="turnCard" aria-live="polite"></aside>
+        </div>
+        <p class="muted mono" style="font-size:12px;margin:0">Track drawn after the Red Bull Ring, Austria: 10 turns, 4.318 km. Simplified, not to scale. Each turn is a chapter; green turns are chapters you've read.</p>
+      </div>
+      <section class="block">
+        <span class="eyebrow">Reading progress · 1 of 10</span>
+        <h2>Chapters</h2>
+        <div class="chgrid" id="chgrid"></div>
+      </section>
+    </div>
+
+    <!-- CHAPTER 1 -->
+    <div class="view" id="v-ch1" hidden>
+      <div class="hero">
+        <span class="eyebrow">Chapter 1</span>
+        <h1>Historical background</h1>
+        <p class="lede">A car is always close to the ground, which makes its airflow harder to understand than an aircraft's. Both fight drag, but where a plane needs lift, a racing car wants the opposite: downforce, which presses the tyres into the track so they can accelerate, brake and corner harder.</p>
+      </div>
+
+      <section class="block">
+        <span class="eyebrow">Interactive timeline · 1956 to 2011</span>
+        <h2>Sixty years of chasing grip</h2>
+        <p class="muted">Pick a year, or use the arrows. Filter by what changed: the cars' wings, their undersides, or the rules that reined them in.</p>
+        <div class="tl-controls" role="group" aria-label="Filter timeline">
+          <button class="chip" data-f="all" aria-pressed="true">All</button>
+          <button class="chip" data-f="wings" aria-pressed="false">Wings and spoilers</button>
+          <button class="chip" data-f="under" aria-pressed="false">Underbody</button>
+          <button class="chip" data-f="rules" aria-pressed="false">Rules and safety</button>
+        </div>
+        <div class="years" id="years" role="tablist" aria-label="Years"></div>
+        <div class="stage" id="stage" aria-live="polite"></div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Core ideas from the chapter</span>
+        <h2>The four forces to keep in mind</h2>
+        <div class="concepts" id="concepts"></div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Try it · Grip lab</span>
+        <h2>Why downforce changed everything</h2>
+        <p>The chapter's central claim is that downforce "clearly adds to the tyres' grip". This simplified model shows how much. Tyre grip is roughly friction coefficient times the load pressing down on the tyres. Aerodynamic force grows with the square of speed, so the faster the car goes, the more the air helps (or hurts).</p>
+        <div class="lab">
+          <div style="display:grid;gap:18px;min-width:0">
+            <div>
+              <label for="spd">Speed: <span id="spdOut" class="mono">200 km/h</span></label>
+              <input id="spd" type="range" min="0" max="320" step="5" value="200">
+            </div>
+            <div>
+              <label>Aero setup</label>
+              <div class="seg" role="group" aria-label="Aero setup">
+                <button class="chip" data-cl="0.35" aria-pressed="false">1960s sports car (lift)</button>
+                <button class="chip" data-cl="0" aria-pressed="false">No aero</button>
+                <button class="chip" data-cl="-1.2" aria-pressed="false">Early wings</button>
+                <button class="chip" data-cl="-3.5" aria-pressed="true">Modern F1</button>
+              </div>
+            </div>
+            <div class="formula" id="formula">F = ½ · ρ · V² · (C<sub>L</sub>·A)</div>
+            <p class="muted" style="font-size:13.5px;margin:0">Model: 700 kg car, tyre friction μ = 1.6, air density ρ = 1.225 kg/m³. C<sub>L</sub>·A is lift coefficient times area; negative means downforce. Real cars vary, and Chapter 2 covers the equation properly.</p>
+          </div>
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div class="readout">
+              <div><b id="rForce">0</b><span id="rForceL">Downforce, N</span></div>
+              <div><b id="rLoad">0</b><span>Load vs weight</span></div>
+              <div><b id="rG">0</b><span>Max cornering g</span></div>
+            </div>
+            <div><label>Aero load as share of car weight</label><div class="gauge" id="gauge"><i></i></div></div>
+            <div id="labCar" class="art" style="border:1px solid var(--line);border-radius:8px;background:#0c1017"></div>
+            <p id="labNote" style="margin:0;font-size:15px"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Beyond the book</span>
+        <h2>What happened after the 3rd edition</h2>
+        <p class="muted">The book's history ends around the 2011 DRS rule. These two later changes follow straight on from the ideas in this chapter.</p>
+        <div class="beyond" id="beyond"></div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Your notes</span>
+        <div class="notes">
+          <span class="pill">Waiting for Sarath's notes</span>
+          <h3>What I took from Chapter 1</h3>
+          <p class="muted" style="margin:0">Your own takeaways from the chapter will go here, alongside the book's version above.</p>
+        </div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Check yourself</span>
+        <h2>Five-question pit stop</h2>
+        <div class="quiz" id="quiz"></div>
+        <div class="score" id="score"></div>
+      </section>
+    </div>
+
+    <!-- GLOSSARY -->
+    <div class="view" id="v-glossary" hidden>
+      <div class="hero">
+        <span class="eyebrow">Grows with every chapter</span>
+        <h1>Glossary</h1>
+        <p class="lede">Terms as McBeath uses them, in plain words. Each one notes the chapter where it first comes up.</p>
+        <input class="gsearch" id="gsearch" type="search" placeholder="Search terms, e.g. diffuser" aria-label="Search glossary">
+      </div>
+      <section class="block"><dl class="gloss" id="gloss"></dl></section>
+    </div>
+
+    <!-- STUB for chapters not yet read -->
+    <div class="view" id="v-stub" hidden>
+      <div class="stub">
+        <span class="eyebrow" id="stubEye"></span>
+        <h1 id="stubTitle" style="font-size:clamp(36px,5vw,60px)"></h1>
+        <p class="lede" id="stubText"></p>
+        <p class="muted" style="margin:0">This page fills in once you reach this chapter and send your notes.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer><div class="wrap">Personal study notes on <i>Competition Car Aerodynamics</i>, 3rd edition, by Simon McBeath. Car drawings are simplified illustrations, not to scale.</div></footer>
+
+<script>
+(function(){
+const C={s:"#4cc3ff",p:"#ffb547",l:"#ff5d6c",body:"#1f2a3b",bodyHi:"#2d3c54",edge:"#7f8ea8",tyre:"#0a0c10",ground:"#2a3343"};
+
+/* ---------- Car illustration builder (side view, nose on the left) ---------- */
+function car(o){
+  o=Object.assign({body:"modern",frontWing:false,rearWing:"none",skirts:false,fan:false,diffuser:false,stepped:false,underGlow:false,spoiler:false,down:0,lift:0,drag:0,flow:true,flowUnder:false,label:""},o);
+  const W=600,H=230,gy=200;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label||"Racing car side view"}"><defs>
+  <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.bodyHi}"/><stop offset="1" stop-color="${C.body}"/></linearGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${C.s}" stop-opacity=".55"/><stop offset="1" stop-color="${C.s}" stop-opacity="0"/></radialGradient>
+  <marker id="ahS" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${C.s}"/></marker>
+  <marker id="ahP" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${C.p}"/></marker>
+  <marker id="ahL" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${C.l}"/></marker>
+  </defs>`;
+  // streamlines over the car
+  if(o.flow){
+    s+=`<g fill="none" stroke="#9fb3cc" stroke-opacity=".28" stroke-width="1.4">`;
+    [40,62,84].forEach((y,i)=>{s+=`<path class="flow" style="animation-delay:-${i*.4}s" d="M0 ${y} C150 ${y} 220 ${y-8-i*3} 320 ${y-10-i*2} S520 ${y+4} 600 ${y+6}"/>`});
+    s+=`</g>`;
+  }
+  if(o.underGlow) s+=`<ellipse cx="300" cy="${gy-10}" rx="${o.stepped?150:190}" ry="20" fill="url(#glow)"/>`;
+  if(o.flowUnder){
+    s+=`<g fill="none" stroke="${C.s}" stroke-opacity=".75" stroke-width="1.6">
+      <path class="flow" d="M30 ${gy-14} L150 ${gy-12} L400 ${gy-12} C470 ${gy-14} 510 ${gy-34} 600 ${gy-44}"/>
+      <path class="flow" style="animation-delay:-.6s" d="M30 ${gy-8} L150 ${gy-7} L400 ${gy-7} C470 ${gy-8} 520 ${gy-22} 600 ${gy-28}"/></g>`;
+  }
+  // ground
+  s+=`<line x1="0" y1="${gy}" x2="${W}" y2="${gy}" stroke="${C.ground}" stroke-width="2"/>`;
+  for(let x=10;x<W;x+=26) s+=`<line x1="${x}" y1="${gy+6}" x2="${x+12}" y2="${gy+6}" stroke="${C.ground}" stroke-width="2"/>`;
+
+  // body shapes
+  const B={
+    cigar:`M52 168 C60 140 90 128 150 126 L250 124 C262 108 300 104 320 118 L420 120 C480 122 525 138 548 160 L548 172 L60 176 Z`,
+    sports:`M40 172 C46 150 70 132 140 124 C190 118 230 96 300 92 C360 90 400 104 440 116 C500 126 540 140 556 156 L560 174 L44 178 Z`,
+    wedge:`M36 176 L60 160 L200 132 C230 112 260 104 300 108 L330 120 L470 124 C520 128 548 140 556 156 L556 178 L40 180 Z`,
+    modern:`M40 166 C48 150 70 140 130 136 L210 132 C232 112 268 102 300 108 L330 122 L460 126 C510 130 540 142 548 160 L548 176 L60 178 Z`
+  };
+  s+=`<path d="${B[o.body]}" fill="url(#bodyG)" stroke="${C.edge}" stroke-width="1.5"/>`;
+  // cockpit / driver
+  if(o.body!=="sports") s+=`<circle cx="292" cy="${o.body==="cigar"?114:110}" r="11" fill="#e8ecf2" stroke="${C.edge}"/><rect x="285" y="${o.body==="cigar"?108:104}" width="14" height="5" rx="2" fill="${C.s}" opacity=".8"/>`;
+  else s+=`<path d="M250 100 C280 86 330 86 360 98 L352 106 L256 108 Z" fill="#0d1520" stroke="${C.edge}"/>`;
+  // sidepod line for wedge/modern
+  if(o.body==="wedge"||o.body==="modern") s+=`<path d="M210 150 L460 148" stroke="${C.edge}" stroke-opacity=".5"/>`;
+  // spoiler lip
+  if(o.spoiler) s+=`<path d="M548 150 L566 128 L570 132 L556 156 Z" fill="${C.p}" stroke="${C.p}"/>`;
+  // stepped floor
+  if(o.stepped) s+=`<path d="M150 186 L180 186 L180 180 L420 180 L420 186 L470 186" fill="none" stroke="${C.s}" stroke-width="2"/>`;
+  else if(o.body==="modern"||o.body==="wedge") s+=`<path d="M150 186 L470 186" fill="none" stroke="${C.edge}" stroke-width="2"/>`;
+  // diffuser
+  if(o.diffuser) s+=`<path d="M470 186 L548 164" stroke="${C.s}" stroke-width="2.4"/><path d="M480 186 L548 172 M492 186 L548 178" stroke="${C.s}" stroke-opacity=".5"/>`;
+  // skirts
+  if(o.skirts) s+=`<rect x="200" y="176" width="260" height="${gy-176}" fill="${C.s}" opacity=".35"/><line x1="200" y1="${gy-1}" x2="460" y2="${gy-1}" stroke="${C.s}" stroke-width="3"/>`;
+  // venturi tunnel hint for ground-effect wedge
+  if(o.body==="wedge"&&o.underGlow) s+=`<path d="M200 186 C280 172 380 170 470 150" fill="none" stroke="${C.s}" stroke-dasharray="4 4" stroke-width="1.6"/>`;
+  // fan
+  if(o.fan){s+=`<circle cx="520" cy="150" r="22" fill="#0d1520" stroke="${C.s}" stroke-width="2"/>`;for(let a=0;a<6;a++){const r=a*Math.PI/3;s+=`<line x1="520" y1="150" x2="${520+18*Math.cos(r)}" y2="${150+18*Math.sin(r)}" stroke="${C.s}"/>`}}
+  // front wing
+  if(o.frontWing) s+=`<path d="M22 182 C40 174 82 172 108 178 L104 184 C78 182 44 184 22 186 Z" fill="${C.bodyHi}" stroke="${C.s}" stroke-width="1.6"/>`;
+  // rear wing
+  const aerofoil=(x,y,w,flapOpen)=>{let p=`<path d="M${x} ${y} C${x+w*.25} ${y+12} ${x+w*.7} ${y+12} ${x+w} ${y+2} C${x+w*.7} ${y+5} ${x+w*.3} ${y+4} ${x} ${y} Z" fill="${C.bodyHi}" stroke="${C.s}" stroke-width="1.6"/>`;
+    if(flapOpen===true) p+=`<path d="M${x+w*.55} ${y-16} L${x+w+4} ${y-10} L${x+w+4} ${y-7} L${x+w*.55} ${y-12} Z" fill="${C.bodyHi}" stroke="${C.p}" stroke-width="1.6"/>`;
+    else if(flapOpen===false) p+=`<path d="M${x+w*.55} ${y-6} C${x+w*.8} ${y-10} ${x+w} ${y-14} ${x+w+4} ${y-22} L${x+w+6} ${y-18} C${x+w} ${y-6} ${x+w*.8} ${y-2} ${x+w*.55} ${y-2} Z" fill="${C.bodyHi}" stroke="${C.s}" stroke-width="1.6"/>`;
+    return p};
+  if(o.rearWing==="cockpit") s+=`<line x1="282" y1="94" x2="280" y2="58" stroke="${C.edge}" stroke-width="3"/><line x1="330" y1="94" x2="332" y2="58" stroke="${C.edge}" stroke-width="3"/>`+aerofoil(256,52,100);
+  if(o.rearWing==="strut") s+=`<line x1="470" y1="124" x2="468" y2="40" stroke="${C.edge}" stroke-width="3"/><line x1="500" y1="126" x2="502" y2="42" stroke="${C.edge}" stroke-width="3"/>`+aerofoil(440,36,100);
+  if(o.rearWing==="sports") s+=`<line x1="520" y1="128" x2="520" y2="100" stroke="${C.edge}" stroke-width="3"/>`+aerofoil(486,94,80);
+  if(o.rearWing==="low") s+=`<line x1="520" y1="132" x2="520" y2="92" stroke="${C.edge}" stroke-width="3"/>`+aerofoil(486,86,72);
+  if(o.rearWing==="big") s+=`<rect x="540" y="66" width="6" height="96" fill="${C.edge}"/>`+aerofoil(486,74,64,false);
+  if(o.rearWing==="drs") s+=`<rect x="540" y="66" width="6" height="96" fill="${C.edge}"/>`+aerofoil(486,74,64,true);
+  // wheels
+  [[140,162],[470,162]].forEach(([x,y])=>{s+=`<circle cx="${x}" cy="${y}" r="38" fill="${C.tyre}" stroke="#3a4558" stroke-width="2"/><circle cx="${x}" cy="${y}" r="17" fill="#1b2230" stroke="#4b5870"/>`});
+  // force arrows
+  if(o.down){const n=Math.max(1,Math.min(4,o.down));for(let i=0;i<n;i++){const x=200+i*(260/(Math.max(n-1,1)));const len=18+o.down*6;s+=`<line x1="${x}" y1="${50}" x2="${x}" y2="${50+len}" stroke="${C.s}" stroke-width="3" marker-end="url(#ahS)"/>`}}
+  if(o.lift){for(let i=0;i<Math.min(3,o.lift);i++){const x=240+i*90;s+=`<line x1="${x}" y1="${96-6}" x2="${x}" y2="${96-30-o.lift*6}" stroke="${C.l}" stroke-width="3" marker-end="url(#ahL)"/>`}}
+  if(o.drag){const len=40+o.drag*14;s+=`<line x1="${W-8-len}" y1="110" x2="${W-8}" y2="110" stroke="${C.p}" stroke-width="3" marker-end="url(#ahP)"/>`}
+  s+=`</svg>`;
+  return s;
+}
+
+/* ---------- Chapter list (from the book's contents) ---------- */
+const CH=[
+  ["1","Historical background","How wings, spoilers and ground effect took over racing, and how the rules fought back.",true],
+  ["2","Out of thin air","The theory: Newton, Bernoulli, air properties, boundary layers and how forces arise."],
+  ["3","Computational Fluid Dynamics","How CFD simulates airflow and why it shows things a wind tunnel can't."],
+  ["4","Airdams, splitters and spoilers","Front-end devices and rear spoilers on closed-wheel cars."],
+  ["5","Wings","Aerofoil profiles, angle of attack, multi-element wings and end plates."],
+  ["6","Underbody aerodynamics","Flat floors, diffusers and the ground effect under the car."],
+  ["7","Miscellaneous devices","Wheels, dive planes, vortex generators, cooling and other devices that add downforce or cut drag."],
+  ["8","Removing (some of) the guesswork","Seeing what the air really does: flow-vis, wool tufts, data logging, coastdowns and wind tunnels."],
+  ["9","A few case studies","Real cars developed in the wind tunnel and in CFD."],
+  ["10","Final thoughts","Testing your changes and building a database of reference settings."]
+];
+const rail=document.getElementById("rail"),grid=document.getElementById("chgrid");
+CH.forEach(([n,t,d,live])=>{
+  rail.insertAdjacentHTML("beforeend",`<li><a href="#ch${n}" data-v="ch${n}"><span class="n">${n.padStart(2,"0")}</span><span>${t}</span><span class="dot ${live?"live":""}"></span></a></li>`);
+  grid.insertAdjacentHTML("beforeend",`<a class="chcard" href="#ch${n}"><span class="n">CH ${n.padStart(2,"0")} <span class="pill ${live?"live":""}">${live?"Read":"Up next"}</span></span><h3>${t}</h3><p>${d}</p></a>`);
+});
+rail.insertAdjacentHTML("beforeend",`<li style="margin-top:10px"><a href="#glossary" data-v="glossary"><span class="n">A–Z</span><span>Glossary</span><span></span></a></li>`);
+grid.children[1].querySelector(".pill").textContent="Next";
+
+/* ---------- Circuit map: 10 turns = 10 chapters ---------- */
+(function(){
+  const P=[[380,500],[560,495],[740,488],[800,460],[812,400],[818,300],[810,180],[790,105],[760,80],[725,100],[650,200],[580,300],[555,335],[500,355],[420,365],[360,370],[300,350],[235,305],[180,310],[140,360],[150,440],[200,500],[250,535],[300,548],[345,535]];
+  const T=[[3,44,22],[5,44,0],[8,0,-40],[12,34,30],[15,0,-40],[17,-24,-36],[19,-42,0],[21,-34,30],[23,-14,42],[24,34,40]];
+  // closed Catmull-Rom spline -> cubic Béziers
+  const n=P.length;let d=`M${P[0][0]} ${P[0][1]}`;
+  for(let i=0;i<n;i++){const p0=P[(i-1+n)%n],p1=P[i],p2=P[(i+1)%n],p3=P[(i+2)%n];
+    d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0]} ${p2[1]}`}
+  let s=`<svg viewBox="60 16 850 620" role="img" aria-label="Circuit map with ten turns, one per chapter">
+  <path d="${d}" fill="none" stroke="#e7ebf2" stroke-opacity=".12" stroke-width="34" stroke-linejoin="round"/>
+  <path d="${d}" fill="none" stroke="#262e3c" stroke-width="26" stroke-linejoin="round"/>
+  <path id="trackLine" d="${d}" fill="none" stroke="#3a4558" stroke-width="1.5" stroke-dasharray="10 12"/>`;
+  // start/finish chequer at the second point
+  for(let r=0;r<4;r++)for(let c=0;c<2;c++) s+=`<rect x="${556+c*6}" y="${483+r*6}" width="6" height="6" fill="${(r+c)%2?"#e7ebf2":"#0a0d12"}"/>`;
+  s+=`<text x="560" y="535" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" fill="#8d97aa">START / FINISH</text>`;
+  s+=`<circle id="carDot" r="7" fill="#4cc3ff" style="filter:drop-shadow(0 0 6px #4cc3ff)"/>`;
+  T.forEach(([pi,dx,dy],i)=>{const [x,y]=P[pi],n=i+1,live=CH[i][3];
+    s+=`<a class="turn ${live?"read":""}" href="#ch${n}" data-t="${i}" aria-label="Turn ${n}: Chapter ${n}, ${CH[i][1]}">
+      <line x1="${x}" y1="${y}" x2="${x+dx*.7}" y2="${y+dy*.7}" stroke="#8d97aa" stroke-opacity=".5"/>
+      <circle class="apex" cx="${x}" cy="${y}" r="4"/>
+      <circle class="hit" cx="${x+dx}" cy="${y+dy}" r="30"/>
+      <circle class="badge" cx="${x+dx}" cy="${y+dy}" r="19"/>
+      <text x="${x+dx}" y="${y+dy+8}" text-anchor="middle">${n}</text></a>`});
+  s+=`</svg>`;
+  const host=document.getElementById("circuit");host.innerHTML=s;
+  const card=document.getElementById("turnCard");
+  function info(i){const c=CH[i];host.querySelectorAll(".turn").forEach(t=>t.classList.toggle("active",+t.dataset.t===i));
+    card.innerHTML=`<span class="eyebrow">Turn ${i+1} · Chapter ${c[0]}</span><div class="tnum">T${i+1}</div><h3>${c[1]}</h3><p>${c[2]}</p>
+    <span class="pill ${c[3]?"live":""}" style="justify-self:start">${c[3]?"Read":i===1?"Next up":"Not read yet"}</span>
+    <a class="btn" href="#ch${c[0]}">Open chapter →</a>`}
+  host.querySelectorAll(".turn").forEach(t=>{const i=+t.dataset.t;t.addEventListener("mouseenter",()=>info(i));t.addEventListener("focus",()=>info(i))});
+  info(1);
+  // a car lapping the circuit
+  const path=host.querySelector("#trackLine"),dot=host.querySelector("#carDot"),L=path.getTotalLength();
+  const startAt=(()=>{let best=0,bd=1e9;for(let l=0;l<L;l+=4){const q=path.getPointAtLength(l),dd=(q.x-560)**2+(q.y-495)**2;if(dd<bd){bd=dd;best=l}}return best})();
+  const place=l=>{const q=path.getPointAtLength((startAt+l)%L);dot.setAttribute("cx",q.x);dot.setAttribute("cy",q.y)};
+  place(0);
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){let t0=null;const lap=9000;
+    const tick=ts=>{if(t0===null)t0=ts;place(((ts-t0)%lap)/lap*L);requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+})();
+
+/* ---------- Timeline (Chapter 1 facts) ---------- */
+const TL=[
+ {y:"1956",f:"wings",t:"Michael May's winged Porsche",car:{body:"sports",rearWing:"cockpit",down:2,label:"Porsche Spyder with an aerofoil above the cockpit"},extra:"may",
+  x:"Swiss engineer Michael May mounted an aerofoil above the cockpit of a Porsche Spyder, acting through the car's centre of gravity. It could tilt from –3° (nose-up) to +17° (nose-down). Scrutineers at the Nürburgring and Monza refused to let him use it, and it seems he never raced with it.",
+  k:"The first known attempt to run a wing on a racing car, a decade before anyone raced one."},
+ {y:"1960s",f:"wings",t:"Spoilers fight lift on sports cars",car:{body:"sports",spoiler:true,lift:1,drag:2,label:"Sports prototype with a rear spoiler"},
+  x:"Low, streamlined sports prototypes had huge plan areas and the highest top speeds, for example at Le Mans, so they were the cars most troubled by aerodynamic lift. Spoilers such as those on the Ferrari 330 P3/4 disturbed the smooth, lift-inducing flow over the upper body. Straight-line speed dropped from the extra drag, yet lap times fell.",
+  k:"Slower on the straights but faster per lap means cornering grip went up, so the spoiler was reducing lift and starting to create real downforce."},
+ {y:"1966",f:"wings",t:"Jim Hall's Chaparral 2E",car:{body:"sports",rearWing:"strut",down:3,drag:1,label:"Chaparral-style CanAm car with a tall strut-mounted wing"},
+  x:"Jim Hall reasoned that if wings hold aeroplanes up, a wing turned upside down should push a car onto the road. His Chaparral 2E appeared with a wing at Bridgehampton, New York State, in 1966.",
+  k:"Hall is universally credited as the first to actually race a car with aerofoils fitted. This started the downforce revolution."},
+ {y:"1968–69",f:"rules",t:"F1 wings on stilts, then a near-ban",car:{body:"cigar",rearWing:"strut",down:2,label:"1960s Formula 1 car with a tall strut-mounted rear wing"},
+  x:"Formula 1 took up wings almost at once: simple aluminium wings on struts 'little bigger than flamingo legs'. A spate of accidents from failed wings and supports led the CSI, F1's governing body then, to try to ban wings altogether. After talks with constructors, wings came back in modified, restricted form.",
+  k:"The first of many cycles in which a downforce gain is followed by a rule change to control it."},
+ {y:"1970",f:"under",t:"Chaparral 2J, the 'sucker car'",car:{body:"sports",fan:true,skirts:true,underGlow:true,down:4,label:"Fan car with skirts sealing the underside"},
+  x:"Hall's Chaparral 2J used fans driven by an auxiliary engine to pull air out from under the car, with 'skirts' sealing the underside from outside air so a low-pressure area could form below it.",
+  k:"Low pressure over the whole underside sucks the car down very firmly. This idea underpins ground effect."},
+ {y:"1970s",f:"wings",t:"Airdams, splitters and real aerofoils",car:{body:"sports",spoiler:false,rearWing:"sports",frontWing:false,down:2,drag:1,label:"1970s Group 2 saloon style car with rear wing"},
+  x:"Through the 1970s wings were refined in single-seaters and sports cars. In Europe the Group 2 saloons went beyond spoilers, with airdams and splitters at the front and genuine aerofoil wings at the rear.",
+  k:"Aero spread from top single-seaters to almost every category where it was allowed."},
+ {y:"1977–78",f:"under",t:"Lotus 78 and 79: the wing car",car:{body:"wedge",skirts:true,underGlow:true,rearWing:"low",frontWing:true,flowUnder:true,down:4,label:"Lotus 79 style ground-effect wing car with skirts"},
+  x:"Peter Wright, working for Colin Chapman at Lotus, realised forward speed and a shaped underside alone could create large suction under the car. The whole centre of the car became an inverted wing. The Lotus 78 was relatively inefficient, but the 1978 Lotus 79 let Mario Andretti dominate the World Championship and won Lotus the Constructors' title. In the same year Brabham's 'fan car', said to be for 'engine cooling', won one race before it was banned.",
+  k:"Ground effect gave 'hitherto unknown' downforce, higher cornering speeds and shorter braking, and every rival copied it. Williams' FW07 is often called the most elegant of them."},
+ {y:"1983",f:"rules",t:"The flat bottom",car:{body:"modern",rearWing:"big",frontWing:true,down:2,drag:3,label:"1980s turbo-era car with a flat floor and large rear wing"},
+  x:"The ruling body banned ground effect in F1 with a mandatory flat bottom between the axle lines; other categories followed later. In the turbo era, with over 1000 bhp from 1.5-litre engines, teams added 'winglets' to rear wings for every bit of rear downforce. Drag almost stopped mattering.",
+  k:"Take downforce away from one area and designers move it elsewhere, here to bigger rear wings."},
+ {y:"1989",f:"under",t:"Diffusers bring ground effect back",car:{body:"modern",rearWing:"big",frontWing:true,diffuser:true,underGlow:true,flowUnder:true,down:3,drag:1,label:"Car with flat floor, nose-down rake and rear diffuser"},
+  x:"F1 returned to 3.5-litre non-turbo engines, so downforce versus drag mattered again. With small ground clearance and some nose-down attitude, even a flat floor acts like a crude wing section. Letting the underfloor air escape efficiently at the rear proved vital, and diffusers were born.",
+  k:"Ride height and rake control the underbody, which led to very stiff springs and very low cars."},
+ {y:"1992–93",f:"rules",t:"Active suspension",car:{body:"modern",rearWing:"big",frontWing:true,diffuser:true,underGlow:true,down:3,label:"Car whose ride height is held by active suspension"},
+  x:"F1 used active suspension to hold the car's attitude and ground clearance far more tightly than springs could. The main reason was aerodynamic, so in truth the car itself had become a movable aerodynamic device. It was eventually banned.",
+  k:"Aero performance depends on the car's attitude to the ground, so controlling attitude is controlling downforce."},
+ {y:"1995",f:"rules",t:"Stepped floor after Imola",car:{body:"modern",rearWing:"big",frontWing:true,stepped:true,diffuser:true,underGlow:true,down:2,label:"Mid-1990s car with a stepped floor"},
+  x:"After the deaths of Roland Ratzenberger and Ayrton Senna at Imola in 1994, the FIA quickly cut downforce. For 1995, F1, F3000 and F3 had to run a 'stepped floor', raising minimum ground clearance over much of the underbody, as on the 1996 Ferrari F310.",
+  k:"Downforce fell by maybe as much as 40%, and cars became less sensitive to their attitude, so more predictable and safer."},
+ {y:"1998",f:"rules",t:"Narrower cars, grooved tyres",car:{body:"modern",rearWing:"big",frontWing:true,stepped:true,diffuser:true,down:2,drag:1,label:"Late-1990s narrow-track car"},
+  x:"FIA studies from 1996 into cars following closely found that cutting total downforce made following worse, not better. So the FIA attacked grip through tyres instead, with 'treaded' tyres in 1998, and made cars 200 mm narrower, which hurt underbody downforce through more interaction with the wheels.",
+  k:"Performance was only held back for a while; the order of the teams barely changed."},
+ {y:"1999",f:"rules",t:"Le Mans flips",car:{body:"sports",lift:3,label:"Prototype pitched nose-up generating large lift"},
+  x:"All three Mercedes CLKs flipped at the 1999 Le Mans 24 Hours, and Michele Alboreto was killed testing an Audi in 2001 after a tyre failure pitched the car nose-up. With big plan areas at high speed, a nose-up car makes huge upward lift instead of downforce. The FIA brought in anti-lift measures for 2004, and later required wheel-arch openings and engine-cover fins on LMP cars.",
+  k:"Aero forces are large enough that any rule change touching them is a safety question."},
+ {y:"2009",f:"rules",t:"Overtaking Working Group rules",car:{body:"modern",rearWing:"big",frontWing:true,diffuser:true,down:2,label:"2009 style car with simplified bodywork"},
+  x:"The Overtaking Working Group (Rory Byrne, Paddy Lowe, Pat Symonds, with Jean-Claude Migeot) studied why F1 cars could not follow closely. Their aim of more mechanical grip and less aero led to the radically different-looking 2009 cars, with less downforce at first.",
+  k:"For the first time the constructors helped shape the rules, which at least avoided making things worse."},
+ {y:"2011",f:"wings",t:"DRS",car:{body:"modern",rearWing:"drs",frontWing:true,diffuser:true,drag:1,down:1,label:"Car with rear wing flap opened by DRS"},
+  x:"The Drag Reduction System lifts the nose of the rear wing's flap, under set conditions, to cut drag and give a following car more straight-line speed. In practice it almost guaranteed a pass. It must fail safe, because a wing stuck open has far less downforce, and failures did happen even in F1.",
+  k:"Rules now allowed movable aero devices again, and teams quickly hunted lap time from the principle."}
+];
+const years=document.getElementById("years"),stage=document.getElementById("stage");
+let cur=0,filter="all";
+const tagName={wings:"Wings and spoilers",under:"Underbody",rules:"Rules and safety"};
+TL.forEach((e,i)=>years.insertAdjacentHTML("beforeend",`<button role="tab" data-i="${i}" aria-selected="false">${e.y}</button>`));
+function visible(){return TL.map((e,i)=>i).filter(i=>filter==="all"||TL[i].f===filter)}
+function show(i){
+  cur=i;const e=TL[i];
+  years.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.i===i)));
+  const sel=years.querySelector(`[data-i="${i}"]`);if(sel)sel.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"});
+  stage.innerHTML=`<div class="art">${car(e.car)}<div class="caption">Illustration: ${e.car.label}</div></div>
+   <div style="display:grid;gap:12px;align-content:start;min-width:0">
+     <div><div class="yr">${e.y}</div><div class="tag"><span class="pill">${tagName[e.f]}</span></div></div>
+     <h3>${e.t}</h3><p style="margin:0">${e.x}</p><div class="take">${e.k}</div>
+     <div class="nav"><button class="btn" id="prev">← Earlier</button><button class="btn" id="next">Later →</button></div>
+   </div>`;
+  const v=visible(),p=v.indexOf(i);
+  stage.querySelector("#prev").disabled=p<=0;stage.querySelector("#next").disabled=p>=v.length-1;
+  stage.querySelector("#prev").onclick=()=>{if(p>0)show(v[p-1])};
+  stage.querySelector("#next").onclick=()=>{if(p<v.length-1)show(v[p+1])};
+}
+years.addEventListener("click",ev=>{const b=ev.target.closest("button");if(b)show(+b.dataset.i)});
+document.querySelectorAll(".tl-controls .chip").forEach(c=>c.addEventListener("click",()=>{
+  filter=c.dataset.f;document.querySelectorAll(".tl-controls .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===c)));
+  years.querySelectorAll("button").forEach(b=>b.hidden=!(filter==="all"||TL[+b.dataset.i].f===filter));
+  show(visible()[0]);
+}));
+show(0);
+
+/* ---------- Concepts ---------- */
+const CON=[
+ {t:"Drag",c:C.p,svg:car({body:"cigar",drag:3,flow:true,label:"Drag arrow pointing backwards"}),x:"Opposes forward motion. It dominates acceleration and braking at high speed and sets top speed. Early aero work was all about streamlining to cut it."},
+ {t:"Lift",c:C.l,svg:car({body:"sports",lift:3,label:"Lift arrows pointing up on a sports car"}),x:"Aeroplane-style upward force. On a car it unloads the tyres, cutting braking and cornering grip at speed. Big plan area plus high speed makes more of it."},
+ {t:"Downforce",c:C.s,svg:car({body:"modern",frontWing:true,rearWing:"big",down:3,label:"Downforce arrows pressing the car down"}),x:"'Negative lift'. It adds load to the tyres without adding mass, so grip rises with speed. The single biggest performance factor in modern single-seaters."},
+ {t:"Ground effect",c:C.s,svg:car({body:"wedge",skirts:true,underGlow:true,flowUnder:true,down:4,label:"Underbody suction under a ground-effect car"}),x:"Shaping the underside so air speeds up beneath the car and pressure drops. Being close to the ground makes it work. Lotus made it famous; rules keep reshaping it."}
+];
+document.getElementById("concepts").innerHTML=CON.map(k=>`<div class="concept"><div style="border-radius:6px;background:#0c1017;border:1px solid var(--line)">${k.svg}</div><h3 style="color:${k.c}">${k.t}</h3><p>${k.x}</p></div>`).join("");
+
+/* ---------- Grip lab ---------- */
+const spd=document.getElementById("spd");let CL=-3.5;
+const M=700,G=9.81,MU=1.6,RHO=1.225;
+function lab(){
+  const v=+spd.value/3.6, F=0.5*RHO*v*v*(-CL); // positive = downforce
+  const load=(M*G+F)/(M*G), g=MU*Math.max(0,load);
+  document.getElementById("spdOut").textContent=spd.value+" km/h";
+  document.getElementById("rForce").textContent=Math.round(Math.abs(F)).toLocaleString();
+  document.getElementById("rForceL").textContent=F<0?"Lift, N":"Downforce, N";
+  document.getElementById("rLoad").textContent=load.toFixed(2)+"×";
+  document.getElementById("rG").textContent=g.toFixed(1);
+  const share=Math.min(1,Math.abs(F)/(M*G*2.5));const gauge=document.getElementById("gauge");
+  gauge.querySelector("i").style.width=(share*100)+"%";gauge.classList.toggle("neg",F<0);
+  document.getElementById("formula").innerHTML=`F = ½ · ${RHO} · (${v.toFixed(1)} m/s)² · ${(-CL).toFixed(2)} m² = <b style="color:${F<0?C.l:C.s}">${Math.round(F).toLocaleString()} N</b>`;
+  const cfg=CL>0?{body:"sports",lift:Math.ceil(share*6)||0}:CL===0?{body:"cigar"}:CL>-2?{body:"cigar",rearWing:"strut",down:Math.ceil(share*4)}:{body:"modern",frontWing:true,rearWing:"big",diffuser:true,underGlow:share>.2,down:Math.ceil(share*4)};
+  cfg.label="Car for the selected aero setup";
+  document.getElementById("labCar").innerHTML=car(cfg);
+  let note;
+  if(CL>0) note=`At ${spd.value} km/h the body generates lift, so the tyres carry only ${(load*100).toFixed(0)}% of the car's weight. This is the problem 1960s sports cars had at Le Mans.`;
+  else if(CL===0) note="With no aero force, grip is the same at every speed. Cornering is limited only by the tyres and the car's weight.";
+  else note= load>=2 ? `The air is now pressing down harder than the car's own weight. That is the famous claim that an F1 car could drive upside down, which needs downforce above weight.`:`Downforce adds ${((load-1)*100).toFixed(0)}% to the tyre load. Try 300 km/h to see where it overtakes the car's weight.`;
+  document.getElementById("labNote").textContent=note;
+}
+spd.addEventListener("input",lab);
+document.querySelectorAll(".lab .seg .chip").forEach(b=>b.addEventListener("click",()=>{CL=+b.dataset.cl;document.querySelectorAll(".lab .seg .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));lab()}));
+lab();
+
+/* ---------- Beyond the book ---------- */
+document.getElementById("beyond").innerHTML=[
+ {svg:car({body:"wedge",frontWing:true,rearWing:"big",underGlow:true,flowUnder:true,down:4,label:"2022-style car with venturi tunnels under the floor"}),t:"2022: ground effect returns to F1",x:"F1's 2022 rules brought back shaped venturi tunnels under the floor, the Lotus 79 idea, to make downforce less sensitive to the car in front and help cars follow. Cars bouncing on their suspension ('porpoising') showed again how sensitive ground effect is to ride height."},
+ {svg:car({body:"modern",frontWing:true,rearWing:"drs",diffuser:true,drag:1,label:"2026-style car with movable front and rear wing elements"}),t:"2026: active aero replaces DRS",x:"From 2026, F1 cars can move elements on both front and rear wings, switching between a high-downforce setting for corners and a low-drag setting on straights. It is the movable-device principle from DRS, applied to the whole car."}
+].map(b=>`<article>${b.svg}<div><h3>${b.t}</h3><p>${b.x}</p><span class="pill">Not in the book</span></div></article>`).join("");
+
+/* ---------- Quiz ---------- */
+const QZ=[
+ {q:"Who is credited with first racing a car fitted with a wing?",o:["Michael May","Jim Hall","Colin Chapman"],a:1,w:"Jim Hall raced the Chaparral 2E with a wing at Bridgehampton in 1966. May tried first, in 1956, but was never allowed to race it."},
+ {q:"Spoilers made 1960s sports cars slower on the straights. Why did lap times still drop?",o:["Less weight","More cornering grip","Better engines"],a:1,w:"The spoiler added drag but cut lift and began to create downforce, so cornering speeds rose enough to win back more time than the straights lost."},
+ {q:"What did the 1983 F1 rule change require?",o:["A stepped floor","A flat bottom between the axles","Treaded tyres"],a:1,w:"The flat bottom banned ground-effect undersides. The stepped floor came in 1995, treaded tyres in 1998."},
+ {q:"Roughly how much downforce did the 1995 stepped floor take away?",o:["About 10%","Up to about 40%","About 75%"],a:1,w:"McBeath says 'maybe by as much as 40 per cent', and it made cars less sensitive to their attitude."},
+ {q:"Why did FIA studies in 1996 not simply cut total downforce to help overtaking?",o:["It made following worse","Teams refused","It was too costly"],a:0,w:"Less total downforce made the following car's relative loss larger, so the FIA turned to tyres and narrower cars instead."}
+];
+const quiz=document.getElementById("quiz");let got=0,done=0;
+QZ.forEach((z,qi)=>{
+  const d=document.createElement("div");d.className="q";
+  d.innerHTML=`<p>${qi+1}. ${z.q}</p><div class="opts">${z.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}</div><div class="why" hidden></div>`;
+  d.querySelector(".opts").addEventListener("click",ev=>{
+    const b=ev.target.closest("button");if(!b||d.dataset.done)return;d.dataset.done=1;done++;
+    const i=+b.dataset.i;d.querySelectorAll(".opts button").forEach((x,j)=>{if(j===z.a)x.classList.add("right");else if(j===i)x.classList.add("wrong");x.disabled=true});
+    if(i===z.a)got++;const w=d.querySelector(".why");w.hidden=false;w.textContent=(i===z.a?"Correct. ":"Not quite. ")+z.w;
+    document.getElementById("score").textContent=`Score: ${got} of ${done} answered`+(done===QZ.length?(got===QZ.length?" · Full marks.":" · Revisit the timeline above for the ones you missed."):"");
+  });
+  quiz.appendChild(d);
+});
+
+/* ---------- Glossary ---------- */
+const GL=[
+ ["Active suspension","Computer-controlled suspension that holds ride height and attitude. Used in F1 mainly for aero reasons, then banned.","Ch 1"],
+ ["Aerofoil","A wing-shaped section that creates a force at right angles to the airflow. Turned upside down on a car, it makes downforce.","Ch 1"],
+ ["Airdam","A barrier under the front of a car that limits how much air goes underneath, reducing front lift.","Ch 1"],
+ ["CFD","Computational Fluid Dynamics. Software that simulates airflow around a shape and shows velocity and pressure.","Ch 1"],
+ ["Diffuser","The upswept rear section of the floor that lets underbody air slow down and exit efficiently, which increases suction under the car.","Ch 1"],
+ ["Downforce","Aerodynamic force pushing the car onto the road, sometimes called negative lift. Adds tyre grip without adding mass.","Ch 1"],
+ ["Drag","Aerodynamic force opposing forward motion. Limits top speed and acceleration at high speed.","Ch 1"],
+ ["DRS","Drag Reduction System. A rear-wing flap that opens on straights to cut drag for overtaking. Introduced in F1 in 2011.","Ch 1"],
+ ["Flat bottom","Rule from 1983 requiring a flat floor between the axle lines in F1, which banned ground-effect undersides.","Ch 1"],
+ ["Ground effect","Downforce created by the underside of the car working close to the ground, where faster air underneath lowers the pressure.","Ch 1"],
+ ["Lift","Upward aerodynamic force. On a car it reduces tyre grip, so racers try to turn it into downforce.","Ch 1"],
+ ["Plan area","The car's area seen from directly above. Bigger plan area means more potential lift or downforce.","Ch 1"],
+ ["Skirts","Sliding seals along the sides of a ground-effect car that keep outside air from leaking into the low-pressure underside.","Ch 1"],
+ ["Spoiler","A lip or blade that 'spoils' smooth flow over the body to reduce lift, at the cost of some drag.","Ch 1"],
+ ["Splitter","A flat plate sticking forward under the front airdam. High pressure above it and low pressure below make front downforce.","Ch 1"],
+ ["Stepped floor","F1 rule from 1995 that raised the floor over much of the underbody, cutting downforce by up to about 40%.","Ch 1"],
+ ["Wing car","A car whose whole centre section works as an inverted wing, like the Lotus 79.","Ch 1"]
+];
+const gl=document.getElementById("gloss");
+function renderG(q){q=(q||"").toLowerCase();gl.innerHTML=GL.filter(g=>!q||(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<dt>${g[0]}</dt><dd>${g[1]} <span class="mono">· ${g[2]}</span></dd>`).join("")||`<dd class="muted" style="grid-column:1/-1">No term matches that search yet.</dd>`}
+document.getElementById("gsearch").addEventListener("input",e=>renderG(e.target.value));renderG();
+
+/* ---------- Router ---------- */
+function route(){
+  let h=(location.hash||"#home").slice(1);
+  const views={home:"v-home",ch1:"v-ch1",glossary:"v-glossary"};
+  let id=views[h];
+  if(!id){const m=h.match(/^ch(\d+)$/);if(m&&CH[m[1]-1]){id="v-stub";const c=CH[m[1]-1];
+    document.getElementById("stubEye").textContent="Chapter "+c[0]+" · not read yet";document.getElementById("stubTitle").textContent=c[1];document.getElementById("stubText").textContent=c[2];}
+    else{id="v-home";h="home";}}
+  document.querySelectorAll(".view").forEach(v=>v.hidden=v.id!==id);
+  document.querySelectorAll('nav.quick a, .rail a').forEach(a=>{if(a.getAttribute("href")==="#"+h)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);route();
+})();
+</script>
+
+</body>
+</html>
