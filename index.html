@@ -48,7 +48,7 @@ nav.quick a:hover,nav.quick a[aria-current="page"]{color:var(--fg);border-color:
 /* Shell */
 .shell{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;padding-block:32px 80px}
 @media (max-width:860px){.shell{grid-template-columns:minmax(0,1fr)} .rail{display:none}}
-.rail{position:sticky;top:76px;align-self:start;font-size:14px}
+.rail{position:sticky;z-index:1;top:76px;align-self:start;font-size:14px}
 .rail h4{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
 .rail ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 .rail a{display:grid;grid-template-columns:28px 1fr auto;gap:6px;align-items:center;padding:7px 8px;border-radius:4px;text-decoration:none;color:var(--muted)}
@@ -80,6 +80,13 @@ section.block{margin-top:64px;display:grid;gap:18px}
 .legend span::before{content:"";display:inline-block;width:18px;height:3px;margin-right:7px;vertical-align:middle;background:currentColor}
 .legend .s{color:var(--suction)} .legend .p{color:var(--pressure)} .legend .l{color:var(--lift)}
 
+
+
+/* Home background car */
+.home-bg{position:fixed;left:0;right:0;top:120px;z-index:0;pointer-events:none;display:flex;justify-content:flex-end;opacity:.32}
+.home-bg svg{width:min(1300px,110vw);height:auto;margin-right:-6vw;filter:drop-shadow(0 0 30px rgba(76,195,255,.15))}
+#v-home>*:not(.home-bg){position:relative;z-index:1}
+@media (max-width:860px){.home-bg{top:90px;opacity:.25}.home-bg svg{width:150vw;margin-right:-30vw}}
 
 /* Circuit map */
 .circuit{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:stretch}
@@ -221,6 +228,54 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
   <main>
     <!-- HOME -->
     <div class="view" id="v-home">
+      <div class="home-bg" aria-hidden="true">
+        <svg viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="hbBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4c68"/><stop offset="1" stop-color="#151d2a"/></linearGradient>
+            <linearGradient id="hbFade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4cc3ff" stop-opacity="0"/><stop offset="1" stop-color="#4cc3ff" stop-opacity=".7"/></linearGradient>
+            <radialGradient id="hbGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4cc3ff" stop-opacity=".5"/><stop offset="1" stop-color="#4cc3ff" stop-opacity="0"/></radialGradient>
+          </defs>
+          <!-- speed streaks -->
+          <g stroke="url(#hbFade)" stroke-width="2" stroke-linecap="round">
+            <line x1="0" y1="120" x2="420" y2="120"/><line x1="40" y1="170" x2="300" y2="170"/><line x1="0" y1="215" x2="250" y2="215"/><line x1="80" y1="95" x2="360" y2="95"/>
+          </g>
+          <ellipse cx="640" cy="292" rx="430" ry="18" fill="url(#hbGlow)"/>
+          <line x1="0" y1="304" x2="1200" y2="304" stroke="#4cc3ff" stroke-opacity=".25"/>
+          <g fill="url(#hbBody)" stroke="#9fb3cc" stroke-width="1.6" stroke-linejoin="round">
+            <!-- floor and diffuser -->
+            <path d="M300 280 L960 280 L1016 258 L1024 270 L966 292 L300 292 Z"/>
+            <!-- main body: nose, chassis, sidepod, airbox, engine cover -->
+            <path d="M120 246 C170 232 260 222 340 216 C380 206 420 202 470 200 C490 178 512 166 540 162 L600 160 C620 128 650 112 690 112 L716 116 L730 146 C800 160 880 186 960 196 L1010 202 L1010 262 L880 270 L330 272 L130 258 Z"/>
+            <!-- sidepod inlet and bodywork line -->
+            <path d="M560 214 L600 206 L604 246 L566 250 Z" fill="#0b0e13"/>
+            <path d="M610 236 C720 232 840 232 960 226" fill="none"/>
+            <!-- front wing -->
+            <path d="M28 290 L34 248 L50 246 L54 270 L176 272 L182 288 Z"/>
+            <path d="M58 262 C100 252 142 250 180 256 L176 264 C142 260 100 262 60 268 Z" fill="#4cc3ff" fill-opacity=".35" stroke="#4cc3ff"/>
+            <!-- rear wing -->
+            <path d="M992 116 L1084 112 L1092 236 L1004 242 Z" fill-opacity=".85"/>
+            <path d="M984 124 C1022 118 1062 118 1098 124 L1096 138 C1058 134 1022 134 984 138 Z" fill="#4cc3ff" fill-opacity=".35" stroke="#4cc3ff"/>
+            <path d="M992 104 C1030 96 1066 96 1098 100 L1098 110 C1066 108 1030 108 992 114 Z" fill="#4cc3ff" fill-opacity=".25" stroke="#4cc3ff"/>
+            <line x1="1040" y1="140" x2="1032" y2="226" stroke-width="5"/>
+          </g>
+          <!-- halo and helmet -->
+          <circle cx="548" cy="172" r="17" fill="#e7ebf2" fill-opacity=".85" stroke="#9fb3cc"/>
+          <rect x="537" y="164" width="22" height="7" rx="3" fill="#4cc3ff"/>
+          <path d="M486 198 C504 162 548 148 612 156" fill="none" stroke="#c9d4e4" stroke-width="7" stroke-linecap="round"/>
+          <!-- wheels -->
+          <g>
+            <circle cx="236" cy="250" r="54" fill="#07090d" stroke="#3a4558" stroke-width="3"/>
+            <circle cx="236" cy="250" r="26" fill="#151c28" stroke="#ffb547" stroke-opacity=".7" stroke-width="2"/>
+            <circle cx="930" cy="246" r="58" fill="#07090d" stroke="#3a4558" stroke-width="3"/>
+            <circle cx="930" cy="246" r="28" fill="#151c28" stroke="#ffb547" stroke-opacity=".7" stroke-width="2"/>
+          </g>
+          <!-- underfloor airflow -->
+          <g fill="none" stroke="#4cc3ff" stroke-opacity=".6" stroke-width="1.6">
+            <path class="flow" d="M0 298 L300 297 L960 297 C1020 290 1080 264 1200 246"/>
+            <path class="flow" style="animation-delay:-.7s" d="M0 288 L300 288 L960 288 C1030 280 1100 250 1200 228"/>
+          </g>
+        </svg>
+      </div>
       <div class="hero">
         <span class="eyebrow">A study companion to Competition Car Aerodynamics, 3rd edition</span>
         <h1>Ten turns,<br>ten chapters</h1>
