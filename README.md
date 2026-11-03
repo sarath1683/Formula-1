@@ -1,4 +1,4 @@
-# Downforce Notebook
+# Formula 1 Notebook
 
 A dark, interactive study website built while reading *Competition Car Aerodynamics* (3rd edition) by Simon McBeath.
 
