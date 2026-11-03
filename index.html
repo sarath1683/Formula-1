@@ -176,6 +176,19 @@ section.block{margin-top:64px;display:grid;gap:18px}
 .notes{border:1px dashed #36425a;border-radius:10px;padding:20px;display:grid;gap:8px}
 .notes .pill{justify-self:start}
 
+
+/* Sarath's notes */
+.mynotes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mynote{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0}
+.mynote .pic{background:#0c1017;border-bottom:1px solid var(--line);position:relative}
+.mynote .pic svg{display:block;width:100%;height:auto}
+.mynote .num{position:absolute;left:12px;top:10px;font-family:var(--display);font-weight:800;font-size:30px;line-height:1;color:var(--pressure)}
+.mynote .txt{padding:14px 16px 16px;display:grid;gap:10px;align-content:start}
+.mynote blockquote{margin:0;font-family:var(--display);font-weight:700;font-size:21px;line-height:1.2;letter-spacing:.01em;color:var(--fg)}
+.mynote .book{margin:0;font-size:14.5px;color:#c3cad6}
+.mynote .book b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--suction);font-weight:600;display:block;margin-bottom:2px}
+.mynote .go{justify-self:start;text-decoration:none}
+
 /* Beyond */
 .beyond{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .beyond article{border:1px solid var(--line);border-radius:8px;overflow:hidden;min-width:0}
@@ -322,7 +335,7 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
       </section>
 
       <section class="block">
-        <span class="eyebrow">Try it · Grip lab</span>
+        <span class="eyebrow" id="grip-lab">Try it · Grip lab</span>
         <h2>Why downforce changed everything</h2>
         <p>The chapter's central claim is that downforce "clearly adds to the tyres' grip". This simplified model shows how much. Tyre grip is roughly friction coefficient times the load pressing down on the tyres. Aerodynamic force grows with the square of speed, so the faster the car goes, the more the air helps (or hurts).</p>
         <div class="lab">
@@ -364,12 +377,10 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
       </section>
 
       <section class="block">
-        <span class="eyebrow">Your notes</span>
-        <div class="notes">
-          <span class="pill">Waiting for Sarath's notes</span>
-          <h3>What I took from Chapter 1</h3>
-          <p class="muted" style="margin:0">Your own takeaways from the chapter will go here, alongside the book's version above.</p>
-        </div>
+        <span class="eyebrow">Sarath's notes · 10 points</span>
+        <h2>What I took from Chapter 1</h2>
+        <p class="muted">The points I picked out while reading, each paired with what the book adds. Tap a timeline link to jump to that moment in history.</p>
+        <div class="mynotes" id="myNotes"></div>
       </section>
 
       <section class="block">
@@ -664,6 +675,50 @@ document.getElementById("beyond").innerHTML=[
  {svg:car({body:"wedge",frontWing:true,rearWing:"big",underGlow:true,flowUnder:true,down:4,label:"2022-style car with venturi tunnels under the floor"}),t:"2022: ground effect returns to F1",x:"F1's 2022 rules brought back shaped venturi tunnels under the floor, the Lotus 79 idea, to make downforce less sensitive to the car in front and help cars follow. Cars bouncing on their suspension ('porpoising') showed again how sensitive ground effect is to ride height."},
  {svg:car({body:"modern",frontWing:true,rearWing:"drs",diffuser:true,drag:1,label:"2026-style car with movable front and rear wing elements"}),t:"2026: active aero replaces DRS",x:"From 2026, F1 cars can move elements on both front and rear wings, switching between a high-downforce setting for corners and a low-drag setting on straights. It is the movable-device principle from DRS, applied to the whole car."}
 ].map(b=>`<article>${b.svg}<div><h3>${b.t}</h3><p>${b.x}</p><span class="pill">Not in the book</span></div></article>`).join("");
+
+/* ---------- Sarath's notes ---------- */
+const NOTES=[
+ {n:"Tyres must provide the tractive forces (accelerating, braking and cornering) as well as generating grip.",
+  b:"Unlike a plane, a car must stay on the ground so its tyres can grip. Every aero trick in the book is really about helping those four contact patches do this job.",
+  car:{body:"modern",frontWing:true,rearWing:"big",down:2,label:"Car pressed onto the track so the tyres can grip"}},
+ {n:"Drag can be reduced by streamlining the vehicle's shape.",
+  b:"The earliest aero work was streamlining. It helped speed records a lot, but in racing its effect was hard to separate from better tyres, engines and suspension.",
+  car:{body:"cigar",drag:3,label:"Streamlined early car with a drag arrow"}},
+ {n:"Downforce is a crucial element in performance.",
+  b:"In every major single-seater series it is the most important single element. It matters so much that junior series like Formula Ford ban it, so drivers learn step by step.",
+  car:{body:"modern",frontWing:true,rearWing:"big",diffuser:true,underGlow:true,down:4,label:"Modern car with strong downforce"}},
+ {n:"Acceleration is affected less by aerodynamic lift than braking and cornering are.",
+  b:"Traction is scarcest in the low gears, at low speed, where aero forces are still small. Braking and cornering happen at high speed, where lift or downforce is large.",
+  car:{body:"sports",lift:2,label:"Car with lift arrows at speed"},lab:true},
+ {n:"Negative lift is what we call downforce.",
+  b:"Same physics as an aircraft wing, pointed the other way. Lift unloads the tyres; downforce adds load to them without adding mass.",
+  car:{body:"cigar",rearWing:"strut",down:2,label:"Inverted wing producing negative lift"}},
+ {n:"Spoilers cut straight-line speed through extra drag, yet lowered lap times by raising cornering speed through more grip between tyre and road.",
+  b:"That trade-off proved the spoiler was doing more than reducing lift. It was starting to create real downforce.",
+  car:{body:"sports",spoiler:true,drag:2,down:1,label:"Sports car with a rear spoiler"},tl:1},
+ {n:"American Jim Hall was the first to race a car with aerofoils.",
+  b:"His Chaparral 2E ran a wing at Bridgehampton in 1966. Michael May tried in 1956, but scrutineers never let him race it.",
+  car:{body:"sports",rearWing:"strut",down:3,label:"Chaparral-style car with a tall wing"},tl:2},
+ {n:"Active suspension systems.",
+  b:"They held ride height and attitude so the underbody worked at its best. Because the purpose was aerodynamic, the car itself became a movable aero device, and it was banned.",
+  car:{body:"modern",rearWing:"big",frontWing:true,diffuser:true,underGlow:true,down:3,label:"Car held at a fixed ride height"},tl:9},
+ {n:"The introduction of the stepped floor.",
+  b:"Brought in for 1995 after Imola 1994. It raised much of the floor, cutting downforce by maybe 40% and making cars less sensitive to pitch and ride height.",
+  car:{body:"modern",rearWing:"big",frontWing:true,stepped:true,diffuser:true,underGlow:true,down:2,label:"Car with a stepped floor"},tl:10},
+ {n:"F1 cars don't do backflips because their wings provide downforce.",
+  b:"McBeath argues downforce keeps cars planted, so banning wings could be unsafe. The danger comes when a car pitches nose-up: then its big plan area makes huge lift instead, as with the Mercedes CLKs at Le Mans in 1999.",
+  car:{body:"sports",lift:3,label:"Prototype pitched nose-up making lift"},tl:12}
+];
+document.getElementById("myNotes").innerHTML=NOTES.map((m,i)=>`<article class="mynote">
+  <div class="pic">${car(m.car)}<span class="num">${String(i+1).padStart(2,"0")}</span></div>
+  <div class="txt"><blockquote>${m.n}</blockquote><p class="book"><b>From the book</b>${m.b}</p>
+  ${m.tl!=null?`<button class="btn go" data-tl="${m.tl}">See ${TL[m.tl].y} on the timeline ↑</button>`:""}
+  ${m.lab?`<button class="btn go" data-lab="1">Try it in the grip lab ↑</button>`:""}</div></article>`).join("");
+document.getElementById("myNotes").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;
+  if(b.dataset.tl){filter="all";document.querySelectorAll(".tl-controls .chip").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.f==="all")));years.querySelectorAll("button").forEach(y=>y.hidden=false);
+    show(+b.dataset.tl);stage.scrollIntoView({behavior:"smooth",block:"center"})}
+  if(b.dataset.lab){CL=0.35;document.querySelectorAll(".lab .seg .chip").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.cl==="0.35")));lab();document.getElementById("grip-lab").scrollIntoView({behavior:"smooth",block:"start"})}
+});
 
 /* ---------- Quiz ---------- */
 const QZ=[
