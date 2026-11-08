@@ -481,14 +481,12 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-newton" data-title="Newton's laws">
         <span class="eyebrow">Part 1 · The sources of the forces</span>
         <h2>Newton's three laws, applied to air</h2>
-        <span class="note-tag">Your note · Newton's 1, 2, 3 laws</span>
         <p>Air has mass, so everything Newton said about solid objects applies to it. Stick your hand out of a car window and tilt it: you feel drag pushing it back, and lift pushing it up or down.</p>
         <div class="laws">
           <article><span class="lawn">1</span><h3>Inertia</h3><p>A body stays at rest, or keeps moving at the same speed and direction, unless a force acts on it. To turn the airflow round a wing, something must push on the air.</p></article>
           <article><span class="lawn">2</span><h3>F = m · a</h3><p>The force needed for a given acceleration is proportional to mass. A heavier car needs more force to speed up, slow down or corner. That reluctance is inertia.</p></article>
           <article><span class="lawn">3</span><h3>Action and reaction</h3><p>Every force has an equal and opposite reaction. A wing pulls the air towards it, so the air pulls the wing the other way. That reaction is downforce.</p></article>
         </div>
-        <span class="note-tag">Your note · Balanced actions and reactions in steady state</span>
         <p>Forces are drawn as vectors: the arrow points the way the force acts, and its length shows how big it is. Pick a situation to see the book's Figures 2-1 to 2-3.</p>
         <div class="seg" role="group" aria-label="Force situation" id="forceSeg">
           <button class="chip" data-s="steady" aria-pressed="true">Steady speed</button>
@@ -502,7 +500,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-air" data-title="Air properties">
         <span class="eyebrow">Part 2 · Air properties</span>
         <h2>How much air does a car disturb?</h2>
-        <span class="note-tag">Your note · Mass of air disturbed depends on 3 factors</span>
         <p>As a car passes, it accelerates and deflects the air around it. The mass of air it disturbs, and so the size of the reaction forces, depends on three things:</p>
         <div class="three">
           <article><div class="ico" id="icoSize"></div><h3>Size of the car</h3><p>A bigger car (and its shape) disturbs more air, so it feels bigger forces at the same speed.</p></article>
@@ -511,13 +508,11 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
         </div>
         <div class="two">
           <div class="card">
-            <span class="note-tag">Your note · Why assume air is incompressible</span>
             <h3>Treating air as incompressible</h3>
             <p>Air is a gas and can be squeezed, but at racing speeds its density barely changes, so aerodynamicists treat density as constant. Weather and altitude cause small changes only.</p>
             <p class="beyond-note"><b>Beyond the book</b> The usual rule is that compressibility only matters above about Mach 0.3, roughly 370 km/h at sea level. Even at 340 km/h the density change around a car is only about 4%.</p>
           </div>
           <div class="card">
-            <span class="note-tag">Your note · Principle of relative motion</span>
             <h3>Relative motion</h3>
             <p>A car moving through still air is treated the same as a still car with air moving over it. That is what makes wind tunnels work.</p>
             <div class="seg" role="group" aria-label="Frame of reference" id="relSeg">
@@ -534,19 +529,16 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-bl" data-title="Viscosity and boundary layer">
         <span class="eyebrow">Part 3 · Viscosity</span>
         <h2>Stickiness and the boundary layer</h2>
-        <span class="note-tag">Your note · Viscosity steals kinetic energy and turns it into heat</span>
         <p>Viscosity is a fluid's stickiness. It isn't density: oil is more viscous than water yet floats on it. Air flows past a body in thin layers. The layer touching the surface sticks to it and doesn't move. Each layer above is held back a little by the slower one beneath, so they slide over each other until, far enough out, the air moves at the full <em>freestream</em> speed.</p>
         <div class="two">
           <div class="figure"><div id="blProfile"></div><p class="caption">The book's Figure 2-4: velocity grows from zero at the surface to freestream at the edge of the boundary layer.</p></div>
           <div class="card">
-            <span class="note-tag">Your note · Boundary layer, shear force</span>
             <h3>Shear forces</h3>
             <p>Where layers slide past each other, viscosity creates <b>shear forces</b> between them, a bit like friction between solids. The key point is that viscosity steals kinetic energy from the air near the surface and turns it into heat. The heat is tiny, but the lost energy matters a lot, because tired air struggles to stay attached later on.</p>
             <div class="eq">τ = μ · (dV / dy)</div>
             <p class="muted" style="font-size:13.5px;margin:0">Shear stress τ grows with viscosity μ and with how steeply velocity changes away from the surface. Not in the book, but it is the standard way to write this.</p>
           </div>
         </div>
-        <span class="note-tag">Your note · Boundary layer thickness over a competition car</span>
         <h3>How the boundary layer grows along a car</h3>
         <p>Viscous losses build up with distance, so the boundary layer thickens towards the rear. It starts laminar and a few millimetres thick at the nose, then turns turbulent and grows to perhaps a few centimetres at the back. The drawing exaggerates the thickness so you can see it.</p>
         <div class="figure"><div id="blCar"></div><p class="caption">Blue: thin laminar layer. Amber: thicker turbulent layer. Thicker boundary layers mean more drag.</p></div>
@@ -556,7 +548,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-lt" data-title="Laminar and turbulent">
         <span class="eyebrow">Part 4 · Laminar and turbulent flow</span>
         <h2>Smooth layers or swirling mix</h2>
-        <span class="note-tag">Your note · Laminar and turbulent, causes of transition</span>
         <div class="two">
           <div class="figure"><div id="candle"></div><p class="caption">Blow out a candle: smoke rises in straight, laminar streamlines, then breaks into turbulent swirls.</p></div>
           <div class="card">
@@ -572,7 +563,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
             </ul>
           </div>
         </div>
-        <span class="note-tag">Your note · Transition happens even over a smooth surface</span>
         <p>Even a perfectly smooth surface can't keep the flow laminar forever. As viscosity removes energy, the small velocity differences between sub-layers grow, the layers start to interact, and the flow becomes random. Turbulent layers grow thicker, faster, because of their sideways velocity components.</p>
         <div class="figure"><div id="plate"></div><p class="caption">The book's Figure 2-5 over a smooth flat plate: thin laminar layer, transition, then a thicker turbulent layer.</p></div>
       </section>
@@ -582,7 +572,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
         <span class="eyebrow">Part 5 · From Aristotle to Bernoulli</span>
         <h2>Where the flow is fastest, the pressure is least</h2>
         <div class="history" id="history"></div>
-        <span class="note-tag">Your note · Bernoulli's equation and energy conservation</span>
         <div class="eq big">P<sub>s</sub> + ½ρV² = constant = total pressure</div>
         <div class="two">
           <div class="card">
@@ -601,14 +590,12 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
             </ul>
           </div>
         </div>
-        <span class="note-tag">Your note · Apply it to the stagnation point, upper and lower surfaces</span>
         <h3>Bernoulli around an inverted wing</h3>
         <p>Tap a point on the wing to see what Bernoulli says happens there.</p>
         <div class="wingx">
           <div class="figure"><div id="wingArt"></div></div>
           <div class="card" id="wingInfo" aria-live="polite"></div>
         </div>
-        <span class="note-tag">Your note · How the velocity and pressure plots look on both surfaces</span>
         <div class="figure"><div id="cpPlot"></div><p class="caption">Like the book's Figure 2-8: pressure coefficient along the chord. By convention, negative (suction) is plotted upwards. The shaded gap between the curves is the downforce.</p></div>
         <div class="two">
           <div class="card"><h3 class="c-s">Lower (suction) surface</h3><p>Air speeds up round the leading edge to a peak a short way back, where pressure is lowest. Then it slows and pressure rises again towards ambient at the trailing edge. That rising part is the <b>pressure recovery</b> region. Most of the downforce comes from this surface.</p></div>
@@ -620,7 +607,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-venturi" data-title="Venturi tube">
         <span class="eyebrow">Part 6 · Conservation of mass</span>
         <h2>The venturi tube</h2>
-        <span class="note-tag">Your note · Venturi tube with diagram and equation</span>
         <p>The mass of air passing each section per second must be the same, because air can't pile up or vanish. Squeeze the area and the air must speed up, and by Bernoulli its pressure drops. A carburettor uses that low pressure in the throat to suck fuel through its jet. The diverging part after the throat is a <b>diffuser</b>: it slows the air again and recovers the pressure.</p>
         <div class="eq big">ρ·V₁·A₁ = ρ·V₂·A₂ = ρ·V₃·A₃</div>
         <div class="lab">
@@ -645,7 +631,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-curve" data-title="Following curves">
         <span class="eyebrow">Part 7 · Turning the flow</span>
         <h2>Why air follows a curved surface</h2>
-        <span class="note-tag">Your note · Adhesive stickiness, and air further away following the curve</span>
         <div class="two">
           <div class="card">
             <h3>Two forces do the turning</h3>
@@ -659,7 +644,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
           <div id="paperArt" class="mini"></div>
           <div><h3>Try it: the paper experiment</h3><p>Hold a sheet of A4 paper by one short edge just under your lower lip so it droops, then blow across its top. The paper rises into the airstream, a force at right angles to the flow. The book calls this the <b>Coanda effect</b>. It isn't the source of lift on wings, but it shows air flowing over a curve can create a force.</p></div>
         </div>
-        <span class="note-tag">Your note · How one moving car affects another</span>
         <h3>The influence reaches well beyond the surface</h3>
         <p>The pressure changes around a body don't stop at its skin; they spread a long way into the air. You can feel it when you're passed by a lorry on the motorway. In racing it means a car affects the cars ahead of, beside and behind it, which is why a following car loses front downforce when it gets close (Chapter 1).</p>
         <div class="figure"><div id="proxArt"></div><p class="caption">Each car carries a field of altered pressure. The following car's front wing sits in slower, disturbed air from the leader's wake.</p></div>
@@ -669,7 +653,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-sep" data-title="Separation and stall">
         <span class="eyebrow">Part 8 · Pressure gradients</span>
         <h2>Downhill, uphill, and letting go</h2>
-        <span class="note-tag">Your note · Types of pressure gradient, separation, stall and their causes</span>
         <div class="two">
           <div class="figure"><div id="hillArt"></div><p class="caption">Air rolls happily from high to low pressure (favourable gradient), but climbing from low back to high pressure (unfavourable) needs energy.</p></div>
           <div class="card">
@@ -689,7 +672,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
           </div>
           <div id="sepArt" class="art-box"></div>
         </div>
-        <span class="note-tag">Your note · Wake, and wipers on SUVs but not saloons</span>
         <h3>The wake, and the rear-wiper puzzle</h3>
         <p>The same thing happens at the back of a road car's roof: fast flow slows down, the boundary layer has thickened, and at a sharp lip or steep drop the flow separates into the highly disturbed region called the <b>wake</b> (the book's Figure 2-9).</p>
         <div class="two">
@@ -703,7 +685,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-vg" data-title="Vortex generators">
         <span class="eyebrow">Part 9 · Turbulence isn't always bad</span>
         <h2>Re-energising the boundary layer</h2>
-        <span class="note-tag">Your note · How turbulence brings in fresh energy, vortex generators</span>
         <div class="two">
           <div class="card">
             <p>A laminar boundary layer has less skin friction, so less drag. But a turbulent layer can resist separation better, and can even make separated flow reattach. Its sideways velocity components stir faster air from outside down towards the surface, bringing in fresh energy.</p>
@@ -717,7 +698,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-re" data-title="Reynolds number">
         <span class="eyebrow">Part 10 · Scale models</span>
         <h2>Reynolds number</h2>
-        <span class="note-tag">Your note · Reynolds number</span>
         <p>A half-scale model in a wind tunnel doesn't behave like the real car at the same speed, because its boundary layer has had half the distance to grow. Separation tends to happen further back on the model. The Reynolds number tells you when flows over different-sized bodies will look alike: match it, and the flow patterns match.</p>
         <div class="eq big">Re = ρ·V·L ÷ μ &nbsp;≈ 67,778 × V × L</div>
         <p class="muted" style="margin-top:-6px;font-size:14px">V in m/s and L in metres (imperial: Re ≈ 6,300 × V × L with ft/s and ft). Re has no units.</p>
@@ -741,7 +721,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-cp" data-title="Pressure coefficient">
         <span class="eyebrow">Part 11 · Pressure coefficients</span>
         <h2>C<sub>p</sub>: pressure as a number</h2>
-        <span class="note-tag">Your note · Pressure coefficient equations and values by local velocity</span>
         <p>C<sub>p</sub> shows how the local static pressure compares with the undisturbed air. It is the language of every CFD pressure plot later in the book.</p>
         <div class="derive">
           <div class="eq">P<sub>s∞</sub> + ½ρV<sub>∞</sub>² = P<sub>s</sub> + ½ρV²</div>
@@ -768,7 +747,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-forces" data-title="Forces and coefficients">
         <span class="eyebrow">Part 12 · The forces involved</span>
         <h2>Lift, drag, and the coefficients</h2>
-        <span class="note-tag">Your note · Forces and equations; side forces from gusts and nearby cars</span>
         <div class="two">
           <div class="figure"><div id="resArt"></div><p class="caption">Figure 2-11: drag and lift (here downforce) add as vectors into one resultant aerodynamic force.</p></div>
           <div class="card">
@@ -779,7 +757,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
             <p><b>Side forces</b> matter for stability, but they come from gusty crosswinds and nearby cars. Because they are brief and unpredictable, they are hard to model.</p>
           </div>
         </div>
-        <span class="note-tag">Your note · Types of drag and their causes</span>
         <h3>Types of drag</h3>
         <div class="drags">
           <article><h3 class="c-p">Form (pressure) drag</h3><p>High pressure on forward-facing surfaces plus low pressure behind separated flow at the rear. The biggest source for most cars.</p></article>
@@ -791,7 +768,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
           <h3>Main causes of drag on a racing car, roughly from most to least</h3>
           <ol class="rank"><li>The basic shape of the car</li><li>Wheels and wheel housings</li><li>External devices such as wings and spoilers</li><li>Internal flows for cooling and ventilation</li><li>Imperfections: door handles, mirrors, window seals, panel gaps</li></ol>
         </div>
-        <span class="note-tag">Your note · C<sub>D</sub> and C<sub>L</sub> sizes; larger frontal area but lower C<sub>D</sub></span>
         <h3>How big are the coefficients?</h3>
         <div class="two">
           <div class="figure"><div id="shapesArt"></div><p class="caption">Figure 2-12: a flat plate across the flow has C<sub>D</sub> above 1.1. A teardrop four to five times longer than it is wide has about 0.04.</p></div>
@@ -801,12 +777,10 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
           <tr><td>McLaren Formula 1</td><td>1.35 m²</td><td>0.85</td><td>≈ 574 kg</td><td>2.56</td><td>≈ 1,725 kg</td><td><b>3.0</b></td></tr>
           <tr><td>McLaren F1 GTR</td><td>1.58 m²</td><td>0.57</td><td>≈ 455 kg</td><td>0.34</td><td>≈ 273 kg</td><td><b>0.6</b></td></tr></tbody></table></div>
         <p>The GTR has the <b>bigger</b> frontal area but makes <b>less</b> drag, so its shape must be cleaner: covered wheels and fewer downforce devices. Size matters as much as shape, which is why some sources quote C<sub>D</sub>·A to compare cars of different sizes. Frontal area can be estimated as width × height × about 0.87.</p>
-        <span class="note-tag">Your note · Aerodynamic efficiency</span>
         <div class="card">
           <h3>Aerodynamic efficiency, –L/D</h3>
           <p>Downforce divided by drag. The F1 car's 3.0 against the GTR's 0.6 suggests it is five times as efficient. McBeath warns that this ignores each car's purpose and rules, so –L/D is best used to compare cars within one category, or one team's cars over time.</p>
         </div>
-        <span class="note-tag">Your note · How C<sub>D</sub> and C<sub>L</sub> are found in the wind tunnel and CFD</span>
         <div class="card">
           <h3>Where the numbers come from</h3>
           <p><b>Wind tunnel:</b> the car or model sits on a balance that measures drag and downforce directly at a known airspeed. Dividing the force by q × A gives C<sub>D</sub> and C<sub>L</sub>.</p>
@@ -840,7 +814,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-power" data-title="Drag and power">
         <span class="eyebrow">Part 13 · Drag and power</span>
         <h2>Power absorbed by drag</h2>
-        <span class="note-tag">Your note · bhp absorbed equation</span>
         <div class="two">
           <div class="card">
             <div class="eq">bhp = C<sub>D</sub> · A · V³ ÷ 146,600 &nbsp;<span class="muted">(mph, ft²)</span></div>
@@ -857,7 +830,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-grip" data-title="Downforce and grip">
         <span class="eyebrow">Part 14 · Downforce, grip and balance</span>
         <h2>It's all about friction</h2>
-        <span class="note-tag">Your note · Frictional force</span>
         <div class="two">
           <div class="figure"><div id="fricArt"></div><p class="caption">F = μR. Twice the normal force R gives twice the friction. Downforce adds to R without adding mass.</p></div>
           <div class="card">
@@ -866,13 +838,11 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
             <p>Contact area isn't in the equation. A complication: real tyres' μ drops slightly as R rises, but total grip still increases.</p>
           </div>
         </div>
-        <span class="note-tag">Your note · Why wide racing tyres grip more than narrow ones</span>
         <div class="card">
           <h3>So why are racing tyres wide?</h3>
           <p>If area doesn't appear in F = μR, width shouldn't matter. McBeath says width is about matching the tyre's thermal and mechanical behaviour to the car and track, so it runs at the right temperature for grip.</p>
           <p class="beyond-note"><b>Beyond the book</b> Rubber isn't a simple solid. It grips partly by keying into the road surface, and its μ falls as the load per unit area rises. A wider tyre spreads the same load over more rubber, so each bit works at a lower load, where μ is higher. It also has more rubber to share the heat.</p>
         </div>
-        <span class="note-tag">Your note · Balancing friction and centripetal force, with equation and example</span>
         <h3>Cornering lab: the book's worked example</h3>
         <p>In a steady corner, the maximum friction exactly supplies the centripetal force: μR = mV²/r, so V<sub>max</sub> = √(μRr ÷ m). With downforce, R = mg + downforce, and downforce rises with V², so each speed gain brings yet more grip.</p>
         <div class="lab">
@@ -899,7 +869,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-prod" data-title="Road cars and lift">
         <span class="eyebrow">Part 15 · Production cars and lift</span>
         <h2>Some saloons are upside-down wings</h2>
-        <span class="note-tag">Your note · In side view, some cars look like an aerofoil</span>
         <div class="two">
           <div class="figure"><div id="saloonArt"></div><p class="caption">Figure 2-15: a smooth modern saloon profile over a lifting aerofoil. Fast, smooth flow over the roof means low pressure on top, so the car makes lift.</p></div>
           <div class="card">
@@ -913,7 +882,6 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <section class="block" id="s-wake" data-title="Slipstreaming">
         <span class="eyebrow">Part 16 · Non-Bernoulli downforce?</span>
         <h2>The wake and slipstreaming</h2>
-        <span class="note-tag">Your note · Non-Bernoulli downforce and slipstreaming</span>
         <div class="two">
           <div class="figure"><div id="slipArt"></div><p class="caption">The low-pressure wake drags leaves along behind a car and pulls a following car forward.</p></div>
           <div class="card">
