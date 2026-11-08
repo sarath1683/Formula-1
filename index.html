@@ -213,6 +213,73 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
 .flow{stroke-dasharray:6 10;animation:flow 1.6s linear infinite}
 @keyframes flow{to{stroke-dashoffset:-32}}
 @media (prefers-reduced-motion:reduce){.flow{animation:none}.gauge i{transition:none}}
+
+/* ---------- Chapter 2 ---------- */
+.note-tag{justify-self:start;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--pressure);border:1px solid rgba(255,181,71,.4);background:rgba(255,181,71,.07);border-radius:99px;padding:3px 10px}
+.c-s{color:var(--suction)} .c-p{color:var(--pressure)} .c-l{color:var(--lift)}
+.ceiling{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:16px}
+@media (max-width:760px){.ceiling{grid-template-columns:minmax(0,1fr)}}
+.ceiling-art svg{display:block;width:100%;height:auto}
+.ceiling-txt{display:grid;gap:8px;min-width:0}
+.ceiling-txt p{margin:0}
+.secnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-top:28px;background:linear-gradient(var(--bg) 70%,transparent);scrollbar-width:thin}
+.secnav button{flex:0 0 auto;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;background:var(--bg-2);color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:6px 11px;cursor:pointer}
+.secnav button:hover,.secnav button.on{color:var(--fg);border-color:var(--suction)}
+.laws,.three,.drags{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.laws article,.three article,.drags article{border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:6px;align-content:start;min-width:0;background:var(--bg-2)}
+.laws p,.three p,.drags p{margin:0;font-size:15px;color:#c3cad6}
+.lawn{font-family:var(--display);font-weight:800;font-size:44px;line-height:.9;color:var(--pressure)}
+.three .ico svg{display:block;width:100%;height:auto;max-height:90px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--bg-2);padding:16px 18px;display:grid;gap:10px;align-content:start;min-width:0}
+.card p{margin:0;font-size:15.5px}
+.card h3{font-size:21px}
+.figure{border:1px solid var(--line);border-radius:10px;background:#0c1017;overflow:hidden;min-width:0}
+.figure svg{display:block;width:100%;height:auto}
+.figure .caption{margin:0}
+.art-box{border:1px solid var(--line);border-radius:8px;background:#0c1017;overflow:hidden;min-width:0}
+.art-box svg{display:block;width:100%;height:auto}
+.mini svg{display:block;width:100%;height:auto}
+.eq{font-family:var(--mono);font-size:15px;background:#0b0f15;border:1px solid var(--line);border-left:3px solid var(--suction);border-radius:6px;padding:10px 14px;overflow-x:auto;white-space:nowrap;color:#dfe9f5}
+.eq.big{font-size:clamp(15px,2.2vw,21px);padding:14px 18px}
+.derive{display:grid;gap:8px}
+.beyond-note{border:1px dashed #36425a;border-radius:8px;padding:10px 12px;font-size:14.5px!important;color:#c3cad6;margin:0}
+.beyond-note b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--good);margin-right:6px}
+.example{border-left:3px solid var(--pressure);padding:6px 0 6px 14px;margin:0}
+ul.tight,ol.rank{margin:0;padding-left:20px;display:grid;gap:4px;font-size:15px;color:#c3cad6}
+ol.rank li::marker{font-family:var(--mono);color:var(--pressure)}
+.history{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.history article{border-top:2px solid var(--line);padding-top:8px;display:grid;gap:4px;min-width:0}
+.history article.win{border-top-color:var(--good)}
+.history .hy{font-family:var(--mono);font-size:12px;color:var(--pressure)}
+.history h3{font-size:18px}
+.history p{margin:0;font-size:13.5px;color:var(--muted)}
+.wingx{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){.wingx{grid-template-columns:minmax(0,1fr)}}
+.hot{cursor:pointer}
+.hot circle.ring{fill:#0c1017;stroke:var(--fg);stroke-width:2}
+.hot:hover circle.ring,.hot:focus-visible circle.ring,.hot.on circle.ring{stroke:var(--pressure);stroke-width:3}
+.hot:focus{outline:none}
+.hot text{font-family:var(--display);font-weight:800;font-size:16px;fill:var(--fg);pointer-events:none}
+.paper{grid-template-columns:200px minmax(0,1fr);align-items:center}
+@media (max-width:600px){.paper{grid-template-columns:minmax(0,1fr)}}
+.state{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.02em}
+.tbl{border-collapse:collapse;width:100%;font-size:14px}
+.tbl th,.tbl td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+.tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tbl td{font-variant-numeric:tabular-nums}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+.tbl.wide{min-width:640px}
+.readout.four{grid-template-columns:repeat(2,minmax(0,1fr));align-content:start}
+svg .lbl{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;fill:#aeb8c9}
+svg .lbl.s{fill:#4cc3ff} svg .lbl.p{fill:#ffb547} svg .lbl.l{fill:#ff5d6c} svg .lbl.g{fill:#5fe0a1}
+svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:16px;fill:#e7ebf2;letter-spacing:.03em}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 2.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.drift{animation:drift 3s linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-40px)}}
+@media (prefers-reduced-motion:reduce){.spin,.drift{animation:none}}
 </style>
 </head>
 <body>
@@ -227,6 +294,7 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
     <nav class="quick" aria-label="Sections">
       <a href="#home">Home</a>
       <a href="#ch1">Chapter 1</a>
+      <a href="#ch2">Chapter 2</a>
       <a href="#glossary">Glossary</a>
     </nav>
   </div>
@@ -300,7 +368,7 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
         <p class="muted mono" style="font-size:12px;margin:0">Track drawn after the Red Bull Ring, Austria: 10 turns, 4.318 km. Simplified, not to scale. Each turn is a chapter; green turns are chapters you've read.</p>
       </div>
       <section class="block">
-        <span class="eyebrow">Reading progress · 1 of 10</span>
+        <span class="eyebrow">Reading progress · 2 of 10</span>
         <h2>Chapters</h2>
         <div class="chgrid" id="chgrid"></div>
       </section>
@@ -388,6 +456,447 @@ footer{border-top:1px solid var(--line);padding-block:20px;font-size:13px;color:
         <h2>Five-question pit stop</h2>
         <div class="quiz" id="quiz"></div>
         <div class="score" id="score"></div>
+      </section>
+    </div>
+
+    <!-- CHAPTER 2 -->
+    <div class="view" id="v-ch2" hidden>
+      <div class="hero">
+        <span class="eyebrow">Chapter 2</span>
+        <h1>Out of thin air</h1>
+        <p class="lede">An airliner leaves the ground purely because its wings push on thin air, and an F1 car is often said to make enough downforce to drive on a ceiling. This chapter explains where forces that large come from, using nothing more magical than Newton's laws.</p>
+        <div class="ceiling">
+          <div class="ceiling-art" id="ceilingArt"></div>
+          <div class="ceiling-txt">
+            <span class="eyebrow">Ceiling check</span>
+            <p>Using the book's 1996 F1 figures (–C<sub>L</sub> = 2.56, frontal area 1.35 m²) and an assumed 600 kg car with driver, downforce equals weight at about <b class="mono" id="ceilV">190 km/h</b>. Above that speed, the car could in principle hold itself to the ceiling.</p>
+            <p class="muted" style="font-size:13.5px;margin:0">V = √(2mg ÷ (ρ · C<sub>L</sub> · A)). Getting it up there is left as an exercise.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="secnav" id="secnav" aria-label="Chapter 2 sections"></nav>
+
+      <!-- 1 Newton -->
+      <section class="block" id="s-newton" data-title="Newton's laws">
+        <span class="eyebrow">Part 1 · The sources of the forces</span>
+        <h2>Newton's three laws, applied to air</h2>
+        <p>Air has mass, so everything Newton said about solid objects applies to it. Stick your hand out of a car window and tilt it: you feel drag pushing it back, and lift pushing it up or down.</p>
+        <div class="laws">
+          <article><span class="lawn">1</span><h3>Inertia</h3><p>A body stays at rest, or keeps moving at the same speed and direction, unless a force acts on it. To turn the airflow round a wing, something must push on the air.</p></article>
+          <article><span class="lawn">2</span><h3>F = m · a</h3><p>The force needed for a given acceleration is proportional to mass. A heavier car needs more force to speed up, slow down or corner. That reluctance is inertia.</p></article>
+          <article><span class="lawn">3</span><h3>Action and reaction</h3><p>Every force has an equal and opposite reaction. A wing pulls the air towards it, so the air pulls the wing the other way. That reaction is downforce.</p></article>
+        </div>
+        <p>Forces are drawn as vectors: the arrow points the way the force acts, and its length shows how big it is. Pick a situation to see the book's Figures 2-1 to 2-3.</p>
+        <div class="seg" role="group" aria-label="Force situation" id="forceSeg">
+          <button class="chip" data-s="steady" aria-pressed="true">Steady speed</button>
+          <button class="chip" data-s="lessdrag" aria-pressed="false">Less drag</button>
+          <button class="chip" data-s="lift" aria-pressed="false">Aero lift</button>
+        </div>
+        <div class="figure"><div id="forceArt"></div><p class="caption" id="forceCap"></p></div>
+      </section>
+
+      <!-- 2 Air properties -->
+      <section class="block" id="s-air" data-title="Air properties">
+        <span class="eyebrow">Part 2 · Air properties</span>
+        <h2>How much air does a car disturb?</h2>
+        <p>As a car passes, it accelerates and deflects the air around it. The mass of air it disturbs, and so the size of the reaction forces, depends on three things:</p>
+        <div class="three">
+          <article><div class="ico" id="icoSize"></div><h3>Size of the car</h3><p>A bigger car (and its shape) disturbs more air, so it feels bigger forces at the same speed.</p></article>
+          <article><div class="ico" id="icoDensity"></div><h3>Density of the air</h3><p>Mass per unit volume, 1.225 kg/m³ in the book. Set by temperature and pressure, so we can't change it.</p></article>
+          <article><div class="ico" id="icoSpeed"></div><h3>Speed through the air</h3><p>The faster the car, the more it disturbs the air. Forces grow with speed squared.</p></article>
+        </div>
+        <div class="two">
+          <div class="card">
+            <h3>Treating air as incompressible</h3>
+            <p>Air is a gas and can be squeezed, but at racing speeds its density barely changes, so aerodynamicists treat density as constant. Weather and altitude cause small changes only.</p>
+            <p class="beyond-note"><b>Beyond the book</b> The usual rule is that compressibility only matters above about Mach 0.3, roughly 370 km/h at sea level. Even at 340 km/h the density change around a car is only about 4%.</p>
+          </div>
+          <div class="card">
+            <h3>Relative motion</h3>
+            <p>A car moving through still air is treated the same as a still car with air moving over it. That is what makes wind tunnels work.</p>
+            <div class="seg" role="group" aria-label="Frame of reference" id="relSeg">
+              <button class="chip" data-r="road" aria-pressed="true">Car moves</button>
+              <button class="chip" data-r="tunnel" aria-pressed="false">Air moves</button>
+            </div>
+            <div id="relArt" class="mini"></div>
+            <p class="muted" style="font-size:14px;margin:0" id="relCap"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 Viscosity & boundary layer -->
+      <section class="block" id="s-bl" data-title="Viscosity and boundary layer">
+        <span class="eyebrow">Part 3 · Viscosity</span>
+        <h2>Stickiness and the boundary layer</h2>
+        <p>Viscosity is a fluid's stickiness. It isn't density: oil is more viscous than water yet floats on it. Air flows past a body in thin layers. The layer touching the surface sticks to it and doesn't move. Each layer above is held back a little by the slower one beneath, so they slide over each other until, far enough out, the air moves at the full <em>freestream</em> speed.</p>
+        <div class="two">
+          <div class="figure"><div id="blProfile"></div><p class="caption">The book's Figure 2-4: velocity grows from zero at the surface to freestream at the edge of the boundary layer.</p></div>
+          <div class="card">
+            <h3>Shear forces</h3>
+            <p>Where layers slide past each other, viscosity creates <b>shear forces</b> between them, a bit like friction between solids. The key point is that viscosity steals kinetic energy from the air near the surface and turns it into heat. The heat is tiny, but the lost energy matters a lot, because tired air struggles to stay attached later on.</p>
+            <div class="eq">τ = μ · (dV / dy)</div>
+            <p class="muted" style="font-size:13.5px;margin:0">Shear stress τ grows with viscosity μ and with how steeply velocity changes away from the surface. Not in the book, but it is the standard way to write this.</p>
+          </div>
+        </div>
+        <h3>How the boundary layer grows along a car</h3>
+        <p>Viscous losses build up with distance, so the boundary layer thickens towards the rear. It starts laminar and a few millimetres thick at the nose, then turns turbulent and grows to perhaps a few centimetres at the back. The drawing exaggerates the thickness so you can see it.</p>
+        <div class="figure"><div id="blCar"></div><p class="caption">Blue: thin laminar layer. Amber: thicker turbulent layer. Thicker boundary layers mean more drag.</p></div>
+      </section>
+
+      <!-- 4 Laminar vs turbulent -->
+      <section class="block" id="s-lt" data-title="Laminar and turbulent">
+        <span class="eyebrow">Part 4 · Laminar and turbulent flow</span>
+        <h2>Smooth layers or swirling mix</h2>
+        <div class="two">
+          <div class="figure"><div id="candle"></div><p class="caption">Blow out a candle: smoke rises in straight, laminar streamlines, then breaks into turbulent swirls.</p></div>
+          <div class="card">
+            <h3>The difference</h3>
+            <p><b class="c-s">Laminar:</b> all particles move in the average direction and their streamlines stay parallel.</p>
+            <p><b class="c-p">Turbulent:</b> particles take erratic, crossing paths, even though the average speed and direction can be the same.</p>
+            <h3 style="margin-top:6px">What causes transition</h3>
+            <ul class="tight">
+              <li>Distance: viscous effects keep draining energy until the layers start mixing</li>
+              <li>A change of surface curvature</li>
+              <li>Surface roughness, such as seams, rivets or dirt</li>
+              <li>Higher speed and longer bodies, which together mean a higher Reynolds number (Part 9)</li>
+            </ul>
+          </div>
+        </div>
+        <p>Even a perfectly smooth surface can't keep the flow laminar forever. As viscosity removes energy, the small velocity differences between sub-layers grow, the layers start to interact, and the flow becomes random. Turbulent layers grow thicker, faster, because of their sideways velocity components.</p>
+        <div class="figure"><div id="plate"></div><p class="caption">The book's Figure 2-5 over a smooth flat plate: thin laminar layer, transition, then a thicker turbulent layer.</p></div>
+      </section>
+
+      <!-- 5 Bernoulli -->
+      <section class="block" id="s-bern" data-title="Bernoulli">
+        <span class="eyebrow">Part 5 · From Aristotle to Bernoulli</span>
+        <h2>Where the flow is fastest, the pressure is least</h2>
+        <div class="history" id="history"></div>
+        <div class="eq big">P<sub>s</sub> + ½ρV² = constant = total pressure</div>
+        <div class="two">
+          <div class="card">
+            <h3>Two forms of energy</h3>
+            <p><b>P<sub>s</sub>, static pressure:</b> pressure energy, the air's ability to push on surfaces.</p>
+            <p><b>½ρV², dynamic pressure:</b> kinetic energy of a unit volume of air (½mV², with density standing in for mass).</p>
+            <p>Energy can't be created or destroyed, only converted. So if the air speeds up, its static pressure must drop.</p>
+          </div>
+          <div class="card">
+            <h3>When it is valid</h3>
+            <ul class="tight">
+              <li>Only along one streamline (one mean flow path)</li>
+              <li>No viscosity and no energy losses</li>
+              <li>Incompressible flow</li>
+              <li>Used to <i>compare</i> two points, so the constant's value doesn't matter</li>
+            </ul>
+          </div>
+        </div>
+        <h3>Bernoulli around an inverted wing</h3>
+        <p>Tap a point on the wing to see what Bernoulli says happens there.</p>
+        <div class="wingx">
+          <div class="figure"><div id="wingArt"></div></div>
+          <div class="card" id="wingInfo" aria-live="polite"></div>
+        </div>
+        <div class="figure"><div id="cpPlot"></div><p class="caption">Like the book's Figure 2-8: pressure coefficient along the chord. By convention, negative (suction) is plotted upwards. The shaded gap between the curves is the downforce.</p></div>
+        <div class="two">
+          <div class="card"><h3 class="c-s">Lower (suction) surface</h3><p>Air speeds up round the leading edge to a peak a short way back, where pressure is lowest. Then it slows and pressure rises again towards ambient at the trailing edge. That rising part is the <b>pressure recovery</b> region. Most of the downforce comes from this surface.</p></div>
+          <div class="card"><h3 class="c-p">Upper (pressure) surface</h3><p>Air is slower here, so pressure stays slightly above ambient along most of the chord. It adds some downforce, but less than the suction underneath.</p></div>
+        </div>
+      </section>
+
+      <!-- 6 Venturi -->
+      <section class="block" id="s-venturi" data-title="Venturi tube">
+        <span class="eyebrow">Part 6 · Conservation of mass</span>
+        <h2>The venturi tube</h2>
+        <p>The mass of air passing each section per second must be the same, because air can't pile up or vanish. Squeeze the area and the air must speed up, and by Bernoulli its pressure drops. A carburettor uses that low pressure in the throat to suck fuel through its jet. The diverging part after the throat is a <b>diffuser</b>: it slows the air again and recovers the pressure.</p>
+        <div class="eq big">ρ·V₁·A₁ = ρ·V₂·A₂ = ρ·V₃·A₃</div>
+        <div class="lab">
+          <div style="display:grid;gap:16px;min-width:0">
+            <div><label for="vThroat">Throat area: <span id="vThroatOut" class="mono">50%</span> of inlet</label><input id="vThroat" type="range" min="25" max="100" step="5" value="50"></div>
+            <div><label for="vSpeed">Inlet speed: <span id="vSpeedOut" class="mono">40 m/s</span></label><input id="vSpeed" type="range" min="10" max="90" step="5" value="40"></div>
+            <div class="formula" id="vFormula"></div>
+            <p class="muted" style="font-size:13.5px;margin:0">Same idea as the floor and diffuser under a ground-effect car (Chapter 6).</p>
+          </div>
+          <div style="display:grid;gap:12px;min-width:0">
+            <div id="venturiArt" class="art-box"></div>
+            <div class="readout">
+              <div><b id="vV2">0</b><span>Throat speed, m/s</span></div>
+              <div><b id="vDp">0</b><span>Pressure drop, Pa</span></div>
+              <div><b id="vCp">0</b><span>Throat C<sub>p</sub></span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 Following curves -->
+      <section class="block" id="s-curve" data-title="Following curves">
+        <span class="eyebrow">Part 7 · Turning the flow</span>
+        <h2>Why air follows a curved surface</h2>
+        <div class="two">
+          <div class="card">
+            <h3>Two forces do the turning</h3>
+            <p><b>1. At the surface:</b> the air's adhesive stickiness (viscosity) holds the layer touching the surface, so it follows the curve. Without a force, Newton's first law says the air would carry straight on past the lowest point.</p>
+            <p><b>2. Further away:</b> the air turning sharply next to the surface speeds up, so static pressure there drops most. That low pressure pulls the air further out round the curve too.</p>
+            <p><b>The result:</b> by Newton's third law, pulling the air towards the wing pulls the wing towards the air. On an inverted wing, that is downforce.</p>
+          </div>
+          <div class="figure"><div id="curveArt"></div><p class="caption">Like Figure 2-7: pressure falls towards the curved surface, pulling outer streamlines round. The reaction on the wing is downforce.</p></div>
+        </div>
+        <div class="card paper">
+          <div id="paperArt" class="mini"></div>
+          <div><h3>Try it: the paper experiment</h3><p>Hold a sheet of A4 paper by one short edge just under your lower lip so it droops, then blow across its top. The paper rises into the airstream, a force at right angles to the flow. The book calls this the <b>Coanda effect</b>. It isn't the source of lift on wings, but it shows air flowing over a curve can create a force.</p></div>
+        </div>
+        <h3>The influence reaches well beyond the surface</h3>
+        <p>The pressure changes around a body don't stop at its skin; they spread a long way into the air. You can feel it when you're passed by a lorry on the motorway. In racing it means a car affects the cars ahead of, beside and behind it, which is why a following car loses front downforce when it gets close (Chapter 1).</p>
+        <div class="figure"><div id="proxArt"></div><p class="caption">Each car carries a field of altered pressure. The following car's front wing sits in slower, disturbed air from the leader's wake.</p></div>
+      </section>
+
+      <!-- 8 Pressure gradients & separation -->
+      <section class="block" id="s-sep" data-title="Separation and stall">
+        <span class="eyebrow">Part 8 · Pressure gradients</span>
+        <h2>Downhill, uphill, and letting go</h2>
+        <div class="two">
+          <div class="figure"><div id="hillArt"></div><p class="caption">Air rolls happily from high to low pressure (favourable gradient), but climbing from low back to high pressure (unfavourable) needs energy.</p></div>
+          <div class="card">
+            <h3>Two kinds of gradient</h3>
+            <p><b class="c-s">Favourable:</b> high pressure to low, like a ball rolling downhill. From the leading edge to the suction peak.</p>
+            <p><b class="c-l">Unfavourable (adverse):</b> low pressure to high, uphill. From the suction peak to the trailing edge. The air only makes it to the top if it has enough kinetic energy and the slope isn't too steep.</p>
+            <p>If it can't, the flow <b>separates</b> from the surface. Total separation over a wing is a <b>stall</b>.</p>
+          </div>
+        </div>
+        <h3>Separation lab</h3>
+        <p>Increase the inverted wing's angle. Past a point, the air on the suction side can't climb the pressure hill and separates. Under the separated region the air near the surface reverses into a recirculating <b>separation bubble</b>.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="aoa">Wing angle: <span id="aoaOut" class="mono">6°</span></label><input id="aoa" type="range" min="0" max="22" step="1" value="6"></div>
+            <div class="state" id="sepState"></div>
+            <p class="muted" style="font-size:14px;margin:0">Causes of separation: too steep an angle, too low a speed, a steep adverse gradient, a tired (thick, low-energy) boundary layer, or a sharp lip or sudden change of shape.</p>
+          </div>
+          <div id="sepArt" class="art-box"></div>
+        </div>
+        <h3>The wake, and the rear-wiper puzzle</h3>
+        <p>The same thing happens at the back of a road car's roof: fast flow slows down, the boundary layer has thickened, and at a sharp lip or steep drop the flow separates into the highly disturbed region called the <b>wake</b> (the book's Figure 2-9).</p>
+        <div class="two">
+          <div class="figure"><div id="suvArt"></div><p class="caption">Blunt rear: the flow separates at the roof edge and the wake recirculates against the rear glass.</p></div>
+          <div class="figure"><div id="sedanArt"></div><p class="caption">Sloping rear: the flow stays attached down the rear window and separates later, at the boot edge.</p></div>
+        </div>
+        <p class="beyond-note"><b>Beyond the book</b> That is why SUVs and hatchbacks need a rear wiper and saloons usually don't. On a blunt rear, the recirculating wake carries road spray and dirt forwards onto the glass. On a saloon, attached flow keeps the rear window swept clean.</p>
+      </section>
+
+      <!-- 9 Turbulence helps -->
+      <section class="block" id="s-vg" data-title="Vortex generators">
+        <span class="eyebrow">Part 9 · Turbulence isn't always bad</span>
+        <h2>Re-energising the boundary layer</h2>
+        <div class="two">
+          <div class="card">
+            <p>A laminar boundary layer has less skin friction, so less drag. But a turbulent layer can resist separation better, and can even make separated flow reattach. Its sideways velocity components stir faster air from outside down towards the surface, bringing in fresh energy.</p>
+            <p><b>Vortex generators</b> are small fins on a surface. Each one sheds a little swirling vortex that mixes fast outer air into the tired boundary layer, so the flow stays attached further back. Laminar isn't always the goal.</p>
+          </div>
+          <div class="figure"><div id="vgArt"></div><p class="caption">Without (top): the tired boundary layer separates early. With vortex generators (bottom): swirls mix in energy and the flow stays attached.</p></div>
+        </div>
+      </section>
+
+      <!-- 10 Reynolds -->
+      <section class="block" id="s-re" data-title="Reynolds number">
+        <span class="eyebrow">Part 10 · Scale models</span>
+        <h2>Reynolds number</h2>
+        <p>A half-scale model in a wind tunnel doesn't behave like the real car at the same speed, because its boundary layer has had half the distance to grow. Separation tends to happen further back on the model. The Reynolds number tells you when flows over different-sized bodies will look alike: match it, and the flow patterns match.</p>
+        <div class="eq big">Re = ρ·V·L ÷ μ &nbsp;≈ 67,778 × V × L</div>
+        <p class="muted" style="margin-top:-6px;font-size:14px">V in m/s and L in metres (imperial: Re ≈ 6,300 × V × L with ft/s and ft). Re has no units.</p>
+        <div class="two">
+          <div class="figure"><div id="reArt"></div><p class="caption">Figure 2-10: at the same speed, the boundary layer at the end of a plate of length L/2 is thinner than at the end of length L.</p></div>
+          <div class="lab" style="grid-template-columns:minmax(0,1fr)">
+            <div><label for="reV">Full-size car speed: <span id="reVOut" class="mono">50 m/s</span></label><input id="reV" type="range" min="10" max="90" step="5" value="50"></div>
+            <div><label for="reS">Model scale: <span id="reSOut" class="mono">50%</span></label><input id="reS" type="range" min="20" max="100" step="5" value="50"></div>
+            <div class="readout">
+              <div><b id="reFull">0</b><span>Car Re (L = 5 m)</span></div>
+              <div><b id="reModel">0</b><span>Model Re, same speed</span></div>
+              <div><b id="reNeed">0</b><span>Model speed needed, m/s</span></div>
+            </div>
+            <p id="reNote" style="margin:0;font-size:14.5px"></p>
+          </div>
+        </div>
+        <p>That is why F1 moved to larger models tested at higher speeds. In 1998 Benetton tried something cleverer: pressurise the tunnel to twice atmospheric pressure. That doubles the air density, so a half-scale model at the same speed matches full-size Re. Technical problems stopped it being used, but the idea was sound.</p>
+      </section>
+
+      <!-- 11 Cp -->
+      <section class="block" id="s-cp" data-title="Pressure coefficient">
+        <span class="eyebrow">Part 11 · Pressure coefficients</span>
+        <h2>C<sub>p</sub>: pressure as a number</h2>
+        <p>C<sub>p</sub> shows how the local static pressure compares with the undisturbed air. It is the language of every CFD pressure plot later in the book.</p>
+        <div class="derive">
+          <div class="eq">P<sub>s∞</sub> + ½ρV<sub>∞</sub>² = P<sub>s</sub> + ½ρV²</div>
+          <div class="eq">(P<sub>s</sub> − P<sub>s∞</sub>) ÷ q<sub>∞</sub> = 1 − q ÷ q<sub>∞</sub> &nbsp;&nbsp;where q = ½ρV²</div>
+          <div class="eq big">C<sub>p</sub> = ΔP ÷ q<sub>∞</sub> = 1 − (V ÷ V<sub>∞</sub>)²</div>
+        </div>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="cpR">Local speed ÷ freestream speed: <span id="cpROut" class="mono">1.00</span></label><input id="cpR" type="range" min="0" max="2.2" step="0.05" value="1"></div>
+            <div class="formula" id="cpFormula"></div>
+            <p id="cpNote" style="margin:0"></p>
+            <table class="tbl"><thead><tr><th>Local velocity</th><th>C<sub>p</sub></th></tr></thead><tbody>
+              <tr><td>Stagnation point, V = 0</td><td>1</td></tr>
+              <tr><td>Freestream, V = V∞</td><td>0</td></tr>
+              <tr><td>Slower than freestream</td><td>0 to 1</td></tr>
+              <tr><td>Faster than freestream</td><td>below 0</td></tr></tbody></table>
+          </div>
+          <div id="cpGauge" class="art-box"></div>
+        </div>
+        <p class="example"><b>Book example.</b> A car does 45 m/s (about 100 mph) and its shaped underside doubles the airspeed to 90 m/s. Then C<sub>p</sub> = 1 − (90/45)² = 1 − 4 = <b>−3</b>. A big negative C<sub>p</sub> always means the air has been sped up a lot.</p>
+      </section>
+
+      <!-- 12 Forces -->
+      <section class="block" id="s-forces" data-title="Forces and coefficients">
+        <span class="eyebrow">Part 12 · The forces involved</span>
+        <h2>Lift, drag, and the coefficients</h2>
+        <div class="two">
+          <div class="figure"><div id="resArt"></div><p class="caption">Figure 2-11: drag and lift (here downforce) add as vectors into one resultant aerodynamic force.</p></div>
+          <div class="card">
+            <p>Pressure difference = C<sub>p</sub> × q, and force = pressure × area. Adding up all the local pressures over a body gives an overall coefficient for each direction:</p>
+            <div class="eq">Lift = C<sub>L</sub> · ½ρV² · A</div>
+            <div class="eq">Drag = C<sub>D</sub> · ½ρV² · A</div>
+            <p class="muted" style="font-size:14px">For cars, A is the frontal area; for wings it is the plan area.</p>
+            <p><b>Side forces</b> matter for stability, but they come from gusty crosswinds and nearby cars. Because they are brief and unpredictable, they are hard to model.</p>
+          </div>
+        </div>
+        <h3>Types of drag</h3>
+        <div class="drags">
+          <article><h3 class="c-p">Form (pressure) drag</h3><p>High pressure on forward-facing surfaces plus low pressure behind separated flow at the rear. The biggest source for most cars.</p></article>
+          <article><h3 class="c-s">Skin friction (viscous) drag</h3><p>Viscous air rubbing on the surface and its roughness. Small on most competition cars.</p></article>
+          <article><h3>Profile drag</h3><p>Form drag plus skin friction, the usual way to describe a wing's non-lift drag.</p></article>
+          <article><h3 class="c-l">Vortex (induced) drag</h3><p>Any body making lift or downforce sheds swirling vortices with low-pressure cores. They pull on rearward-facing surfaces. Big on cars with large wings.</p></article>
+        </div>
+        <div class="card">
+          <h3>Main causes of drag on a racing car, roughly from most to least</h3>
+          <ol class="rank"><li>The basic shape of the car</li><li>Wheels and wheel housings</li><li>External devices such as wings and spoilers</li><li>Internal flows for cooling and ventilation</li><li>Imperfections: door handles, mirrors, window seals, panel gaps</li></ol>
+        </div>
+        <h3>How big are the coefficients?</h3>
+        <div class="two">
+          <div class="figure"><div id="shapesArt"></div><p class="caption">Figure 2-12: a flat plate across the flow has C<sub>D</sub> above 1.1. A teardrop four to five times longer than it is wide has about 0.04.</p></div>
+          <div class="figure"><div id="cdScale"></div><p class="caption">Typical drag coefficients from the book, drawn to scale.</p></div>
+        </div>
+        <div class="tblwrap"><table class="tbl wide"><thead><tr><th>1996 car at 200 mph (89.4 m/s)</th><th>Frontal area</th><th>C<sub>D</sub></th><th>Drag</th><th>–C<sub>L</sub></th><th>Downforce</th><th>–L/D</th></tr></thead><tbody>
+          <tr><td>McLaren Formula 1</td><td>1.35 m²</td><td>0.85</td><td>≈ 574 kg</td><td>2.56</td><td>≈ 1,725 kg</td><td><b>3.0</b></td></tr>
+          <tr><td>McLaren F1 GTR</td><td>1.58 m²</td><td>0.57</td><td>≈ 455 kg</td><td>0.34</td><td>≈ 273 kg</td><td><b>0.6</b></td></tr></tbody></table></div>
+        <p>The GTR has the <b>bigger</b> frontal area but makes <b>less</b> drag, so its shape must be cleaner: covered wheels and fewer downforce devices. Size matters as much as shape, which is why some sources quote C<sub>D</sub>·A to compare cars of different sizes. Frontal area can be estimated as width × height × about 0.87.</p>
+        <div class="card">
+          <h3>Aerodynamic efficiency, –L/D</h3>
+          <p>Downforce divided by drag. The F1 car's 3.0 against the GTR's 0.6 suggests it is five times as efficient. McBeath warns that this ignores each car's purpose and rules, so –L/D is best used to compare cars within one category, or one team's cars over time.</p>
+        </div>
+        <div class="card">
+          <h3>Where the numbers come from</h3>
+          <p><b>Wind tunnel:</b> the car or model sits on a balance that measures drag and downforce directly at a known airspeed. Dividing the force by q × A gives C<sub>D</sub> and C<sub>L</sub>.</p>
+          <p><b>CFD:</b> the software works out pressure and shear on every patch of the surface. Adding them up gives the total forces, then the coefficients the same way.</p>
+          <p><b>Without either:</b> measure frontal area and top speed and work C<sub>D</sub> backwards from the power equation below, or use the straight-line tests in Chapter 8.</p>
+          <p class="muted" style="font-size:13.5px;margin:0">The tunnel and CFD descriptions are general background; the book covers them in detail in Chapters 3 and 8.</p>
+        </div>
+        <h3>Try the equations</h3>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div class="seg" role="group" aria-label="Car preset" id="aeroPreset">
+              <button class="chip" data-p="f1" aria-pressed="true">1996 F1</button>
+              <button class="chip" data-p="gtr" aria-pressed="false">McLaren F1 GTR</button>
+              <button class="chip" data-p="road" aria-pressed="false">Road saloon</button>
+              <button class="chip" data-p="lsr" aria-pressed="false">Land speed record</button>
+            </div>
+            <div><label for="aV">Speed: <span id="aVOut" class="mono"></span></label><input id="aV" type="range" min="20" max="400" step="5" value="322"></div>
+            <div class="formula" id="aFormula"></div>
+            <p class="muted" style="font-size:13.5px;margin:0" id="aSrc"></p>
+          </div>
+          <div class="readout four">
+            <div><b id="aDrag">0</b><span>Drag, kg</span></div>
+            <div><b id="aDown">0</b><span id="aDownL">Downforce, kg</span></div>
+            <div><b id="aLD">0</b><span>–L/D</span></div>
+            <div><b id="aBhp">0</b><span>bhp to beat drag</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Power -->
+      <section class="block" id="s-power" data-title="Drag and power">
+        <span class="eyebrow">Part 13 · Drag and power</span>
+        <h2>Power absorbed by drag</h2>
+        <div class="two">
+          <div class="card">
+            <div class="eq">bhp = C<sub>D</sub> · A · V³ ÷ 146,600 &nbsp;<span class="muted">(mph, ft²)</span></div>
+            <div class="eq">bhp = C<sub>D</sub> · A · V³ ÷ 1,225 &nbsp;<span class="muted">(m/s, m²)</span></div>
+            <p>Drag grows with V², and power is force × speed, so the power drag absorbs grows with <b>V³</b>. Going 10% faster takes about 33% more power. Multiply bhp by 0.746 for kW.</p>
+            <p>Use <b>available</b> power at the wheels, not flywheel power. The book's correction factors: ×0.91 for rear-engined single-seaters on narrow or cold tyres, ×0.875 for circuit single-seaters on hot wide tyres (F1, F3), ×0.85 for race saloons and sports cars, ×0.82 for front-engined rear-drive cars.</p>
+          </div>
+          <div class="figure"><div id="powerChart"></div><p class="caption">Like Figure 2-14: where each drag-power curve meets the car's available power is its theoretical top speed. F1: 700 bhp × 0.875 = 612.5. GTR: 600 × 0.85 = 510.</p></div>
+        </div>
+        <p>Top speed rarely decides lap time, except on ovals and perhaps at Le Mans. But knowing C<sub>D</sub> helps work out how much extra drag you can afford for more downforce (Chapter 5).</p>
+      </section>
+
+      <!-- 14 Grip -->
+      <section class="block" id="s-grip" data-title="Downforce and grip">
+        <span class="eyebrow">Part 14 · Downforce, grip and balance</span>
+        <h2>It's all about friction</h2>
+        <div class="two">
+          <div class="figure"><div id="fricArt"></div><p class="caption">F = μR. Twice the normal force R gives twice the friction. Downforce adds to R without adding mass.</p></div>
+          <div class="card">
+            <div class="eq big">F = μ · R</div>
+            <p>μ is the coefficient of friction, set by the two surfaces: tiny for an ice-hockey puck on wet ice, huge for a Top Fuel dragster's tyres on sticky asphalt. R is the normal force pressing them together, usually the weight.</p>
+            <p>Contact area isn't in the equation. A complication: real tyres' μ drops slightly as R rises, but total grip still increases.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>So why are racing tyres wide?</h3>
+          <p>If area doesn't appear in F = μR, width shouldn't matter. McBeath says width is about matching the tyre's thermal and mechanical behaviour to the car and track, so it runs at the right temperature for grip.</p>
+          <p class="beyond-note"><b>Beyond the book</b> Rubber isn't a simple solid. It grips partly by keying into the road surface, and its μ falls as the load per unit area rises. A wider tyre spreads the same load over more rubber, so each bit works at a lower load, where μ is higher. It also has more rubber to share the heat.</p>
+        </div>
+        <h3>Cornering lab: the book's worked example</h3>
+        <p>In a steady corner, the maximum friction exactly supplies the centripetal force: μR = mV²/r, so V<sub>max</sub> = √(μRr ÷ m). With downforce, R = mg + downforce, and downforce rises with V², so each speed gain brings yet more grip.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="gR">Corner radius: <span id="gROut" class="mono">50 m</span></label><input id="gR" type="range" min="15" max="200" step="5" value="50"></div>
+            <div><label for="gMu">Tyre μ: <span id="gMuOut" class="mono">1.4</span></label><input id="gMu" type="range" min="0.8" max="2" step="0.1" value="1.4"></div>
+            <div><label for="gCla">–C<sub>L</sub>·A: <span id="gClaOut" class="mono">3.46 m²</span></label><input id="gCla" type="range" min="0" max="5" step="0.02" value="3.46"></div>
+            <p class="muted" style="font-size:13.5px;margin:0">Defaults are the book's: 500 kg, μ 1.4, 90° corner of 50 m radius, 1996 F1 –C<sub>L</sub> 2.56 × 1.35 m².</p>
+          </div>
+          <div style="display:grid;gap:12px;min-width:0">
+            <div class="readout">
+              <div><b id="gV0">0</b><span>No aero, km/h</span></div>
+              <div><b id="gV1">0</b><span>Book's one step, km/h</span></div>
+              <div><b id="gV2">0</b><span>Fully converged, km/h</span></div>
+            </div>
+            <div id="cornerArt" class="art-box"></div>
+            <p id="gNote" style="margin:0;font-size:14.5px"></p>
+          </div>
+        </div>
+        <p class="muted" style="font-size:14px">The book adds downforce once (66.8 mph, 107.6 km/h) and notes the process is iterative. The converged column carries that through to the end: each step's extra speed adds downforce until it settles. It all assumes the downforce is balanced front to rear, the "Holy Grail" of aero setup.</p>
+      </section>
+
+      <!-- 15 Production cars -->
+      <section class="block" id="s-prod" data-title="Road cars and lift">
+        <span class="eyebrow">Part 15 · Production cars and lift</span>
+        <h2>Some saloons are upside-down wings</h2>
+        <div class="two">
+          <div class="figure"><div id="saloonArt"></div><p class="caption">Figure 2-15: a smooth modern saloon profile over a lifting aerofoil. Fast, smooth flow over the roof means low pressure on top, so the car makes lift.</p></div>
+          <div class="card">
+            <p>Chasing low C<sub>D</sub>, road cars got raked windscreens and rounded edges. That keeps the air over the top fast and smooth, which is exactly what a wing does to make lift.</p>
+            <p><b>Numbers:</b> a road saloon might make up to <b class="c-l">+82 kg of lift</b> at 160 km/h. Its touring-car version, with airdam, splitter and wing, makes about <b class="c-s">50 kg of downforce</b>. That is 132 kg more load on the tyres, about 13% more cornering grip, which is huge where hundredths count.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 16 Non-Bernoulli -->
+      <section class="block" id="s-wake" data-title="Slipstreaming">
+        <span class="eyebrow">Part 16 · Non-Bernoulli downforce?</span>
+        <h2>The wake and slipstreaming</h2>
+        <div class="two">
+          <div class="figure"><div id="slipArt"></div><p class="caption">The low-pressure wake drags leaves along behind a car and pulls a following car forward.</p></div>
+          <div class="card">
+            <p>In a car's wake the air is slow relative to the car, yet the pressure is low. Simple Bernoulli says slow air should mean high pressure, so something else is going on. The wake has lost energy, turned into heat and sound by separation and viscosity, so its <i>total</i> pressure is lower.</p>
+            <p>That low pressure is real. Dust and leaves follow a car along, and you can feel a lorry's suction when you drive up behind it. In racing it lets a following car <b>slipstream</b>: less drag, more straight-line speed.</p>
+            <p>McBeath's verdict: it isn't truly "non-Bernoulli". Bernoulli is conservation of energy, and the losses are part of the energy budget.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Check yourself</span>
+        <h2>Ten-question pit stop</h2>
+        <div class="quiz" id="quiz2"></div>
+        <div class="score" id="score2"></div>
       </section>
     </div>
 
@@ -499,7 +1008,7 @@ function car(o){
 /* ---------- Chapter list (from the book's contents) ---------- */
 const CH=[
   ["1","Historical background","How wings, spoilers and ground effect took over racing, and how the rules fought back.",true],
-  ["2","Out of thin air","The theory: Newton, Bernoulli, air properties, boundary layers and how forces arise."],
+  ["2","Out of thin air","The theory: Newton, Bernoulli, air properties, boundary layers and how forces arise.",true],
   ["3","Computational Fluid Dynamics","How CFD simulates airflow and why it shows things a wind tunnel can't."],
   ["4","Airdams, splitters and spoilers","Front-end devices and rear spoilers on closed-wheel cars."],
   ["5","Wings","Aerofoil profiles, angle of attack, multi-element wings and end plates."],
@@ -515,7 +1024,7 @@ CH.forEach(([n,t,d,live])=>{
   grid.insertAdjacentHTML("beforeend",`<a class="chcard" href="#ch${n}"><span class="n">CH ${n.padStart(2,"0")} <span class="pill ${live?"live":""}">${live?"Read":"Up next"}</span></span><h3>${t}</h3><p>${d}</p></a>`);
 });
 rail.insertAdjacentHTML("beforeend",`<li style="margin-top:10px"><a href="#glossary" data-v="glossary"><span class="n">A–Z</span><span>Glossary</span><span></span></a></li>`);
-grid.children[1].querySelector(".pill").textContent="Next";
+const NEXT=CH.findIndex(c=>!c[3]);if(NEXT>=0)grid.children[NEXT].querySelector(".pill").textContent="Next";
 
 /* ---------- Circuit map: 10 turns = 10 chapters ---------- */
 (function(){
@@ -545,10 +1054,10 @@ grid.children[1].querySelector(".pill").textContent="Next";
   const card=document.getElementById("turnCard");
   function info(i){const c=CH[i];host.querySelectorAll(".turn").forEach(t=>t.classList.toggle("active",+t.dataset.t===i));
     card.innerHTML=`<span class="eyebrow">Turn ${i+1} · Chapter ${c[0]}</span><div class="tnum">T${i+1}</div><h3>${c[1]}</h3><p>${c[2]}</p>
-    <span class="pill ${c[3]?"live":""}" style="justify-self:start">${c[3]?"Read":i===1?"Next up":"Not read yet"}</span>
+    <span class="pill ${c[3]?"live":""}" style="justify-self:start">${c[3]?"Read":i===CH.findIndex(x=>!x[3])?"Next up":"Not read yet"}</span>
     <a class="btn" href="#ch${c[0]}">Open chapter →</a>`}
   host.querySelectorAll(".turn").forEach(t=>{const i=+t.dataset.t;t.addEventListener("mouseenter",()=>info(i));t.addEventListener("focus",()=>info(i))});
-  info(1);
+  info(Math.max(0,CH.findIndex(c=>!c[3])));
   // a car lapping the circuit
   const path=host.querySelector("#trackLine"),dot=host.querySelector("#carDot"),L=path.getTotalLength();
   const startAt=(()=>{let best=0,bd=1e9;for(let l=0;l<L;l+=4){const q=path.getPointAtLength(l),dd=(q.x-560)**2+(q.y-495)**2;if(dd<bd){bd=dd;best=l}}return best})();
@@ -759,16 +1268,451 @@ const GL=[
  ["Spoiler","A lip or blade that 'spoils' smooth flow over the body to reduce lift, at the cost of some drag.","Ch 1"],
  ["Splitter","A flat plate sticking forward under the front airdam. High pressure above it and low pressure below make front downforce.","Ch 1"],
  ["Stepped floor","F1 rule from 1995 that raised the floor over much of the underbody, cutting downforce by up to about 40%.","Ch 1"],
+ ["Bernoulli's equation","Static pressure plus dynamic pressure (½ρV²) is constant along a streamline: where flow is fastest, pressure is lowest.","Ch 2"],
+ ["Boundary layer","The thin layer of slowed air next to a surface, from zero speed at the surface to freestream at its edge.","Ch 2"],
+ ["Coanda effect","Air flowing over a curved surface tends to follow it, as when blowing over a sheet of paper lifts it.","Ch 2"],
+ ["Coefficient of friction (μ)","How grippy two surfaces are together. Friction F = μR.","Ch 2"],
+ ["Centripetal force","The force towards the centre needed to keep a body on a curved path: mV²/r.","Ch 2"],
+ ["CD and CL","Drag and lift coefficients: how much drag or lift a shape makes, independent of size and speed.","Ch 2"],
+ ["Dynamic pressure (q)","½ρV², the kinetic energy of a unit volume of moving air.","Ch 2"],
+ ["Form (pressure) drag","Drag from high pressure on forward faces and low pressure behind separated flow at the rear. The main drag on most cars.","Ch 2"],
+ ["Frontal area","The car's area seen from the front, used as the reference area A for car lift and drag. Roughly width × height × 0.87.","Ch 2"],
+ ["Incompressible flow","Treating air density as constant, which holds well at racing speeds.","Ch 2"],
+ ["Laminar flow","Smooth flow in parallel layers with little mixing.","Ch 2"],
+ ["L/D (–L/D)","Downforce divided by drag, a measure of aerodynamic efficiency.","Ch 2"],
+ ["Pressure coefficient (Cp)","Local pressure change divided by freestream dynamic pressure. Cp = 1 − (V/V∞)². +1 at stagnation, negative where air is sped up.","Ch 2"],
+ ["Pressure gradient","How pressure changes along the flow. Favourable: high to low. Unfavourable (adverse): low to high, which can cause separation.","Ch 2"],
+ ["Pressure recovery","The region where flow slows after the suction peak and pressure rises back towards ambient.","Ch 2"],
+ ["Profile drag","Form drag plus skin friction drag, usually used for wings.","Ch 2"],
+ ["Relative motion","Treating a car moving through still air as the same as air moving over a still car. Not exact near the ground.","Ch 2"],
+ ["Reynolds number (Re)","ρVL/μ, about 67,778 × V × L in metric. Equal Re means similar flow patterns, which matters for scale models.","Ch 2"],
+ ["Separation","When flow can no longer follow a surface and breaks away, leaving disturbed, often reversed flow behind.","Ch 2"],
+ ["Skin friction drag","Drag from viscous air rubbing on the surface. Small on most competition cars.","Ch 2"],
+ ["Slipstreaming","Running in the low-pressure wake of the car ahead, which cuts drag for the following car.","Ch 2"],
+ ["Stagnation point","Where the flow meets a body head-on and stops. Static pressure is at its maximum and Cp = +1.","Ch 2"],
+ ["Stall","Complete separation of flow from a wing, causing a sudden loss of lift or downforce.","Ch 2"],
+ ["Static pressure","The pressure the air exerts on a surface, its pressure energy.","Ch 2"],
+ ["Turbulent flow","Flow with erratic, crossing particle paths and strong mixing.","Ch 2"],
+ ["Venturi","A converging then diverging duct. Air speeds up and its pressure drops in the narrow throat.","Ch 2"],
+ ["Viscosity","A fluid's stickiness, which resists motion and turns flow energy into heat near surfaces.","Ch 2"],
+ ["Vortex drag","Drag from the low-pressure cores of vortices shed by anything making lift or downforce. Formerly called induced drag.","Ch 2"],
+ ["Vortex generator","A small fin that sheds a vortex to mix energy into the boundary layer and delay separation.","Ch 2"],
+ ["Wake","The disturbed, low-energy, low-pressure region behind a body where the flow has separated.","Ch 2"],
  ["Wing car","A car whose whole centre section works as an inverted wing, like the Lotus 79.","Ch 1"]
 ];
+GL.sort((a,b)=>a[0].localeCompare(b[0]));
 const gl=document.getElementById("gloss");
 function renderG(q){q=(q||"").toLowerCase();gl.innerHTML=GL.filter(g=>!q||(g[0]+g[1]).toLowerCase().includes(q)).map(g=>`<dt>${g[0]}</dt><dd>${g[1]} <span class="mono">· ${g[2]}</span></dd>`).join("")||`<dd class="muted" style="grid-column:1/-1">No term matches that search yet.</dd>`}
 document.getElementById("gsearch").addEventListener("input",e=>renderG(e.target.value));renderG();
 
+/* ---------- Chapter 2 ---------- */
+(function(){
+const K={s:"#4cc3ff",p:"#ffb547",l:"#ff5d6c",f:"#e7ebf2",g:"#5fe0a1",m:"#8d97aa",line:"#2a3343",body:"#1f2a3b",edge:"#7f8ea8"};
+const RHO=1.225,G=9.81;
+let UID=0;
+const $=id=>document.getElementById(id);
+// wrap an svg with arrow markers; inner uses url(#AH-x)
+function mk(vb,inner,label){const u="a"+(++UID);
+  const defs=Object.entries(K).filter(([k])=>k.length===1).map(([k,c])=>`<marker id="${u}-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker>`).join("");
+  return `<svg viewBox="${vb}" role="img" aria-label="${label||"Diagram"}"><defs>${defs}</defs>${inner.replace(/AH-/g,u+"-")}</svg>`}
+const vec=(x1,y1,x2,y2,c,w)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${K[c]}" stroke-width="${w||3}" marker-end="url(#AH-${c})"/>`;
+const txt=(x,y,t,cls,anchor)=>`<text x="${x}" y="${y}" class="lbl ${cls||""}" text-anchor="${anchor||"start"}">${t}</text>`;
+function smooth(P){let d=`M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`;for(let i=0;i<P.length-1;i++){const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`}return d}
+const nest=(svg,x,y,w,h)=>svg.replace("<svg ",`<svg x="${x}" y="${y}" width="${w}" height="${h}" `);
+// inverted aerofoil (camber bulges downward on screen); alpha in degrees raises the trailing edge
+function foil(x0,y0,c,alpha,n){n=n||40;const a=-alpha*Math.PI/180,m=.06,p=.4,U=[],L=[];
+  for(let i=0;i<=n;i++){const x=(1-Math.cos(Math.PI*i/n))/2;
+    const yt=.6*(.2969*Math.sqrt(x)-.126*x-.3516*x*x+.2843*x**3-.1015*x**4);
+    const yc=x<p?m/(p*p)*(2*p*x-x*x):m/((1-p)**2)*((1-2*p)+2*p*x-x*x);
+    const r=(X,Y)=>[x0+(X*Math.cos(a)-Y*Math.sin(a))*c,y0+(X*Math.sin(a)+Y*Math.cos(a))*c];
+    U.push(r(x,yc-yt));L.push(r(x,yc+yt))}
+  return {U,L,path:"M"+U.map(q=>q.map(v=>v.toFixed(1)).join(" ")).join(" L")+" L"+L.slice().reverse().map(q=>q.map(v=>v.toFixed(1)).join(" ")).join(" L")+"Z"}}
+const foilFill=(f,stroke)=>`<path d="${f.path}" fill="#2d3c54" stroke="${stroke||K.s}" stroke-width="1.6"/>`;
+
+/* section nav */
+const nav=$("secnav");
+document.querySelectorAll("#v-ch2 section[data-title]").forEach(s=>{const b=document.createElement("button");b.textContent=s.dataset.title;b.onclick=()=>s.scrollIntoView({behavior:"smooth",block:"start"});nav.appendChild(b)});
+
+/* ceiling check */
+$("ceilingArt").innerHTML=`<div style="transform:scaleY(-1)">${car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,underGlow:true,down:3,label:"F1 car driving upside down on a ceiling"})}</div>`;
+$("ceilV").textContent=Math.round(Math.sqrt(2*600*G/(RHO*2.56*1.35))*3.6)+" km/h";
+
+/* force vectors (Fig 2-1 to 2-3) */
+const FS={
+ steady:{d:60,t:60,lift:0,r:27,cap:"Figure 2-1: steady speed. Drag is matched by the tyres' tractive force, and weight is matched by the ground's reaction. Nothing changes."},
+ lessdrag:{d:34,t:34,lift:0,r:27,cap:"Figure 2-2: cut the drag and less tractive force holds the same speed. Or keep the same tractive force and the car goes faster."},
+ lift:{d:60,t:60,lift:36,r:12,cap:"Figure 2-3: aero lift carries part of the weight, so the tyres press down less, the ground pushes back less, and there is less grip available."}};
+function force(k){const f=FS[k];
+  let e=vec(300,108,300,168,"f")+txt(310,140,"Weight","")+
+   vec(140,229,140,229-f.r,"g")+vec(470,229,470,229-f.r,"g")+txt(180,224,"Ground reaction","g")+
+   vec(18,104,18+f.d,104,"p")+txt(18,94,"Drag","p")+
+   vec(470,196,470-f.t,196,"s")+txt(470-f.t-4,186,"Tractive force","s","end");
+  if(f.lift) e+=vec(300,100,300,100-f.lift,"l")+txt(310,78,"Lift","l");
+  $("forceArt").innerHTML=car({body:"modern",frontWing:true,rearWing:"big",flow:false,label:"Force vectors on a car",extra:""}).replace("</svg>",mk("0 0 600 230",e).replace(/^<svg[^>]*>/,"").replace(/<\/svg>$/,"")+"</svg>");
+  $("forceCap").textContent=f.cap}
+document.querySelectorAll("#forceSeg .chip").forEach(b=>b.onclick=()=>{document.querySelectorAll("#forceSeg .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));force(b.dataset.s)});
+force("steady");
+
+/* three factors icons */
+$("icoSize").innerHTML=mk("0 0 220 90",`<rect x="20" y="52" width="50" height="20" rx="6" fill="${K.body}" stroke="${K.edge}"/><rect x="100" y="30" width="100" height="42" rx="10" fill="${K.body}" stroke="${K.edge}"/>`+[0,1,2,3].map(i=>`<line x1="${210}" y1="${34+i*11}" x2="214" y2="${34+i*11}" stroke="${K.s}"/>`).join("")+txt(45,86,"small","","middle")+txt(150,86,"big","","middle"),"Small and big car");
+$("icoDensity").innerHTML=mk("0 0 220 90",[[30,"0.9"],[130,"1.225"]].map(([x,t],j)=>`<rect x="${x}" y="10" width="60" height="60" rx="4" fill="none" stroke="${K.edge}"/>`+Array.from({length:j?22:9},(_,i)=>`<circle cx="${x+8+((i*37)%46)}" cy="${16+((i*23)%50)}" r="2.4" fill="${K.s}"/>`).join("")+txt(x+30,86,t+" kg/m³","","middle")).join(""),"Low and high air density");
+$("icoSpeed").innerHTML=mk("0 0 220 90",`<path d="M50 78 A60 60 0 0 1 170 78" fill="none" stroke="${K.line}" stroke-width="10"/><path d="M50 78 A60 60 0 0 1 150 36" fill="none" stroke="${K.p}" stroke-width="10"/>`+vec(110,78,150,40,"f",2.5)+txt(110,64,"V²","p","middle"),"Speedometer");
+
+/* relative motion */
+function rel(k){const road=k==="road";
+  const add=(road?`<g class="drift">${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(i=>`<line x1="${i*40+20}" y1="214" x2="${i*40+40}" y2="214" stroke="${K.m}" stroke-width="2"/>`).join("")}</g>`+txt(20,30,"still air","")+txt(560,30,"car → V","p","end")
+   : txt(20,30,"air → V","s")+txt(560,30,"car held still","","end"));
+  $("relArt").innerHTML=car({body:"modern",frontWing:true,rearWing:"big",flow:!road,label:road?"Car moving through still air":"Air moving over a still car"}).replace("</svg>",add.replace(/AH-/g,"")+"</svg>");
+  $("relCap").textContent=road?"On track: the car moves, the air and the road are still.":"In a wind tunnel: the air moves past a fixed car. McBeath warns this isn't identical near the ground, because the road should move with the air too. That is why tunnels use moving belts.";}
+document.querySelectorAll("#relSeg .chip").forEach(b=>b.onclick=()=>{document.querySelectorAll("#relSeg .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));rel(b.dataset.r)});
+rel("road");
+
+/* boundary layer velocity profile */
+(function(){let s=`<rect x="40" y="210" width="360" height="14" fill="#2d3c54"/>`+txt(44,236,"Surface: air stuck, V = 0","");
+  const tips=[[60,210]];
+  for(let k=1;k<=12;k++){const h=k*14,eta=Math.min(1,h/150),u=2*eta-eta*eta,len=Math.max(4,u*230),y=210-h;tips.push([60+len,y]);s+=vec(60,y,60+len,y,eta>=1?"s":"f",2)}
+  s+=`<path d="${smooth(tips)}" fill="none" stroke="${K.p}" stroke-width="2" stroke-dasharray="5 4"/>`;
+  s+=`<path d="M345 210 L355 210 L355 60 L345 60" fill="none" stroke="${K.p}" stroke-width="1.5"/>`+txt(362,140,"δ","p")+txt(362,156,"boundary","p")+txt(362,170,"layer","p");
+  s+=txt(300,36,"Freestream V∞","s","end");
+  s+=txt(66,30,"layers slide over each other: shear","");
+  $("blProfile").innerHTML=mk("0 0 430 250",s,"Velocity gradient in the boundary layer")})();
+
+/* boundary layer over a car */
+(function(){const top=[[40,172],[70,140],[140,124],[230,100],[300,92],[360,92],[440,116],[500,128],[556,156]];
+  const t=x=>x<250?2+(x-40)*.018:5.8+(x-250)*.07;
+  const env=top.map(([x,y])=>[x,y-t(x)]);
+  const d=smooth(env)+" L"+top.slice().reverse().map(q=>q.join(" ")).join(" L")+"Z";
+  const extra=`<defs><linearGradient id="blg" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="556" y2="0"><stop offset="0" stop-color="${K.s}"/><stop offset=".38" stop-color="${K.s}"/><stop offset=".5" stop-color="${K.p}"/><stop offset="1" stop-color="${K.p}"/></linearGradient></defs>
+   <path d="${d}" fill="url(#blg)" fill-opacity=".55" stroke="url(#blg)" stroke-width="1"/>
+   <line x1="250" y1="70" x2="250" y2="96" stroke="${K.f}" stroke-dasharray="3 3"/>
+   <text x="250" y="64" class="lbl" text-anchor="middle">transition</text>
+   <text x="100" y="98" class="lbl s" text-anchor="middle">laminar · a few mm</text>
+   <text x="470" y="80" class="lbl p" text-anchor="middle">turbulent · a few cm</text>
+   <g fill="none" stroke="${K.p}" stroke-opacity=".6"><circle cx="575" cy="150" r="10"/><circle cx="586" cy="128" r="7"/><circle cx="572" cy="112" r="5"/></g>
+   <text x="590" y="182" class="lbl p" text-anchor="end">wake</text>`;
+  $("blCar").innerHTML=car({body:"sports",flow:false,label:"Boundary layer thickening along a car body"}).replace("</svg>",extra+"</svg>")})();
+
+/* candle */
+(function(){let s=`<rect x="112" y="200" width="36" height="50" rx="3" fill="#e7ebf2" fill-opacity=".85"/><line x1="130" y1="200" x2="130" y2="190" stroke="#3a3a3a" stroke-width="2"/><circle cx="130" cy="189" r="2.5" fill="${K.p}"/>`;
+  [126,130,134].forEach(x=>s+=`<line class="flow" x1="${x}" y1="186" x2="${x}" y2="110" stroke="${K.s}" stroke-width="1.6" stroke-opacity=".9"/>`);
+  const turb=[[126,-1],[130,0],[134,1],[128,-2],[132,2]];
+  turb.forEach(([x,dir],i)=>{const P=[[x,110]];let cx=x;for(let y=95;y>=10;y-=15){cx+=dir*7+Math.sin(y*.17+i*1.7)*16;P.push([cx,y])}s+=`<path class="flow" style="animation-delay:-${i*.3}s" d="${smooth(P)}" fill="none" stroke="${K.p}" stroke-width="1.5" stroke-opacity=".85"/>`});
+  s+=txt(150,155,"laminar","s")+txt(196,60,"turbulent","p")+`<line x1="60" y1="110" x2="200" y2="110" stroke="${K.m}" stroke-dasharray="3 4"/>`+txt(204,106,"transition","");
+  $("candle").innerHTML=mk("0 0 300 260",s,"Candle smoke going from laminar to turbulent")})();
+
+/* flat plate transition */
+(function(){const lam=[];for(let x=40;x<=270;x+=10)lam.push([x,150-1.1*Math.sqrt(x-40)]);
+  const tur=[[270,lam[lam.length-1][1]],[300,129],[340,121],[400,112],[460,104],[520,96],[580,89]];
+  const edge=lam.concat(tur.slice(1));
+  let s=`<rect x="40" y="150" width="540" height="10" fill="#2d3c54"/>`+
+   `<path d="${smooth(edge)} L580 150 L40 150Z" fill="url(#plg)" fill-opacity=".5"/>`+
+   `<path d="${smooth(edge)}" fill="none" stroke="${K.f}" stroke-width="1.4"/>`+
+   `<rect x="262" y="118" width="46" height="32" fill="none" stroke="${K.m}" stroke-dasharray="3 3"/>`+txt(285,112,"transition","","middle")+
+   txt(130,128,"laminar","s","middle")+txt(470,84,"turbulent: thicker, grows faster","p","middle")+
+   vec(10,60,60,60,"m",2)+txt(10,50,"flow","")+txt(40,180,"smooth flat plate","");
+  // mini profiles
+  for(let k=1;k<=4;k++){const y=150-k*3.3;s+=`<line x1="150" y1="${y}" x2="${150+[6,10,13,14][k-1]}" y2="${y}" stroke="${K.s}" stroke-width="1"/>`}
+  for(let k=1;k<=6;k++){const y=150-k*7;s+=`<line x1="480" y1="${y}" x2="${480+[12,15,17,18,19,19][k-1]}" y2="${y}" stroke="${K.p}" stroke-width="1"/>`}
+  s=`<defs><linearGradient id="plg" gradientUnits="userSpaceOnUse" x1="40" x2="580" y1="0" y2="0"><stop offset="0" stop-color="${K.s}"/><stop offset=".42" stop-color="${K.s}"/><stop offset=".5" stop-color="${K.p}"/><stop offset="1" stop-color="${K.p}"/></linearGradient></defs>`+s;
+  $("plate").innerHTML=mk("0 0 600 200",s,"Boundary layer transition on a flat plate")})();
+
+/* history */
+$("history").innerHTML=[
+ ["384–322 BC","Aristotle","Thought a vacuum formed ahead of a moving body and kept it going. Never explained how it stopped.",0],
+ ["1726","Newton","Air obeys the same laws as solids. Modelled forces as particles bouncing off a plate: part right, but badly underestimated lift.",0],
+ ["1738","Bernoulli","Hydrodynamica links pressure and velocity through conservation of energy.",1],
+ ["~150 years after Newton","Rayleigh","Likened lift to a plate planing on water. Still far from experiments.",0],
+ ["1903","Wright brothers","Flew 852 ft before theory could explain why. Practice can run ahead of theory.",0],
+ ["Early 1900s","Joukowski and Lanchester","Got the flow patterns right: the plate's influence spreads far into the air through viscosity. Theory finally matched tests.",1]
+].map(([y,n,t,w])=>`<article class="${w?"win":""}"><span class="hy">${y}</span><h3>${n}</h3><p>${t}</p></article>`).join("");
+
+/* Bernoulli wing with hotspots */
+(function(){const f=foil(110,110,380,4);
+  let s="";
+  // streamlines
+  [-70,-42].forEach((o,i)=>{const P=[[0,110+o]].concat(f.U.filter((_,j)=>j%4===0).map(([x,y])=>[x,y+o*(.55+i*.15)])).concat([[600,96+o]]);s+=`<path class="flow" d="${smooth(P)}" fill="none" stroke="#9fb3cc" stroke-opacity=".45" stroke-width="1.4"/>`});
+  [16,40,70].forEach((o,i)=>{const P=[[0,112+o*.6]].concat(f.L.filter((_,j)=>j%4===0).map(([x,y])=>[x,y+o])).concat([[600,96+o*.8]]);s+=`<path class="flow" style="animation-duration:${.9+i*.2}s" d="${smooth(P)}" fill="none" stroke="${K.s}" stroke-opacity="${.85-i*.2}" stroke-width="1.6"/>`});
+  s+=`<path d="M0 113 L${f.U[0][0]-2} ${f.U[0][1]+2}" stroke="${K.p}" stroke-width="1.6"/>`;
+  s+=foilFill(f);
+  const pk=f.L[9],up=f.U[20],te=f.L[34];
+  const H=[["stag",f.U[0][0]-14,f.U[0][1]+4,"1"],["low",pk[0],pk[1]+30,"2"],["up",up[0],up[1]-26,"3"],["te",te[0]+6,te[1]+30,"4"]];
+  H.forEach(([k,x,y,n])=>s+=`<g class="hot" tabindex="0" data-k="${k}" role="button" aria-label="Point ${n}"><circle class="ring" cx="${x}" cy="${y}" r="14"/><text x="${x}" y="${y+6}" text-anchor="middle">${n}</text></g>`);
+  s+=vec(300,190,300,226,"s",3)+txt(310,218,"downforce","s");
+  $("wingArt").innerHTML=mk("0 0 600 240",s,"Inverted wing with streamlines and four points to explore");
+  const INFO={
+   stag:["1 · Stagnation point","The streamline that hits the leading edge comes to a halt. V = 0, so dynamic pressure is 0 and static pressure equals total pressure, the highest anywhere on the wing.","C<sub>p</sub> = 1 − (0/V∞)² = <b>+1</b>"],
+   low:["2 · Lower surface, suction peak","Air splitting round the leading edge accelerates to its fastest a short way back. Fastest flow means lowest static pressure. This suction is the main source of downforce.","V > V∞, so C<sub>p</sub> is <b>negative</b>, around −2 here"],
+   up:["3 · Upper surface","Air is slower over this flatter side than underneath. Lower velocity means higher static pressure, so this side presses down a little too.","V a bit below V∞, so C<sub>p</sub> is small and <b>positive</b>"],
+   te:["4 · Trailing edge, pressure recovery","After the peak, the air under the wing slows back towards freestream and its pressure climbs back to ambient. This uphill climb is where separation can start (Part 8).","C<sub>p</sub> returns towards <b>0</b>"]};
+  const info=$("wingInfo");
+  function sel(k){document.querySelectorAll("#wingArt .hot").forEach(h=>h.classList.toggle("on",h.dataset.k===k));const d=INFO[k];info.innerHTML=`<span class="eyebrow">Bernoulli at this point</span><h3>${d[0]}</h3><p>${d[1]}</p><div class="formula">${d[2]}</div>`}
+  document.querySelectorAll("#wingArt .hot").forEach(h=>{h.addEventListener("click",()=>sel(h.dataset.k));h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();sel(h.dataset.k)}})});
+  sel("stag")})();
+
+/* Cp plot */
+(function(){const X=c=>70+c*500,Y=cp=>30+(cp+3)/4*220;
+  const low=[[0,1],[.02,-1.2],[.08,-2.3],[.15,-2.4],[.3,-1.9],[.5,-1.2],[.7,-.6],[.9,-.15],[1,.1]],up=[[0,1],[.03,.55],[.1,.4],[.3,.3],[.5,.22],[.7,.17],[.9,.12],[1,.1]];
+  const pl=low.map(([c,p])=>[X(c),Y(p)]),pu=up.map(([c,p])=>[X(c),Y(p)]);
+  let s="";
+  [1,0,-1,-2,-3].forEach(v=>s+=`<line x1="70" x2="570" y1="${Y(v)}" y2="${Y(v)}" stroke="${v===0?"#5b6880":K.line}" ${v===0?"":'stroke-dasharray="2 4"'}/>`+txt(60,Y(v)+4,(v>0?"+":"")+v,"","end"));
+  [0,.5,1].forEach(c=>s+=txt(X(c),272,c===0?"leading edge":c===1?"trailing edge":"half chord","",c===0?"start":c===1?"end":"middle"));
+  s+=`<path d="${smooth(pl)} L${pu.slice().reverse().map(q=>q.join(" ")).join(" L")}Z" fill="${K.s}" fill-opacity=".12"/>`;
+  s+=`<path d="${smooth(pl)}" fill="none" stroke="${K.s}" stroke-width="2.5"/><path d="${smooth(pu)}" fill="none" stroke="${K.p}" stroke-width="2.5"/>`;
+  s+=txt(X(.2),Y(-2.4)-10,"lower (suction) surface","s")+txt(X(.55),Y(.22)+20,"upper (pressure) surface","p")+txt(X(.47),Y(-.75)+4,"pressure recovery →","")+
+   `<text transform="translate(18 140) rotate(-90)" class="lbl" text-anchor="middle">Cp  (negative up)</text>`;
+  $("cpPlot").innerHTML=mk("0 0 600 285",s,"Pressure coefficient along the chord of an inverted wing")})();
+
+/* venturi */
+function venturi(){const ratio=+$("vThroat").value/100,V1=+$("vSpeed").value;
+  const R1=78,Rt=R1*ratio,cy=110;
+  const r=x=>x<=110?R1:x<=230?R1-(R1-Rt)*(.5-.5*Math.cos(Math.PI*(x-110)/120)):x<=260?Rt:x<=470?Rt+(R1-Rt)*(.5-.5*Math.cos(Math.PI*(x-260)/210)):R1;
+  const xs=[];for(let x=10;x<=510;x+=10)xs.push(x);
+  const wall=sgn=>xs.map(x=>[x,cy+sgn*r(x)]);
+  let s=`<path d="${smooth(wall(-1))}" fill="none" stroke="${K.f}" stroke-width="3"/><path d="${smooth(wall(1))}" fill="none" stroke="${K.f}" stroke-width="3"/>`;
+  [-.66,-.33,0,.33,.66].forEach((f,i)=>s+=`<path class="flow" style="animation-delay:-${i*.25}s" d="${smooth(xs.map(x=>[x,cy+f*r(x)]))}" fill="none" stroke="${K.s}" stroke-opacity=".7" stroke-width="1.4"/>`);
+  const V2=V1/ratio,dp=.5*RHO*(V2*V2-V1*V1),cp=1-1/(ratio*ratio);
+  // manometer columns: height shows static pressure relative to station 1
+  const H1=60,H2=Math.max(4,H1-dp/40);
+  [[60,"1",H1],[245,"2",H2],[480,"3",H1]].forEach(([x,n,h])=>{s+=`<rect x="${x-6}" y="${cy-r(x)-70}" width="12" height="70" fill="none" stroke="${K.m}"/><rect x="${x-5}" y="${cy-r(x)-h*70/80}" width="10" height="${h*70/80}" fill="${n==="2"?K.s:K.p}" fill-opacity=".8"/>`+txt(x,cy+r(x)+20,n,"","middle")});
+  s+=txt(170,cy+R1+20,"converging","","middle")+txt(370,cy+R1+20,"diffuser","","middle");
+  $("venturiArt").innerHTML=mk(`0 ${cy-R1-80} 520 ${2*R1+110}`,s,"Venturi tube with pressure columns at inlet, throat and exit");
+  $("vThroatOut").textContent=Math.round(ratio*100)+"%";$("vSpeedOut").textContent=V1+" m/s";
+  $("vV2").textContent=V2.toFixed(0);$("vDp").textContent=Math.round(dp).toLocaleString();$("vCp").textContent=cp.toFixed(2);
+  $("vFormula").innerHTML=`V₂ = V₁·A₁/A₂ = ${V1} × ${(1/ratio).toFixed(2)} = <b>${V2.toFixed(1)} m/s</b><br>ΔP = ½ρ(V₂² − V₁²) = <b>${Math.round(dp).toLocaleString()} Pa</b> lower in the throat`;
+  $("vFormula").style.whiteSpace="normal"}
+["vThroat","vSpeed"].forEach(id=>$(id).addEventListener("input",venturi));venturi();
+
+/* following a curve */
+(function(){let s=`<defs><linearGradient id="cvg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${K.s}" stop-opacity=".55"/><stop offset="1" stop-color="${K.s}" stop-opacity="0"/></linearGradient></defs>`;
+  s+=`<path d="M30 70 Q210 190 390 70 L390 70 Q210 250 30 70Z" fill="url(#cvg)" opacity=".7"/>`;
+  [0,22,48,80].forEach((d,i)=>s+=`<path class="flow" style="animation-delay:-${i*.3}s" d="M0 ${74+d} Q210 ${190+d*.55} 420 ${74+d}" fill="none" stroke="${i?"#9fb3cc":K.s}" stroke-opacity="${.9-i*.18}" stroke-width="1.5"/>`);
+  s+=`<path d="M30 66 Q210 186 390 66 L390 18 L30 18Z" fill="#2d3c54" stroke="${K.s}" stroke-width="1.6"/>`;
+  s+=vec(150,182,150,152,"s",2)+vec(270,182,270,152,"s",2)+txt(210,236,"lower pressure near the surface pulls outer air round","s","middle");
+  s+=vec(210,36,210,86,"f",3)+txt(222,58,"downforce (reaction)","");
+  $("curveArt").innerHTML=mk("0 0 420 250",s,"Airflow pulled round the curved underside of a wing")})();
+$("paperArt").innerHTML=mk("0 0 200 130",`<circle cx="30" cy="40" r="20" fill="#e7ebf2" fill-opacity=".8"/><path d="M44 46 Q60 44 64 46" stroke="#0b0e13" stroke-width="3"/><path d="M58 50 Q120 46 170 30" fill="none" stroke="${K.f}" stroke-width="3"/><path d="M58 50 Q110 70 150 110" fill="none" stroke="${K.f}" stroke-opacity=".3" stroke-width="3" stroke-dasharray="4 4"/>`+vec(60,38,170,22,"s",2)+txt(140,124,"paper before","","middle")+txt(118,18,"blow","s","middle"),"Blowing over a sheet of paper lifts it");
+
+/* cars in proximity */
+(function(){const c1=car({body:"modern",frontWing:true,rearWing:"big",flow:false}),c2=car({body:"modern",frontWing:true,rearWing:"big",flow:false});
+  let s=`<ellipse cx="190" cy="120" rx="230" ry="95" fill="${K.s}" fill-opacity=".06" stroke="${K.s}" stroke-opacity=".25" stroke-dasharray="4 6"/><ellipse cx="610" cy="120" rx="230" ry="95" fill="${K.s}" fill-opacity=".06" stroke="${K.s}" stroke-opacity=".25" stroke-dasharray="4 6"/>`;
+  for(let i=0;i<7;i++){const x=380+i*20,y=90+((i*29)%60);s+=`<circle cx="${x}" cy="${y}" r="${6+(i%3)*3}" fill="none" stroke="${K.p}" stroke-opacity=".7"/>`}
+  s+=nest(c1,20,40,360,138)+nest(c2,440,40,360,138);
+  s+=txt(200,24,"leading car","","middle")+txt(620,24,"following car","","middle")+txt(430,212,"disturbed, low-energy wake","p","middle")+vec(470,198,452,184,"l",2)+txt(560,212,"front wing loses downforce","l");
+  $("proxArt").innerHTML=mk("0 0 820 220",s,"Leading car's wake reaching the following car")})();
+
+/* pressure hill */
+(function(){const P=[[30,50],[80,140],[150,182],[200,186],[260,170],[330,120],[395,80]];
+  let s=`<path d="${smooth(P)}" fill="none" stroke="${K.f}" stroke-width="3"/>`+
+   `<circle cx="96" cy="140" r="11" fill="${K.s}"/>`+vec(110,148,150,174,"g",2.5)+txt(118,128,"favourable: high → low","g")+
+   `<circle cx="300" cy="134" r="11" fill="${K.p}"/>`+vec(316,128,352,104,"l",2.5)+txt(200,28,"unfavourable: low → high","l")+txt(200,44,"needs kinetic energy","")+
+   txt(30,36,"leading edge (high)","")+txt(200,206,"suction peak (lowest)","","middle")+txt(395,68,"trailing edge","","end");
+  $("hillArt").innerHTML=mk("0 0 420 215",s,"Pressure gradients as a hill")})();
+
+/* separation lab */
+function sep(){const a=+$("aoa").value;$("aoaOut").textContent=a+"°";
+  const f=foil(110,110,330,a,40),n=f.L.length-1;
+  const sp=a<=9?1:Math.max(.12,1-(a-9)/11*.85),si=Math.round(sp*n);
+  const cl=a<=12?a*.25:Math.max(.6,3-(a-12)*.24);
+  let s="";
+  [40,66].forEach((y,i)=>s+=`<path class="flow" d="M0 ${y} C200 ${y-6} 360 ${y-8-a} 560 ${y-10-a*1.2}" fill="none" stroke="#9fb3cc" stroke-opacity=".4" stroke-width="1.3"/>`);
+  [14,34,58].forEach((o,i)=>{const pts=[[0,f.L[0][1]+o*.7]].concat(f.L.slice(0,si+1).filter((_,j)=>j%3===0).map(([x,y])=>[x,y+o]));const last=f.L[si];
+    pts.push([last[0]+40,last[1]+o+(si<n?12+i*6:0)]);pts.push([560,last[1]+o+(si<n?30+i*10:-4)]);
+    s+=`<path class="flow" style="animation-delay:-${i*.3}s" d="${smooth(pts)}" fill="none" stroke="${K.s}" stroke-opacity="${.85-i*.2}" stroke-width="1.5"/>`});
+  if(si<n){const seg=f.L.slice(si);const depth=Math.min(60,(n-si)*1.6);
+    const out=seg.map(([x,y],j)=>[x,y+depth*Math.sin(Math.PI*(j/(seg.length-1||1))*.5+.2)]);
+    s+=`<path d="M${seg.map(q=>q.join(" ")).join(" L")} L${out.slice().reverse().map(q=>q.join(" ")).join(" L")}Z" fill="${K.l}" fill-opacity=".18" stroke="${K.l}" stroke-opacity=".5" stroke-dasharray="3 3"/>`;
+    const m=seg[Math.floor(seg.length/2)];
+    s+=`<g class="spin"><path d="M${m[0]-12} ${m[1]+depth*.45} a12 12 0 1 1 6 10" fill="none" stroke="${K.l}" stroke-width="1.6" marker-end="url(#AH-l)"/></g>`;
+    s+=`<circle cx="${f.L[si][0]}" cy="${f.L[si][1]}" r="6" fill="${K.l}"/>`+txt(f.L[si][0],f.L[si][1]+(si>n*.6?-14:24),"separation","l","middle")}
+  s+=foilFill(f);
+  const cx=110+165*Math.cos(a*Math.PI/180),cy=110-165*Math.sin(a*Math.PI/180)+8;
+  s+=vec(cx,cy,cx,cy+18+cl*24,"s",3.5)+txt(cx+10,cy+16+cl*12,"downforce","s");
+  $("sepArt").innerHTML=mk("0 0 560 260",s,"Inverted wing at "+a+" degrees");
+  const st=$("sepState");
+  if(sp>=1){st.textContent="Attached";st.style.color=K.g}else if(sp>.35){st.textContent="Partly separated";st.style.color=K.p}else{st.textContent="Stalled";st.style.color=K.l}}
+$("aoa").addEventListener("input",sep);sep();
+
+/* SUV vs saloon wake */
+(function(){const wheels=(a,b)=>[a,b].map(x=>`<circle cx="${x}" cy="160" r="22" fill="#07090d" stroke="#3a4558" stroke-width="2"/><circle cx="${x}" cy="160" r="9" fill="#1b2230"/>`).join("");
+  let s=`<line x1="0" y1="182" x2="400" y2="182" stroke="${K.line}" stroke-width="2"/>`+
+   `<path d="M40 162 L40 112 Q46 74 104 66 L300 60 L312 64 L314 152 L300 162Z" fill="#26324a" stroke="${K.edge}" stroke-width="1.5"/><path d="M308 70 L312 70 L313 118 L309 118Z" fill="#7fb6d9" fill-opacity=".6"/>`+wheels(100,260)+
+   `<path class="flow" d="M0 50 C100 44 200 40 312 56 C350 58 380 62 400 66" fill="none" stroke="${K.s}" stroke-width="1.6"/>`+
+   `<path class="flow" d="M0 30 C150 26 300 30 400 40" fill="none" stroke="#9fb3cc" stroke-opacity=".5" stroke-width="1.4"/>`;
+  s+=`<g fill="none" stroke="${K.l}" stroke-opacity=".75" stroke-width="1.6"><path class="spin" d="M330 90 a16 16 0 1 1 -4 -10" marker-end="url(#AH-l)"/><path class="spin" style="animation-direction:reverse" d="M350 130 a14 14 0 1 0 4 -10" marker-end="url(#AH-l)"/></g>`;
+  for(let i=0;i<10;i++)s+=`<circle cx="${316+(i*13)%30}" cy="${76+(i*17)%44}" r="1.8" fill="#c7a77a"/>`;
+  s+=txt(390,198,"spray hits the rear glass","l","end")+txt(20,20,"blunt rear (SUV)","");
+  $("suvArt").innerHTML=mk("0 0 400 210",s,"SUV with recirculating wake at the rear glass");
+  let t=`<line x1="0" y1="182" x2="400" y2="182" stroke="${K.line}" stroke-width="2"/>`+
+   `<path d="M30 162 L30 124 Q36 104 86 100 L136 94 Q168 62 210 58 L248 60 Q288 80 318 98 L360 104 L364 150 L350 162Z" fill="#26324a" stroke="${K.edge}" stroke-width="1.5"/><path d="M252 64 L312 98 L300 98 L248 70Z" fill="#7fb6d9" fill-opacity=".6"/>`+wheels(90,300)+
+   `<path class="flow" d="M0 64 C80 60 160 46 210 48 C250 50 290 72 320 90 L360 96 C380 100 392 104 400 108" fill="none" stroke="${K.s}" stroke-width="1.6"/>`+
+   `<path class="flow" d="M0 30 C150 26 300 34 400 50" fill="none" stroke="#9fb3cc" stroke-opacity=".5" stroke-width="1.4"/>`+
+   `<g fill="none" stroke="${K.p}" stroke-opacity=".6"><circle cx="378" cy="128" r="9"/><circle cx="388" cy="146" r="6"/></g>`+
+   txt(390,198,"flow stays attached","g","end")+txt(20,20,"sloping rear (saloon)","");
+  $("sedanArt").innerHTML=mk("0 0 400 210",t,"Saloon with attached flow over the rear window")})();
+
+/* vortex generators */
+(function(){const surf=(y0)=>`M10 ${y0} L180 ${y0} C260 ${y0} 330 ${y0+18} 450 ${y0+34}`;
+  let s=`<path d="${surf(70)} L450 120 L10 120Z" fill="#2d3c54" stroke="${K.edge}"/>`+
+   `<path class="flow" d="M10 56 L200 56 C240 56 250 50 300 46 L450 40" fill="none" stroke="${K.s}" stroke-width="1.5"/>`+
+   `<path d="M230 72 C270 64 320 66 360 82 C330 92 280 90 240 76Z" fill="${K.l}" fill-opacity=".2" stroke="${K.l}" stroke-dasharray="3 3"/>`+
+   `<circle cx="226" cy="71" r="5" fill="${K.l}"/>`+txt(300,34,"without: separates early","l","middle");
+  s+=`<path d="${surf(200)} L450 252 L10 252Z" fill="#2d3c54" stroke="${K.edge}"/>`+
+   `<path d="M150 200 L160 180 L166 200Z" fill="${K.p}"/><path d="M175 200 L185 180 L191 200Z" fill="${K.p}"/>`+
+   `<path class="flow" d="M10 186 L180 186 C260 186 330 202 450 220" fill="none" stroke="${K.s}" stroke-width="1.5"/>`;
+  [215,265,315,365].forEach((x,i)=>s+=`<g class="spin" style="animation-delay:-${i*.5}s"><path d="M${x} ${196+i*5} a8 8 0 1 1 4 -7" fill="none" stroke="${K.g}" stroke-width="1.6" marker-end="url(#AH-g)"/></g>`);
+  s+=txt(170,170,"vortex generators","p","middle")+txt(450,248,"with: flow stays attached","g","end");
+  $("vgArt").innerHTML=mk("0 0 460 262",s,"Flow with and without vortex generators")})();
+
+/* Reynolds */
+(function(){const bl=(x0,y,L,dmax)=>{const P=[];for(let i=0;i<=20;i++){const x=x0+L*i/20;P.push([x,y-dmax*Math.sqrt(i/20)])}return P};
+  const a=bl(40,80,340,30),b=bl(40,172,170,30/Math.SQRT2);
+  let s=`<rect x="40" y="80" width="340" height="8" fill="#2d3c54"/><rect x="40" y="172" width="170" height="8" fill="#2d3c54"/>`+
+   `<path d="${smooth(a)} L380 80Z" fill="${K.s}" fill-opacity=".3" stroke="${K.s}"/><path d="${smooth(b)} L210 172Z" fill="${K.s}" fill-opacity=".3" stroke="${K.s}"/>`+
+   `<line x1="390" y1="50" x2="390" y2="80" stroke="${K.p}" stroke-width="2"/><line x1="220" y1="151" x2="220" y2="172" stroke="${K.p}" stroke-width="2"/>`+
+   txt(395,70,"δ at L","p")+txt(225,166,"δ at L/2","p")+txt(40,104,"full size: length L","")+txt(40,196,"half-scale model: length L/2","")+vec(10,30,50,30,"m",2)+txt(10,22,"same speed","");
+  $("reArt").innerHTML=mk("0 0 450 210",s,"Boundary layer on full-size and half-scale plates")})();
+function reCalc(){const V=+$("reV").value,sc=+$("reS").value/100,L=5;
+  const full=67778*V*L,model=67778*V*L*sc,need=V/sc;
+  const f=n=>n>=1e6?(n/1e6).toFixed(1)+"M":Math.round(n/1e3)+"k";
+  $("reVOut").textContent=V+" m/s ("+Math.round(V*3.6)+" km/h)";$("reSOut").textContent=Math.round(sc*100)+"%";
+  $("reFull").textContent=f(full);$("reModel").textContent=f(model);$("reNeed").textContent=need.toFixed(0);
+  $("reNote").textContent=sc===1?"Full size: the Reynolds numbers match already.":`To match the real car, the ${Math.round(sc*100)}% model would need ${need.toFixed(0)} m/s (${Math.round(need*3.6)} km/h), or air ${(1/sc).toFixed(1)}× denser at the same speed.`}
+["reV","reS"].forEach(id=>$(id).addEventListener("input",reCalc));reCalc();
+
+/* Cp gauge */
+function cpCalc(){const r=+$("cpR").value,cp=1-r*r;$("cpROut").textContent=r.toFixed(2);
+  $("cpFormula").innerHTML=`C<sub>p</sub> = 1 − (${r.toFixed(2)})² = <b style="color:${cp<0?K.s:K.p}">${cp.toFixed(2)}</b>`;
+  $("cpNote").textContent=r===0?"Stagnation: the air has stopped, so pressure is at its maximum.":Math.abs(r-1)<.001?"Same speed as the undisturbed air: no pressure change.":r<1?"Slower than freestream: pressure is above ambient.":"Faster than freestream: pressure is below ambient, which is suction.";
+  const Y=c=>20+(1-c)/5*220;let s="";
+  for(let c=1;c>=-4;c--)s+=`<line x1="70" x2="120" y1="${Y(c)}" y2="${Y(c)}" stroke="${c===0?"#5b6880":K.line}"/>`+txt(62,Y(c)+4,(c>0?"+":"")+c,"","end");
+  s+=`<rect x="80" y="${Math.min(Y(0),Y(cp))}" width="30" height="${Math.abs(Y(cp)-Y(0))}" fill="${cp<0?K.s:K.p}" fill-opacity=".75"/><line x1="70" x2="130" y1="${Y(cp)}" y2="${Y(cp)}" stroke="${K.f}" stroke-width="2"/>`;
+  s+=txt(150,40,"freestream V∞","")+vec(150,52,250,52,"m",3)+txt(150,100,"local V","s")+vec(150,112,150+Math.max(2,100*r),112,"s",3);
+  s+=txt(150,170,"negative = suction","s")+txt(150,190,"(plotted upwards)","");
+  $("cpGauge").innerHTML=mk("0 0 300 250",s,"Pressure coefficient gauge")}
+$("cpR").addEventListener("input",cpCalc);cpCalc();
+
+/* resultant force */
+(function(){const f=foil(80,90,300,6);let s=foilFill(f);
+  const o=[230,104];s+=vec(o[0],o[1],o[0]+110,o[1],"p",3)+txt(o[0]+112,o[1]-8,"drag","p")+vec(o[0],o[1],o[0],o[1]+110,"s",3)+txt(o[0]-8,o[1]+118,"downforce","s","end")+
+   `<path d="M${o[0]+110} ${o[1]} L${o[0]+110} ${o[1]+110} L${o[0]} ${o[1]+110}" fill="none" stroke="${K.m}" stroke-dasharray="3 4"/>`+vec(o[0],o[1],o[0]+110,o[1]+110,"f",3.5)+txt(o[0]+118,o[1]+122,"resultant","");
+  s+=vec(10,60,60,60,"m",2)+txt(10,50,"airflow","");
+  $("resArt").innerHTML=mk("0 0 460 250",s,"Drag and downforce combining into a resultant force")})();
+
+/* shapes */
+(function(){let s=`<rect x="104" y="40" width="10" height="140" fill="#2d3c54" stroke="${K.edge}"/>`;
+  [[30,-1],[70,-1],[150,1],[190,1]].forEach(([y,d])=>s+=`<path class="flow" d="M0 ${y} C60 ${y} 90 ${y+d*-30} 120 ${y+d*-34} C160 ${y+d*-30} 190 ${y} 230 ${y}" fill="none" stroke="#9fb3cc" stroke-opacity=".5"/>`);
+  for(let i=0;i<6;i++)s+=`<circle cx="${135+(i%3)*28}" cy="${80+Math.floor(i/3)*50+(i%2)*10}" r="${9+(i%2)*4}" fill="none" stroke="${K.p}" stroke-opacity=".7"/>`;
+  s+=`<path d="M260 110 C260 90 280 84 300 84 C340 84 390 100 430 110 C390 120 340 136 300 136 C280 136 260 130 260 110Z" fill="#2d3c54" stroke="${K.s}"/>`;
+  [64,92,128,156].forEach((y,i)=>s+=`<path class="flow" d="M240 ${y} C280 ${y+(y<110?-6:6)} 380 ${y+(y<110?-4:4)} 450 ${y}" fill="none" stroke="#9fb3cc" stroke-opacity=".5"/>`);
+  s+=txt(110,206,"flat plate: CD > 1.1","p","middle")+txt(345,206,"teardrop: CD ≈ 0.04","s","middle");
+  $("shapesArt").innerHTML=mk("0 0 460 220",s,"Flat plate and teardrop drag")})();
+(function(){const X=v=>40+v/1.4*520;let s="";const rows=[["teardrop",.04,.04,K.s],["land speed record",.1,.1,K.s],["road cars",.3,.4,K.f],["1996 GTR",.57,.57,K.p],["1996 F1",.85,.85,K.s],["competition cars",.4,1.4,K.p],["flat plate",1.1,1.4,K.l]];
+  const H=30+rows.length*30;
+  for(let v=0;v<=1.4001;v+=.2)s+=`<line x1="${X(v)}" x2="${X(v)}" y1="14" y2="${H-10}" stroke="${K.line}"/>`+txt(X(v),H+6,v.toFixed(1),"","middle");
+  rows.forEach(([n,a,b,c],i)=>{const y=30+i*30;s+=a===b?`<circle cx="${X(a)}" cy="${y}" r="6" fill="${c}"/>`:`<rect x="${X(a)}" y="${y-6}" width="${X(b)-X(a)}" height="12" rx="6" fill="${c}" fill-opacity=".75"/>`;
+    const right=X(b)+12<480;s+=txt(right?X(b)+12:X(a)-12,y+4,n,"",right?"start":"end")});
+  $("cdScale").innerHTML=mk(`0 0 600 ${H+14}`,s,"Drag coefficient ranges")})();
+
+/* aero calculator */
+const PRE={f1:{cd:.85,cl:-2.56,a:1.35,src:"Book: 1996 F1, frontal area 1.35 m²."},gtr:{cd:.57,cl:-.34,a:1.58,src:"Book: 1996 McLaren F1 GTR, 1.58 m²."},road:{cd:.32,cl:.33,a:2.0,src:"Estimated: typical C<sub>D</sub> 0.3 to 0.4, lift worked back from the book's +82 kg at 160 km/h, assuming 2.0 m²."},lsr:{cd:.1,cl:0,a:1.0,src:"Book: C<sub>D</sub> around 0.1. Area of 1.0 m² assumed, lift ignored."}};
+let pre="f1";
+function aero(){const p=PRE[pre],kmh=+$("aV").value,V=kmh/3.6,q=.5*RHO*V*V;
+  const D=p.cd*q*p.a,L=-p.cl*q*p.a,bhp=p.cd*p.a*V**3/1225;
+  $("aVOut").textContent=kmh+" km/h ("+V.toFixed(1)+" m/s, "+Math.round(kmh/1.609)+" mph)";
+  $("aDrag").textContent=Math.round(D/G).toLocaleString();
+  $("aDown").textContent=Math.round(Math.abs(L)/G).toLocaleString();$("aDownL").textContent=L<0?"Lift, kg":"Downforce, kg";
+  $("aLD").textContent=p.cl===0?"0":(-p.cl/p.cd).toFixed(1);$("aBhp").textContent=Math.round(bhp).toLocaleString();
+  $("aFormula").innerHTML=`q = ½ · 1.225 · ${V.toFixed(1)}² = ${Math.round(q).toLocaleString()} Pa<br>Drag = ${p.cd} · q · ${p.a} = ${Math.round(D).toLocaleString()} N<br>${L<0?"Lift":"Downforce"} = ${Math.abs(p.cl)} · q · ${p.a} = ${Math.round(Math.abs(L)).toLocaleString()} N`;
+  $("aFormula").style.whiteSpace="normal";$("aSrc").innerHTML=p.src+` C<sub>D</sub> ${p.cd}, C<sub>L</sub> ${p.cl>0?"+":""}${p.cl}.`}
+document.querySelectorAll("#aeroPreset .chip").forEach(b=>b.onclick=()=>{pre=b.dataset.p;document.querySelectorAll("#aeroPreset .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));aero()});
+$("aV").addEventListener("input",aero);aero();
+
+/* power chart */
+(function(){const X=v=>60+v/240*500,Y=b=>280-b/1000*260;let s="";
+  for(let v=0;v<=240;v+=40)s+=`<line x1="${X(v)}" x2="${X(v)}" y1="20" y2="280" stroke="${K.line}"/>`+txt(X(v),298,v,"","middle");
+  for(let b=0;b<=1000;b+=200)s+=`<line x1="60" x2="560" y1="${Y(b)}" y2="${Y(b)}" stroke="${K.line}"/>`+txt(52,Y(b)+4,b,"","end");
+  s+=txt(310,316,"speed, mph","","middle")+`<text transform="translate(16 150) rotate(-90)" class="lbl" text-anchor="middle">bhp absorbed by drag</text>`;
+  const curve=(k,c)=>{const P=[];for(let v=0;v<=240;v+=4){const b=k*v**3/146600;if(b>1000)break;P.push([X(v),Y(b)])}return `<path d="${smooth(P)}" fill="none" stroke="${c}" stroke-width="2.5"/>`};
+  s+=curve(.85*14.5,K.s)+curve(.57*17,K.p);
+  s+=`<line x1="60" x2="560" y1="${Y(612.5)}" y2="${Y(612.5)}" stroke="${K.s}" stroke-dasharray="5 4"/><line x1="60" x2="560" y1="${Y(510)}" y2="${Y(510)}" stroke="${K.p}" stroke-dasharray="5 4"/>`;
+  s+=`<circle cx="${X(194.4)}" cy="${Y(612.5)}" r="5" fill="${K.s}"/><circle cx="${X(198.2)}" cy="${Y(510)}" r="5" fill="${K.p}"/>`;
+  s+=txt(X(194.4)-8,Y(612.5)-10,"F1 194 mph","s","end")+txt(X(198.2)+8,Y(510)+18,"GTR 198 mph","p");
+  $("powerChart").innerHTML=mk("0 0 580 325",s,"Power absorbed by drag against speed")})();
+
+/* friction */
+(function(){let s=`<line x1="20" y1="90" x2="400" y2="90" stroke="${K.line}" stroke-width="3"/><line x1="20" y1="190" x2="400" y2="190" stroke="${K.line}" stroke-width="3"/>`;
+  s+=`<rect x="140" y="56" width="70" height="34" fill="#2d3c54" stroke="${K.edge}"/>`+vec(175,62,175,92,"f",2.5)+txt(182,50,"R = weight","")+vec(212,72,290,72,"m",2)+txt(296,76,"pull","")+vec(140,84,108,84,"p",3)+txt(20,76,"friction μR","p");
+  s+=`<rect x="140" y="156" width="70" height="34" fill="#2d3c54" stroke="${K.edge}"/>`+vec(165,122,165,162,"f",2.5)+vec(188,112,188,162,"s",2.5)+txt(196,124,"weight + downforce","s")+vec(212,172,330,172,"m",2)+vec(140,184,76,184,"p",3)+txt(20,166,"more friction","p");
+  $("fricArt").innerHTML=mk("0 0 420 205",s,"Friction depends on normal force")})();
+
+/* cornering */
+let cornerAnim=null;
+function corner(){const r=+$("gR").value,mu=+$("gMu").value,cla=+$("gCla").value,m=500,k=.5*RHO*cla;
+  $("gROut").textContent=r+" m";$("gMuOut").textContent=mu.toFixed(1);$("gClaOut").textContent=cla.toFixed(2)+" m²";
+  const V0=Math.sqrt(mu*G*r),V1=Math.sqrt(mu*(m*G+k*V0*V0)*r/m),den=m-mu*k*r,V2=den>0?Math.sqrt(mu*G*r*m/den):Infinity;
+  $("gV0").textContent=(V0*3.6).toFixed(1);$("gV1").textContent=(V1*3.6).toFixed(1);$("gV2").textContent=isFinite(V2)?(V2*3.6).toFixed(1):"no limit";
+  const dist=Math.PI*r/2,t0=dist/V0,t1=dist/V1,t2=isFinite(V2)?dist/V2:0;
+  $("gNote").textContent=isFinite(V2)?`Through this 90° corner (${dist.toFixed(1)} m): ${t0.toFixed(2)} s with no aero, ${t1.toFixed(2)} s after the book's one step (saving ${(t0-t1).toFixed(2)} s), ${t2.toFixed(2)} s fully converged. The car also exits ${((V2-V0)*3.6).toFixed(1)} km/h faster.`:"At this radius the downforce grows faster than the grip the car needs, so in this simple model there is no cornering limit. That is the 'drive on the ceiling' idea again; real tyres and suspension set the limit.";
+  const R=150,cx=40,cy=210;let s=`<path d="M${cx} ${cy-R} A${R} ${R} 0 0 1 ${cx+R} ${cy}" fill="none" stroke="#262e3c" stroke-width="34"/><path d="M${cx} ${cy-R} A${R} ${R} 0 0 1 ${cx+R} ${cy}" fill="none" stroke="#3a4558" stroke-dasharray="8 10"/>`+
+   `<circle id="dot0" r="7" fill="${K.p}"/><circle id="dot2" r="7" fill="${K.s}"/>`+txt(205,150,"● no aero","p")+txt(205,170,"● downforce","s")+txt(cx+R/2,cy+20,"90°, radius "+r+" m","","middle");
+  $("cornerArt").innerHTML=mk("0 0 340 240",s,"Two cars through a 90 degree corner");
+  if(cornerAnim)cancelAnimationFrame(cornerAnim);
+  const d0=$("dot0"),d2=$("dot2"),scale=3/t0,P0=t0*scale*1000,P2=(isFinite(V2)?t2:t0*.6)*scale*1000;
+  const place=(el,f,off)=>{const th=f*Math.PI/2,rr=R+off;el.setAttribute("cx",cx+rr*Math.sin(th));el.setAttribute("cy",cy-rr*Math.cos(th))};
+  place(d0,.0,-9);place(d2,.0,9);
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  let st=null;const tick=ts=>{if(st===null)st=ts;const e=ts-st,cyc=P0+600;const tt=e%cyc;place(d0,Math.min(1,tt/P0),-9);place(d2,Math.min(1,tt/P2),9);cornerAnim=requestAnimationFrame(tick)};cornerAnim=requestAnimationFrame(tick)}
+["gR","gMu","gCla"].forEach(id=>$(id).addEventListener("input",corner));corner();
+
+/* saloon vs aerofoil */
+(function(){const f=foil(40,150,440,0);const flip=f.path.replace(/(\d+\.?\d*) (\d+\.?\d*)/g,(_,x,y)=>x+" "+(300-+y).toFixed(1));
+  let s=`<path d="${flip}" fill="${K.l}" fill-opacity=".08" stroke="${K.l}" stroke-opacity=".6" stroke-dasharray="5 4"/>`;
+  s+=`<path d="M40 150 C60 128 110 118 160 112 C210 84 260 74 310 78 C360 82 410 104 470 122 L476 150 Z" fill="#2d3c54" fill-opacity=".9" stroke="${K.edge}" stroke-width="1.5"/>`;
+  [120,380].forEach(x=>s+=`<circle cx="${x}" cy="152" r="24" fill="#07090d" stroke="#3a4558" stroke-width="2"/>`);
+  s+=`<path class="flow" d="M0 100 C120 92 200 64 300 62 C380 62 440 90 520 108" fill="none" stroke="${K.s}" stroke-width="1.6"/>`;
+  s+=`<path d="M170 98 C220 70 300 62 380 82" fill="none" stroke="${K.s}" stroke-width="8" stroke-opacity=".25"/>`;
+  [220,290,360].forEach(x=>s+=vec(x,56,x,28,"l",3));
+  s+=txt(290,18,"low pressure on top → lift","l","middle")+txt(470,196,"dashed: lifting aerofoil","l","end");
+  $("saloonArt").innerHTML=mk("0 0 520 205",s,"Saloon car profile resembling a lifting aerofoil")})();
+
+/* slipstream */
+(function(){const c1=car({body:"modern",frontWing:true,rearWing:"big",flow:false}),c2=car({body:"modern",frontWing:true,rearWing:"big",flow:false,drag:1});
+  let s=`<defs><radialGradient id="wkg" cx="0" cy="50%" r="100%"><stop offset="0" stop-color="${K.s}" stop-opacity=".35"/><stop offset="1" stop-color="${K.s}" stop-opacity="0"/></radialGradient></defs>`;
+  s+=`<rect x="270" y="40" width="130" height="140" fill="url(#wkg)"/>`;
+  for(let i=0;i<4;i++){const x=290+i*16,y=70+((i*37)%90);s+=`<g class="spin" style="animation-delay:-${i*.4}s"><circle cx="${x}" cy="${y}" r="${5+(i%3)*3}" fill="none" stroke="${K.p}" stroke-opacity=".6"/></g>`}
+  for(let i=0;i<4;i++)s+=`<path d="M${284+i*16} ${170-(i%2)*18} q6 -8 12 0 q-6 6 -12 0Z" fill="#9dbb6a" fill-opacity=".8"/>`;
+  s+=nest(c1,10,40,280,108)+nest(c2,330,40,260,100);
+  s+=vec(400,30,350,30,"g",3)+txt(406,34,"pulled along, less drag","g")+txt(290,196,"low-pressure wake","s");
+  $("slipArt").innerHTML=mk("0 0 600 205",s,"Slipstreaming in a car's wake")})();
+
+/* quiz */
+const QZ2=[
+ {q:"Bernoulli in one line: where the flow is fastest, the static pressure is…",o:["Highest","Lowest","Unchanged"],a:1,w:"Static plus dynamic pressure is constant along a streamline, so faster flow means lower static pressure."},
+ {q:"What is C<sub>p</sub> at the stagnation point?",o:["0","+1","−1"],a:1,w:"V = 0 there, so Cp = 1 − 0 = +1, the highest value in incompressible flow."},
+ {q:"A car does 45 m/s and air under it reaches 90 m/s. What is C<sub>p</sub> there?",o:["−1","−3","−4"],a:1,w:"Cp = 1 − (90/45)² = 1 − 4 = −3."},
+ {q:"Which of these does NOT set the mass of air a car disturbs?",o:["Car size","Air density","Engine power","Speed"],a:2,w:"The three factors are size (and shape), air density and speed."},
+ {q:"Why would you test a half-scale model at double the airspeed?",o:["To match the Reynolds number","To save power","To stop it lifting"],a:0,w:"Re = ρVL/μ. Halve L, double V, and the flow patterns match full size again."},
+ {q:"The power needed to overcome drag rises with speed…",o:["Squared","Cubed","Linearly"],a:1,w:"Drag goes with V², and power is drag × V, so power goes with V³."},
+ {q:"Flow separation mainly happens where the pressure gradient is…",o:["Favourable","Unfavourable (adverse)","Zero"],a:1,w:"Climbing from low to high pressure needs kinetic energy. Tired boundary-layer air can't make it and lets go."},
+ {q:"What do vortex generators do?",o:["Make the boundary layer laminar","Re-energise the boundary layer to delay separation","Cut skin friction"],a:1,w:"Their swirls mix fast outer air into the slow layer near the surface, so it stays attached further back."},
+ {q:"The McLaren F1 GTR had a bigger frontal area than the F1 car but less drag. Why?",o:["Lower CD","Lower speed","Thinner air"],a:0,w:"Its CD was about 0.57 against 0.85: covered wheels and fewer downforce devices."},
+ {q:"In F = μR, how does downforce add grip?",o:["It raises μ","It adds to R without adding mass","It increases contact area"],a:1,w:"Downforce adds to the normal force R, so maximum friction rises, while the mass to be accelerated stays the same."}
+];
+const quiz=$("quiz2");let got=0,done=0;
+QZ2.forEach((z,qi)=>{const d=document.createElement("div");d.className="q";
+  d.innerHTML=`<p>${qi+1}. ${z.q}</p><div class="opts">${z.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}</div><div class="why" hidden></div>`;
+  d.querySelector(".opts").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b||d.dataset.done)return;d.dataset.done=1;done++;
+    const i=+b.dataset.i;d.querySelectorAll(".opts button").forEach((x,j)=>{if(j===z.a)x.classList.add("right");else if(j===i)x.classList.add("wrong");x.disabled=true});
+    if(i===z.a)got++;const w=d.querySelector(".why");w.hidden=false;w.textContent=(i===z.a?"Correct. ":"Not quite. ")+z.w;
+    $("score2").textContent=`Score: ${got} of ${done} answered`+(done===QZ2.length?(got===QZ2.length?" · Full marks.":" · Scroll back up to the parts you missed."):"")});
+  quiz.appendChild(d)});
+})();
+
+
 /* ---------- Router ---------- */
 function route(){
   let h=(location.hash||"#home").slice(1);
-  const views={home:"v-home",ch1:"v-ch1",glossary:"v-glossary"};
+  const views={home:"v-home",ch1:"v-ch1",ch2:"v-ch2",glossary:"v-glossary"};
   let id=views[h];
   if(!id){const m=h.match(/^ch(\d+)$/);if(m&&CH[m[1]-1]){id="v-stub";const c=CH[m[1]-1];
     document.getElementById("stubEye").textContent="Chapter "+c[0]+" · not read yet";document.getElementById("stubTitle").textContent=c[1];document.getElementById("stubText").textContent=c[2];}
