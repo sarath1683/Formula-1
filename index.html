@@ -280,6 +280,17 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
 .drift{animation:drift 3s linear infinite}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-40px)}}
 @media (prefers-reduced-motion:reduce){.spin,.drift{animation:none}}
+/* ---------- Chapter 3 ---------- */
+.zone{fill:transparent;stroke:transparent;cursor:pointer}
+.zone:hover,.zone:focus-visible,.zone.on{stroke:var(--pressure);stroke-width:2;fill:rgba(255,181,71,.06);outline:none}
+.draw{stroke-dasharray:3000;stroke-dashoffset:3000;animation:draw3 2.2s ease-out forwards}
+@keyframes draw3{to{stroke-dashoffset:0}}
+.c3drift{animation:c3drift 4s linear infinite}
+@keyframes c3drift{from{transform:translateX(0);opacity:1}to{transform:translateX(380px);opacity:0}}
+#v-ch3 .stage .yr{font-size:56px}
+#v-ch3 .stage .nav{flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.c3drift{animation:none}}
+#v-ch3 .lab .art-box{align-self:start}
 </style>
 </head>
 <body>
@@ -295,6 +306,7 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       <a href="#home">Home</a>
       <a href="#ch1">Chapter 1</a>
       <a href="#ch2">Chapter 2</a>
+      <a href="#ch3">Chapter 3</a>
       <a href="#glossary">Glossary</a>
     </nav>
   </div>
@@ -368,7 +380,7 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
         <p class="muted mono" style="font-size:12px;margin:0">Track drawn after the Red Bull Ring, Austria: 10 turns, 4.318 km. Simplified, not to scale. Each turn is a chapter; green turns are chapters you've read.</p>
       </div>
       <section class="block">
-        <span class="eyebrow">Reading progress · 2 of 10</span>
+        <span class="eyebrow">Reading progress · 3 of 10</span>
         <h2>Chapters</h2>
         <div class="chgrid" id="chgrid"></div>
       </section>
@@ -900,6 +912,448 @@ svg .ttl{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:700
       </section>
     </div>
 
+    <!-- CHAPTER 3 -->
+    <div class="view" id="v-ch3" hidden>
+      <div class="hero">
+        <span class="eyebrow">Chapter 3</span>
+        <h1>Computational Fluid Dynamics</h1>
+        <p class="lede">CFD swaps the wind tunnel for number-crunching. Draw the car on a computer, wrap the air around it in millions of tiny cells, and let a solver balance mass, momentum and energy in every one of them until the flow settles. What comes out is forces you can measure and air you can actually see.</p>
+        <div class="figure"><div id="c3Hero"></div><p class="caption">Illustration: a car sitting in its CFD mesh. Cells get smaller where the shape changes quickly and the pressure gradients are steep.</p></div>
+      </div>
+
+      <nav class="secnav" id="secnav3" aria-label="Chapter 3 sections"></nav>
+
+      <!-- 1 Unknowns -->
+      <section class="block" id="c3-unknowns" data-title="The unknowns">
+        <span class="eyebrow">Part 1 · How does CFD work?</span>
+        <h2>Six unknowns in every bit of air</h2>
+        <p>Whenever air flows round a body, every point in that flow has the same list of things we don't know yet. CFD's job is to work them out in each cell of the mesh. Tap a quantity to see what it means and whether car aerodynamics usually has to solve for it.</p>
+        <div class="two">
+          <div class="figure"><div id="c3Cell"></div><p class="caption">One cell of the mesh, with its six unknowns. x runs fore and aft, y side to side, z up and down.</p></div>
+          <div class="card" id="c3UnkCard" aria-live="polite"></div>
+        </div>
+        <p>For a racing car, density and temperature are usually treated as fixed, so in essence CFD has to find how the <b>velocity</b> changes around the body. Pressure then follows from Bernoulli. To get there it solves equations built on three principles:</p>
+        <div class="three">
+          <article><span class="lawn">M</span><h3>Conservation of mass</h3><p>What flows into a cell must flow out. This is what turns a change of body shape into a change of air speed, as in Chapter 2's Venturi.</p></article>
+          <article><span class="lawn">P</span><h3>Conservation of momentum</h3><p>Newton's second law for fluids: a force is needed to change the air's momentum, and the body feels the reaction. Part 2 has the details.</p></article>
+          <article><span class="lawn">E</span><h3>Conservation of energy</h3><p>Energy is never created or destroyed in the system, only turned into other forms such as heat and sound. It underpins the whole calculation.</p></article>
+        </div>
+      </section>
+
+      <!-- 2 Momentum -->
+      <section class="block" id="c3-momentum" data-title="Momentum">
+        <span class="eyebrow">Part 2 · The new principle</span>
+        <h2>Conservation of momentum</h2>
+        <p>Momentum is mass times velocity, <span class="mono">mV</span>. Newton's second law says the rate at which a body's momentum changes equals the force acting on it:</p>
+        <div class="eq big">F = (m₂V₂ − m₁V₁) / t</div>
+        <p>Here F is the total force, m₂V₂ − m₁V₁ is final momentum minus initial momentum, and t is time. Momentum can pass from one mass to another. When air runs into an inclined flat plate, the plate turns the air, which changes the air's velocity, so the plate feels a force. That's part of the total aerodynamic load.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3mV">Air speed <span class="mono" id="c3mVo"></span></label><input type="range" id="c3mV" min="10" max="90" value="50"></div>
+            <div><label for="c3mA">Plate angle <span class="mono" id="c3mAo"></span></label><input type="range" id="c3mA" min="0" max="30" value="12"></div>
+            <div class="readout">
+              <div><b id="c3mF">0</b><span>Total force on plate, N</span></div>
+              <div><b id="c3mD">0</b><span>Downforce part, N</span></div>
+              <div><b id="c3mR">0</b><span>Drag part, N</span></div>
+            </div>
+            <p class="beyond-note"><b>Beyond the book</b>A worked example. Air hits a plate with 0.1 m² of span-times-height catching it, so each second a mass ṁ = ρ·V·A of air arrives. If the plate turns that air through its own angle θ, the force is ṁ·V·sin θ. Real wings do better because they also turn air that never touches them.</p>
+          </div>
+          <div class="art-box" id="c3Plate"></div>
+        </div>
+      </section>
+
+      <!-- 3 First all-CFD F1 car + history stepper -->
+      <section class="block" id="c3-virgin" data-title="First all-CFD F1 car">
+        <span class="eyebrow">Part 3 · A landmark in 2010</span>
+        <h2>The first F1 car designed only in CFD</h2>
+        <div class="two">
+          <div class="figure"><div id="c3Virgin"></div><p class="caption">Illustration: a 2010 F1 car whose aerodynamics never saw a wind tunnel.</p></div>
+          <div class="card">
+            <h3>Virgin VR-01, by Wirth Research</h3>
+            <p>In 2010 the Virgin (later Marussia, now defunct) became the first F1 car whose aerodynamics were developed entirely in CFD, with no wind tunnel validation. Wirth Research had already used the same approach on the Acura prototype that did so well in the American Le Mans Series.</p>
+            <p>Three new teams arrived that year. At first the Virgin was just the quickest of them, ahead of Lotus (later Caterham) and HRT, which had both used scale wind tunnel models at least in part. On that evidence, the two approaches had equal merit.</p>
+            <p class="muted" style="font-size:14px;margin:0">By then the forces on a whole F1 car could be predicted to within a very few per cent of the real values.</p>
+          </div>
+        </div>
+        <h3>How CFD got here</h3>
+        <p class="muted">Step through the history, like the Chapter 1 timeline.</p>
+        <div class="years" id="c3HistY" role="tablist" aria-label="CFD history"></div>
+        <div class="stage" id="c3HistS" aria-live="polite"></div>
+      </section>
+
+      <!-- 4 Limits -->
+      <section class="block" id="c3-limits" data-title="What CFD finds hard">
+        <span class="eyebrow">Part 4 · Where accuracy slips</span>
+        <h2>Big separations and unsteady flow</h2>
+        <p>In theory, the conservation equations can solve any flow. In practice viscosity, boundary layer growth and separation get in the way. Ideal attached flows can be predicted very accurately, but more complex flows can't be solved exactly. The equations need simplifying assumptions and extra "models" of the viscous effects, and those can bring some error.</p>
+        <p>The worst cases are <b>large-scale separations</b> and <b>unsteady flow</b>. The wake of a rotating wheel is one of the hardest things to model: it is chaotic, it never settles, and nature refuses to be simplified. Slide from a wing to a wheel and watch the flow get harder.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Lim">Flow case</label><input type="range" id="c3Lim" min="0" max="3" step="1" value="0" aria-valuetext="Streamlined wing"></div>
+            <div class="state" id="c3LimT"></div>
+            <p style="margin:0" id="c3LimX"></p>
+            <div><label>How hard for CFD</label><div class="gauge neg"><i id="c3LimG"></i></div></div>
+          </div>
+          <div class="art-box" id="c3LimArt"></div>
+        </div>
+      </section>
+
+      <!-- 5 Choosing a method -->
+      <section class="block" id="c3-choose" data-title="Choosing a method">
+        <span class="eyebrow">Part 5 · Horses for courses</span>
+        <h2>Picking the right method</h2>
+        <p>There are several ways to reach a CFD solution. The best one depends on how complex the case is and how accurate the answer needs to be. Simple methods are quick but leave physics out. Full methods are realistic but slow. Set your case and see what fits.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label>What are you simulating?</label>
+              <div class="seg" id="c3ChCase">
+                <button class="chip" data-v="0" aria-pressed="true">A wing profile</button>
+                <button class="chip" data-v="1" aria-pressed="false">A 3D wing</button>
+                <button class="chip" data-v="2" aria-pressed="false">A whole car</button>
+                <button class="chip" data-v="3" aria-pressed="false">Wheel wakes</button>
+              </div></div>
+            <div><label>How accurate must it be?</label>
+              <div class="seg" id="c3ChAcc">
+                <button class="chip" data-v="0" aria-pressed="true">Trends only</button>
+                <button class="chip" data-v="1" aria-pressed="false">Good numbers</button>
+                <button class="chip" data-v="2" aria-pressed="false">Best possible</button>
+              </div></div>
+            <div class="card" id="c3ChOut" aria-live="polite"></div>
+          </div>
+          <div class="art-box" id="c3ChArt"></div>
+        </div>
+        <p><b>2D or 3D?</b> A quick way to speed things up is to ask whether 2D will do. A 2D mesh is a single plane, while 3D fills the whole volume with cells. 2D is great for comparing trends, such as which wing profiles look promising, before a 3D run gives reliable numbers. But real flow is never 2D: vortex drag comes from 3D flow, so a 2D run cannot calculate it.</p>
+      </section>
+
+      <!-- 6 Panel methods -->
+      <section class="block" id="c3-panel" data-title="Panel methods">
+        <span class="eyebrow">Part 6 · The simplest CFD</span>
+        <h2>Panel methods</h2>
+        <p>Panel methods ignore viscosity altogether, so skin friction and flow separation simply aren't in the answer. The body's surface is split into flat panels, and each panel gets a strength chosen so that no air flows through it. They work well for streamlined bodies with attached flow, such as wings in some conditions, and they solve very fast. Their engineering uses are limited, though.</p>
+        <div class="two">
+          <div class="figure"><div id="c3PanelArt"></div><p class="caption">An inverted wing section split into panels. Each panel carries a source and vortex strength; the flow (blue) is made to slide along the surface. Slide to change the panel count.</p></div>
+          <div class="card">
+            <label for="c3Pn" style="font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Panels <span id="c3PnO" class="mono"></span></label>
+            <input type="range" id="c3Pn" min="6" max="60" value="16" style="width:100%;accent-color:var(--suction)">
+            <p>More panels follow the curves better, especially round the leading edge, but each extra panel adds another equation. Even 200 panels solve in a blink on a laptop, which is why panel codes are still used for quick wing studies.</p>
+            <p class="beyond-note"><b>Beyond the book</b>Real panel codes go further than this sketch. Some couple the panels to a boundary layer calculation so they can estimate friction drag and the start of separation.</p>
+          </div>
+        </div>
+        <h3>Panel codes you can try</h3>
+        <div class="beyond" id="c3PanelTools"></div>
+      </section>
+
+      <!-- 7 Turbulence models -->
+      <section class="block" id="c3-turb" data-title="Turbulence models">
+        <span class="eyebrow">Part 7 · Navier-Stokes and its helpers</span>
+        <h2>Turbulence models</h2>
+        <p>Methods that include viscosity use the <b>Navier-Stokes equations</b>, which deal with fluid momentum and date from the early 1800s, together with the equations for mass and energy. CFD uses simplified forms of them. Over a whole car much of the flow is turbulent, and resolving every tiny eddy is far too costly. So the solver is bolstered by a <b>turbulence model</b> that estimates what the eddies do on average. There are many models, each more or less suited to a given job, which is why most CFD software lets you choose.</p>
+        <div class="two">
+          <div class="figure"><div id="c3Rans"></div><p class="caption">Turbulent velocity at one point flickers around a mean. RANS solves for the mean (amber); the turbulence model stands in for the flicker.</p></div>
+          <div class="card">
+            <h3>The RANS idea</h3>
+            <div class="eq">u = ū + u′</div>
+            <p>Split velocity into a steady average ū and a fluctuation u′. Average the Navier-Stokes equations and a new unknown appears: how the fluctuations carry momentum around. A turbulence model supplies it. That gives RANS, Reynolds-Averaged Navier-Stokes, the workhorse of motorsport CFD.</p>
+            <p class="muted" style="font-size:14px;margin:0">The book mentions turbulence models and RANS solvers. The split above is the standard way it's done.</p>
+          </div>
+        </div>
+        <h3>Three common models</h3>
+        <p class="muted" style="margin:0">Beyond the book. Click one to compare.</p>
+        <div class="seg" id="c3TmSeg"></div>
+        <div class="card" id="c3TmCard" aria-live="polite"></div>
+      </section>
+
+      <!-- 8 How CFD is done -->
+      <section class="block" id="c3-steps" data-title="How CFD is done">
+        <span class="eyebrow">Part 8 · Five steps</span>
+        <h2>How CFD is done, step by step</h2>
+        <p>Every CFD run goes through the same five stages. Step through them.</p>
+        <div class="years" id="c3StepY" role="tablist" aria-label="CFD steps"></div>
+        <div class="stage" id="c3StepS" aria-live="polite"></div>
+      </section>
+
+      <!-- 9 Mesh types -->
+      <section class="block" id="c3-mesh" data-title="Mesh types">
+        <span class="eyebrow">Part 9 · Cells</span>
+        <h2>Mesh types: hexahedral and tetrahedral</h2>
+        <p>The mesh is where the calculations actually happen. A denser mesh needs more time but can be more accurate, especially where pressure changes steeply round shape changes. So meshes are packed tight near crucial details and loosened elsewhere. There's a balance to strike between accuracy and solve time.</p>
+        <div class="beyond" id="c3Cells"></div>
+        <p>Pick a mesh type to see it wrapped round the same wing section.</p>
+        <div class="seg" id="c3MeshSeg">
+          <button class="chip" data-m="hex" aria-pressed="true">Structured (hex)</button>
+          <button class="chip" data-m="tet" aria-pressed="false">Unstructured (tet)</button>
+          <button class="chip" data-m="hyb" aria-pressed="false">Hybrid</button>
+        </div>
+        <div class="wingx">
+          <div class="figure"><div id="c3MeshArt"></div><p class="caption" id="c3MeshCap"></p></div>
+          <div class="card" id="c3MeshCard" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- 10 Cell alignment -->
+      <section class="block" id="c3-align" data-title="Cells and flow direction">
+        <span class="eyebrow">Part 10 · Why hex cells win</span>
+        <h2>Balancing each cell</h2>
+        <p>In every cell the solver balances the flow of <b>mass</b>, <b>momentum</b> and <b>energy</b> coming in and going out through the cell walls. That balance is most accurate when the cell walls line up with the main flow direction, and hexahedral cells can be laid out so they do. Turn the flow and see how the faces share the work.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Al">Flow angle to cell walls <span class="mono" id="c3AlO"></span></label><input type="range" id="c3Al" min="0" max="45" value="0"></div>
+            <div class="readout">
+              <div><b id="c3AlA">100%</b><span>Through the front and back faces</span></div>
+              <div><b id="c3AlB">0%</b><span>Leaking across side faces</span></div>
+              <div><b id="c3AlC">Low</b><span>Error risk</span></div>
+            </div>
+            <p style="margin:0">Aligned, the air goes in one face and out the opposite one, so the books balance cleanly. At an angle, every face carries some of the flow, and each face's value has to be estimated from its neighbours. Those small estimates are where errors creep in.</p>
+          </div>
+          <div class="art-box" id="c3AlArt"></div>
+        </div>
+      </section>
+
+      <!-- 11 Numerical diffusion -->
+      <section class="block" id="c3-diff" data-title="Numerical diffusion">
+        <span class="eyebrow">Part 11 · Errors that spread</span>
+        <h2>Numerical diffusion</h2>
+        <p>Cells that are skewed from the ideal, so their walls don't line up with the flow, cause small errors that pile up into larger losses of accuracy. That is <b>numerical diffusion</b>. It looks like the air is more viscous than it really is: sharp features get smeared out.</p>
+        <p>This is a real calculation, not a drawing. A thin streak of smoke enters from the left and is carried across a grid of square cells by the simplest "upwind" scheme. When the flow runs along the grid lines the streak stays sharp. Tilt the flow and watch it blur, even though nothing in the physics has changed.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Nd">Flow angle to the grid <span class="mono" id="c3NdO"></span></label><input type="range" id="c3Nd" min="0" max="45" value="0"></div>
+            <div><label for="c3NdR">Cells across the domain <span class="mono" id="c3NdRO"></span></label><input type="range" id="c3NdR" min="20" max="80" step="10" value="40"></div>
+            <div class="readout"><div><b id="c3NdW">0</b><span>Streak width at exit, cells</span></div><div><b id="c3NdP">100%</b><span>Peak smoke left</span></div><div><b id="c3NdI">1</b><span>Ideal width, cells</span></div></div>
+            <p class="muted" style="font-size:14px;margin:0">A finer grid smears less, which is one more reason to refine the mesh where it matters. The dashed lines show where the streak should be.</p>
+          </div>
+          <div class="art-box" id="c3NdArt"></div>
+        </div>
+      </section>
+
+      <!-- 12 Hybrid mesh -->
+      <section class="block" id="c3-hybrid" data-title="Hybrid mesh">
+        <span class="eyebrow">Part 12 · The practical compromise</span>
+        <h2>Hybrid meshes</h2>
+        <p>Cubic cells are ideal, but complex body shapes don't let you fit them everywhere. Tetrahedral cells fit complex shapes more easily and quickly but are more prone to errors. So a common choice is hexahedral cells round the critical areas, usually tetrahedral cells further out, and odd-shaped cells (prisms and pyramids) linking the two. Any mesh with more than one cell type is a <b>hybrid mesh</b>. Hover over a zone.</p>
+        <div class="figure"><div id="c3HybArt"></div><p class="caption" id="c3HybCap">Hover or tap a zone of the car's mesh.</p></div>
+        <div class="tblwrap"><table class="tbl wide">
+          <thead><tr><th>Mesh</th><th>Fits complex shapes</th><th>Time to build</th><th>Accuracy</th><th>Typical use</th></tr></thead>
+          <tbody>
+            <tr><td>All tetrahedral</td><td class="c-s">Easily</td><td class="c-s">Quick</td><td class="c-l">Ballpark</td><td>A quick first look</td></tr>
+            <tr><td>Hybrid</td><td>Well</td><td>Medium</td><td>Good</td><td>Most race-car work</td></tr>
+            <tr><td>All hexahedral (structured)</td><td class="c-l">With difficulty</td><td class="c-l">Much longer</td><td class="c-s">Best</td><td>When accuracy is everything</td></tr>
+          </tbody></table></div>
+        <p>It's all about solving in the right time, within budget, to the accuracy you need. CFD providers judge this from experience with their software and from knowing what kind of flow to expect round a given part.</p>
+      </section>
+
+      <!-- 13 Auto meshing -->
+      <section class="block" id="c3-auto" data-title="Auto-meshing">
+        <span class="eyebrow">Part 13 · Taking away the drudgery</span>
+        <h2>Auto-meshing</h2>
+        <p>Meshing has traditionally been one of the most labour-intensive parts of CFD, needing real expertise to choose the density and type of cells. <b>Auto-meshing</b> packages take away some of that drudgery and can mean less expertise is needed for a satisfactory result. Some user-friendly packages also come with templates tailored to a field, such as cars. As always, each tool has pros and cons, so pick the best one for the precision and timescale you need.</p>
+        <p class="beyond-note"><b>Beyond the book</b>Here's how a typical automatic mesher works, modelled on OpenFOAM's snappyHexMesh. Step through it.</p>
+        <div class="years" id="c3AutoY" role="tablist" aria-label="Auto-meshing steps"></div>
+        <div class="stage" id="c3AutoS" aria-live="polite"></div>
+      </section>
+
+      <!-- 14 Boundary conditions -->
+      <section class="block" id="c3-bc" data-title="Boundary conditions">
+        <span class="eyebrow">Part 14 · Telling the solver the rules</span>
+        <h2>Boundary conditions</h2>
+        <p>Once the mesh is ready, you set air density, viscosity, speed and the turbulence model. Then <b>boundary conditions</b> go on each part of the model: where the air comes in and how fast, where it leaves, and whether each part is stationary or moving. Click each numbered boundary.</p>
+        <div class="wingx">
+          <div class="figure"><div id="c3BcArt"></div><p class="caption">The computational domain around a car, seen from the side.</p></div>
+          <div class="card" id="c3BcCard" aria-live="polite"></div>
+        </div>
+        <h3>How big should the domain be?</h3>
+        <p>The pre-processor puts limits round the volume of air being simulated. It must be big enough that the air at the edges stays undisturbed by the car inside. Shrink the box and see the disturbance hit the walls.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Dom">Domain size, in car lengths <span class="mono" id="c3DomO"></span></label><input type="range" id="c3Dom" min="1.5" max="10" step="0.5" value="6"></div>
+            <div class="state" id="c3DomT"></div>
+            <p class="muted" style="font-size:14px;margin:0" id="c3DomX"></p>
+          </div>
+          <div class="art-box" id="c3DomArt"></div>
+        </div>
+      </section>
+
+      <!-- 15 Convergence -->
+      <section class="block" id="c3-conv" data-title="Convergence">
+        <span class="eyebrow">Part 15 · When is it finished?</span>
+        <h2>Solution convergence and mesh studies</h2>
+        <p>The solver works in loops, or iterations. Each pass passes information across the cells and nudges every value closer to the point where mass, momentum and energy balance in all of them. When they do, the solution has <b>converged</b>. That can take minutes for a simple case or many hours for a complex one.</p>
+        <div class="seg" id="c3CvSeg">
+          <button class="chip" data-c="wing" aria-pressed="true">Attached wing</button>
+          <button class="chip" data-c="car" aria-pressed="false">Whole car</button>
+          <button class="chip" data-c="wheel" aria-pressed="false">Rotating wheel, steady solver</button>
+        </div>
+        <div class="two">
+          <div class="figure"><div id="c3CvArt"></div><p class="caption">Residuals are the leftover imbalances in each cell. They should fall by several orders of magnitude.</p></div>
+          <div class="figure"><div id="c3CvF"></div><p class="caption">A force monitor: the downforce coefficient should settle on a steady value.</p></div>
+        </div>
+        <p class="muted" id="c3CvX" style="margin:0"></p>
+        <h3>Mesh independence study</h3>
+        <p>A converged answer on one mesh isn't the end. A good CFD engineer also checks that the answer doesn't depend on the mesh. Run the same case on coarser and finer meshes: when refining barely changes the result, the mesh is fine enough. Tap a mesh to "run" it.</p>
+        <p class="beyond-note"><b>Beyond the book</b>Mesh studies are standard practice rather than something McBeath covers. The figures below are illustrative.</p>
+        <div class="two">
+          <div class="figure"><div id="c3MiArt"></div><p class="caption">Downforce coefficient against mesh size. The curve flattens once the mesh is good enough.</p></div>
+          <div class="card" id="c3MiCard" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- 16 Oilflow -->
+      <section class="block" id="c3-oil" data-title="Oilflow and streamlines">
+        <span class="eyebrow">Part 16 · Post-processing: seeing the air</span>
+        <h2>Oilflow plots and streamlines</h2>
+        <p>Post-processing uses CFD's huge pile of data in two ways. First the numbers: lift, drag, forces on individual parts such as each wing, or the pressure drop across a radiator, compared between set-ups. Second, <b>visualisation</b>, which is without doubt one of CFD's key benefits.</p>
+        <p>On a real car, an <b>oilflow</b> test means spraying or spotting oily fluid such as dyed paraffin onto the surface, then running the car or the wind tunnel model at speed. The drops streak out and leave a record of the surface flow directions. CFD does the same with <b>surface streamlines</b>. Switch between the two on a dual-element front wing seen from above.</p>
+        <div class="seg" id="c3OilSeg">
+          <button class="chip" data-o="paint" aria-pressed="true">Real oilflow</button>
+          <button class="chip" data-o="cfd" aria-pressed="false">CFD surface streamlines</button>
+          <button class="chip" data-o="stream" aria-pressed="false">Streamlines off the surface</button>
+        </div>
+        <div class="figure"><div id="c3OilArt"></div><p class="caption" id="c3OilCap"></p></div>
+      </section>
+
+      <!-- 17 Cp plots -->
+      <section class="block" id="c3-cp" data-title="Cp plots">
+        <span class="eyebrow">Part 17 · Pressure plots</span>
+        <h2>Cp_static, ΔCp_static and Cp_total</h2>
+        <p>These plots take a slice through the air round the wing, here at the centre of its span, and colour it. They're sketches based on the book's Figures 3-5 to 3-7, not a solved flow. Lower the wing towards the ground and switch plots.</p>
+        <div class="seg" id="c3CpSeg">
+          <button class="chip" data-p="st" aria-pressed="true">Cp_static</button>
+          <button class="chip" data-p="dl" aria-pressed="false">ΔCp_static</button>
+          <button class="chip" data-p="tot" aria-pressed="false">Cp_total</button>
+        </div>
+        <div class="lab">
+          <div style="display:grid;gap:12px;align-content:start;min-width:0">
+            <div><label for="c3CpH">Ground clearance <span class="mono" id="c3CpHO"></span></label><input type="range" id="c3CpH" min="0" max="100" value="100"></div>
+            <div class="state" id="c3CpT"></div>
+            <p style="margin:0" id="c3CpX"></p>
+            <div class="eq" id="c3CpEq"></div>
+          </div>
+          <div class="art-box"><div id="c3CpArt"></div><div class="caption" id="c3CpKey"></div></div>
+        </div>
+        <h3>2D plots along the chord</h3>
+        <p>The simplest 2D analyses give simpler output: a wing profile at a range of angles, with lift coefficients and pressure coefficients plotted from the leading edge (left) to the trailing edge, as in the book's Figure 3-2. Drag the angle. In that software, negative "alfa" means nose down.</p>
+        <div class="lab">
+          <div style="display:grid;gap:12px;align-content:start;min-width:0">
+            <div><label for="c3Af">alfa <span class="mono" id="c3AfO"></span></label><input type="range" id="c3Af" min="-10" max="0" value="-5"></div>
+            <div class="readout four"><div><b id="c3AfCl">0</b><span>Theoretical C<sub>L</sub></span></div><div><b id="c3AfMin">0</b><span>Lowest C<sub>p</sub></span></div></div>
+            <p class="muted" style="font-size:14px;margin:0">Calculated live in your browser by a real panel method (Hess-Smith, 80 panels) for a cambered, 12% thick section turned upside down. Faint lines are the other angles. The wings chapter returns to these plots.</p>
+          </div>
+          <div class="art-box" id="c3AfArt"></div>
+        </div>
+      </section>
+
+      <!-- 18 Benefits -->
+      <section class="block" id="c3-benefits" data-title="Practical benefits">
+        <span class="eyebrow">Part 18 · Why teams love it</span>
+        <h2>The practical benefits of CFD</h2>
+        <div class="laws">
+          <article><span class="lawn">01</span><h3>Fast and cheap runs</h3><p>Once the CAD model exists, you can run many simulations far more quickly and cheaply than building a physical model and running it in a tunnel or on track.</p></article>
+          <article><span class="lawn">02</span><h3>Right first time</h3><p>Overall concept, shape and myriad small details can be tested before anything is made.</p></article>
+          <article><span class="lawn">03</span><h3>Revisit at leisure</h3><p>The data stays. Designers can come back again and again to analyse and visualise the flow while they optimise.</p></article>
+          <article><span class="lawn">04</span><h3>See everything</h3><p>Forces on every component plus pressures and velocities anywhere in the flow, so designers can focus on the areas that need it most.</p></article>
+        </div>
+        <div class="tblwrap"><table class="tbl wide">
+          <thead><tr><th></th><th>CFD</th><th>Wind tunnel</th></tr></thead>
+          <tbody>
+            <tr><td>What you measure</td><td>Forces on each part, and the whole flow field</td><td>Forces and moments only at the model's attachment points</td></tr>
+            <tr><td>Flow visualisation</td><td>Anywhere, any slice, any variable</td><td>Possible but much more limited</td></tr>
+            <tr><td>Needs a physical part</td><td>No, a CAD model is enough</td><td>Yes, a scale model or the real car</td></tr>
+            <tr><td>Weak spots</td><td>Turbulence and separation modelling</td><td>Scale effects, tunnel walls, moving ground</td></tr>
+          </tbody></table></div>
+        <p>Even so, in most cases wind tunnel and track validation are still done, and probably will be for some time. Physical measurements carry their own assumptions and difficulties too.</p>
+      </section>
+
+      <!-- 19 Mesh deformation -->
+      <section class="block" id="c3-deform" data-title="Mesh deformation">
+        <span class="eyebrow">Part 19 · Auto-optimisation</span>
+        <h2>Auto-optimisation and mesh deformation</h2>
+        <p><b>Auto-optimisation</b> software assesses the results of geometry changes and automatically picks the most promising trends to explore. The user sets the constraints and how far each shape may change, then clicks "run". The big step forward was <b>mesh deformation</b>: instead of re-meshing every new shape, the software bends the existing mesh along with the geometry.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Mo">Flap angle <span class="mono" id="c3MoO"></span></label><input type="range" id="c3Mo" min="0" max="30" value="10"></div>
+            <p style="margin:0">Move the flap. The mesh around it stretches and bends to follow, keeping the same cells and connections, so the solver can start again straight away.</p>
+          </div>
+          <div class="art-box" id="c3MoArt"></div>
+        </div>
+        <p>Compare the two loops step by step:</p>
+        <div class="seg" id="c3LoopSeg">
+          <button class="chip" data-l="old" aria-pressed="true">Traditional loop</button>
+          <button class="chip" data-l="new" aria-pressed="false">Mesh deformation loop</button>
+        </div>
+        <div class="years" id="c3LoopY" role="tablist" aria-label="Optimisation loop steps"></div>
+        <div class="stage" id="c3LoopS" aria-live="polite"></div>
+        <p>Could you feed in the rule book and let the optimiser find the perfect car? McBeath doubts it. What is the optimum, and wouldn't it differ at every track? There are still too many variables to remove people from the process, and art still has a part to play alongside science.</p>
+      </section>
+
+      <!-- 20 LES & DES -->
+      <section class="block" id="c3-les" data-title="LES and DES">
+        <span class="eyebrow">Part 20 · Resolving the eddies</span>
+        <h2>LES and DES</h2>
+        <p>Beyond the many turbulence models added to the basic Navier-Stokes equations, there are "hybrid techniques" like <b>Large Eddy Simulation</b> (LES) and <b>Detached Eddy Simulation</b> (DES). All of them try to model better what really happens near the surfaces. Pick a method to see which eddies it calculates directly and which it models.</p>
+        <div class="seg" id="c3LesSeg">
+          <button class="chip" data-e="rans" aria-pressed="true">RANS</button>
+          <button class="chip" data-e="les" aria-pressed="false">LES</button>
+          <button class="chip" data-e="des" aria-pressed="false">DES</button>
+          <button class="chip" data-e="dns" aria-pressed="false">DNS</button>
+        </div>
+        <div class="wingx">
+          <div class="figure"><div id="c3LesArt"></div><p class="caption">Flow past a wheel. Solid swirls are resolved by the mesh; grey haze is handled by a model.</p></div>
+          <div class="card" id="c3LesCard" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- 21 Steady vs transient -->
+      <section class="block" id="c3-time" data-title="Time-averaged and transient">
+        <span class="eyebrow">Part 21 · Steady or unsteady?</span>
+        <h2>Time-averaged and transient</h2>
+        <p>Historically CFD produced <b>time-averaged</b> results using "steady state" methods. But turbulent flow is unsteady, so <b>transient</b> methods have become more common. They try to simulate the real fluctuations in time. Steady-state users notice unsteadiness where there are large separations, such as wheels, because it gets harder to converge.</p>
+        <div class="seg" id="c3TsSeg">
+          <button class="chip" data-t="steady" aria-pressed="true">Steady (time-averaged)</button>
+          <button class="chip" data-t="trans" aria-pressed="false">Transient</button>
+        </div>
+        <div class="two">
+          <div class="figure"><div id="c3TsArt"></div><p class="caption" id="c3TsCap"></p></div>
+          <div class="figure"><div id="c3TsPlot"></div><p class="caption">Lift on the wheel over time. Steady methods give the amber line only.</p></div>
+        </div>
+        <p>So there's no single "Go" button. To get good results you need to understand the fluid dynamics to make the right set-up choices, and how the software handles those choices.</p>
+      </section>
+
+      <!-- 22 Software -->
+      <section class="block" id="c3-soft" data-title="Software">
+        <span class="eyebrow">Part 22 · Accessible software</span>
+        <h2>Available software</h2>
+        <p>CFD software used to be too costly for individuals and small teams. By 2010 that was changing. Commercial licences typically cost a few thousand per processor per year.</p>
+        <div class="beyond" id="c3Soft"></div>
+        <blockquote class="example">"My aim with Caedium is to offer 20% of the functionality of the big CFD vendors' offerings, which hopefully covers 80% of most user needs, at less than 10% of their prices." Richard Smith, Symscape, May 2010.</blockquote>
+      </section>
+
+      <!-- 23 Clusters -->
+      <section class="block" id="c3-hpc" data-title="Clusters and HPC">
+        <span class="eyebrow">Part 23 · Super-computing on the cheap</span>
+        <h2>Computer clusters</h2>
+        <p>One computer has limited processing power and memory. Connect lots of PCs together into a <b>cluster</b> and you get massive computing power at a relatively low price. TotalSim, a leading UK CFD provider, built clusters from high-end "high street" PCs; by 2015 it had several clusters with nearly 2,000 cores between them.</p>
+        <div class="lab">
+          <div style="display:grid;gap:14px;align-content:start;min-width:0">
+            <div><label for="c3Nodes">Slave nodes in the cluster <span class="mono" id="c3NodesO"></span></label><input type="range" id="c3Nodes" min="1" max="16" value="4"></div>
+            <div class="readout"><div><b id="c3HpT">0</b><span>Hours to solve</span></div><div><b id="c3HpS">0</b><span>Speed-up</span></div><div><b id="c3HpE">0</b><span>Efficiency</span></div></div>
+            <p class="beyond-note"><b>Beyond the book</b>Illustrative figures for a 20-hour single-node job. Each extra node takes a region of space, but must swap boundary data with its neighbours, so the gains taper off.</p>
+          </div>
+          <div class="art-box" id="c3HpArt"></div>
+        </div>
+        <h3>How a job runs through the cluster</h3>
+        <div class="years" id="c3JobY" role="tablist" aria-label="Cluster job steps"></div>
+        <div class="stage" id="c3JobS" aria-live="polite"></div>
+        <p class="beyond-note"><b>Beyond the book</b>In F1, CFD is now rationed. The sporting rules cap how much aero testing, in the wind tunnel and in CFD, each team may do, with a sliding scale that gives the lower-placed teams more. So efficiency per run matters as much as raw power.</p>
+      </section>
+
+      <section class="block">
+        <span class="eyebrow">Check yourself</span>
+        <h2>Ten-question pit stop</h2>
+        <div class="quiz" id="quiz3"></div>
+        <div class="score" id="score3"></div>
+      </section>
+    </div>
+
     <!-- GLOSSARY -->
     <div class="view" id="v-glossary" hidden>
       <div class="hero">
@@ -1009,7 +1463,7 @@ function car(o){
 const CH=[
   ["1","Historical background","How wings, spoilers and ground effect took over racing, and how the rules fought back.",true],
   ["2","Out of thin air","The theory: Newton, Bernoulli, air properties, boundary layers and how forces arise.",true],
-  ["3","Computational Fluid Dynamics","How CFD simulates airflow and why it shows things a wind tunnel can't."],
+  ["3","Computational Fluid Dynamics","How CFD simulates airflow and why it shows things a wind tunnel can't.",true],
   ["4","Airdams, splitters and spoilers","Front-end devices and rear spoilers on closed-wheel cars."],
   ["5","Wings","Aerofoil profiles, angle of attack, multi-element wings and end plates."],
   ["6","Underbody aerodynamics","Flat floors, diffusers and the ground effect under the car."],
@@ -1298,6 +1752,38 @@ const GL=[
  ["Vortex drag","Drag from the low-pressure cores of vortices shed by anything making lift or downforce. Formerly called induced drag.","Ch 2"],
  ["Vortex generator","A small fin that sheds a vortex to mix energy into the boundary layer and delay separation.","Ch 2"],
  ["Wake","The disturbed, low-energy, low-pressure region behind a body where the flow has separated.","Ch 2"],
+ ["Navier-Stokes equations","The equations for fluid momentum including viscosity, from the early 1800s. CFD solves simplified forms of them alongside mass and energy conservation.","Ch 3"],
+ ["Conservation of momentum","Newton's second law for fluids: force equals the rate of change of momentum, F = (m₂V₂ − m₁V₁)/t.","Ch 3"],
+ ["Panel method","The simplest CFD. The surface is split into panels and viscosity is ignored, so it is fast but only suits attached flow.","Ch 3"],
+ ["Turbulence model","Extra equations that estimate the average effect of turbulent eddies, so the solver doesn't have to resolve them all.","Ch 3"],
+ ["RANS","Reynolds-Averaged Navier-Stokes: solving for the time-averaged flow, with a turbulence model for the fluctuations. The motorsport workhorse.","Ch 3"],
+ ["Mesh","The grid of cells filling the space round a model, in which the CFD calculations are done.","Ch 3"],
+ ["Hexahedral cell","A six-sided, cube-like cell. The most accurate, because its walls can line up with the flow.","Ch 3"],
+ ["Tetrahedral cell","A cell with four triangular faces. Fits complex shapes easily but is more prone to numerical errors.","Ch 3"],
+ ["Structured mesh","A mesh made entirely of hexahedral cells in an orderly arrangement.","Ch 3"],
+ ["Unstructured mesh","A mesh of tetrahedral cells in no regular pattern. Quick to fit round complex shapes.","Ch 3"],
+ ["Hybrid mesh","A mesh with more than one cell type, typically hexahedra near critical areas, tetrahedra elsewhere, and odd-shaped cells joining them.","Ch 3"],
+ ["Numerical diffusion","Errors from cells skewed to the flow that build up and smear the solution, as if the air were more viscous.","Ch 3"],
+ ["Auto-meshing","Software that builds the mesh automatically, cutting the drudgery and the expertise needed.","Ch 3"],
+ ["Domain","The volume of air around the model that is simulated. It must be big enough for the air at its edges to stay undisturbed.","Ch 3"],
+ ["Boundary conditions","The rules set on each boundary of the model: inlets and air speed, outlets, and whether walls are stationary or moving.","Ch 3"],
+ ["Convergence","When the iterating solver has balanced mass, momentum and energy in every cell, and the results stop changing.","Ch 3"],
+ ["Residual","The leftover imbalance in the equations after an iteration. It falls as the solution converges.","Ch 3"],
+ ["Mesh independence","When refining the mesh no longer changes the answer noticeably, so the mesh is fine enough.","Ch 3"],
+ ["Post-processing","Analysing CFD results: forces, plus visualisation of pressures, velocities and streamlines.","Ch 3"],
+ ["Oilflow plot","Surface flow directions shown by streaks of oily fluid on a real car, or by surface streamlines in CFD.","Ch 3"],
+ ["Iso-surface","A 3D surface joining all points with the same value of something, such as pressure or velocity.","Ch 3"],
+ ["Cp_static plot","A colour plot of static pressure coefficient, on a surface or in a slice through the flow.","Ch 3"],
+ ["Delta_Cp_Static (ΔCp)","A plot of how static pressure changes between two configurations.","Ch 3"],
+ ["Cp_total plot","A plot of total pressure (static plus dynamic). It shows where the air has lost energy, in boundary layers and wakes.","Ch 3"],
+ ["Auto-optimisation","CFD software that tries geometry changes within set limits and automatically follows the most promising trends.","Ch 3"],
+ ["Mesh deformation","Bending the existing mesh to fit a changed shape instead of re-meshing it, which speeds up optimisation.","Ch 3"],
+ ["LES","Large Eddy Simulation: big eddies are calculated directly in time, small ones are modelled.","Ch 3"],
+ ["DES","Detached Eddy Simulation: a hybrid with RANS near walls and LES in separated regions such as wakes.","Ch 3"],
+ ["Steady state","CFD that produces a single time-averaged result.","Ch 3"],
+ ["Transient","CFD that steps through time to capture unsteady fluctuations in the flow.","Ch 3"],
+ ["OpenFOAM","Free, open source CFD software released in 2004/5 and used up to F1 level.","Ch 3"],
+ ["Cluster","Many computers linked to work on one CFD job, each solving a region of space and sharing results.","Ch 3"],
  ["Wing car","A car whose whole centre section works as an inverted wing, like the Lotus 79.","Ch 1"]
 ];
 GL.sort((a,b)=>a[0].localeCompare(b[0]));
@@ -1709,10 +2195,641 @@ QZ2.forEach((z,qi)=>{const d=document.createElement("div");d.className="q";
 })();
 
 
+/* ---------- Chapter 3 (built on first visit) ---------- */
+let ch3Done=false;
+function initCh3(){if(ch3Done)return;ch3Done=true;
+const K={s:"#4cc3ff",p:"#ffb547",l:"#ff5d6c",f:"#e7ebf2",g:"#5fe0a1",m:"#8d97aa",line:"#2a3343",body:"#1f2a3b",edge:"#7f8ea8"};
+let UID=0;
+const $=id=>document.getElementById(id);
+const PI=Math.PI,R=Math.round;
+function mk(vb,inner,label){const u="c"+(++UID);
+  const defs=Object.entries(K).filter(([k])=>k.length===1).map(([k,c])=>`<marker id="${u}-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker>`).join("");
+  return `<svg viewBox="${vb}" role="img" aria-label="${label||"Diagram"}"><defs>${defs}</defs>${inner.replace(/AH-/g,u+"-")}</svg>`}
+const vec=(x1,y1,x2,y2,c,w)=>`<line x1="${x1.toFixed?x1.toFixed(1):x1}" y1="${y1.toFixed?y1.toFixed(1):y1}" x2="${x2.toFixed?x2.toFixed(1):x2}" y2="${y2.toFixed?y2.toFixed(1):y2}" stroke="${K[c]}" stroke-width="${w||3}" marker-end="url(#AH-${c})"/>`;
+const txt=(x,y,t,cls,anchor)=>`<text x="${x}" y="${y}" class="lbl ${cls||""}" text-anchor="${anchor||"start"}">${t}</text>`;
+const ttl=(x,y,t,anchor)=>`<text x="${x}" y="${y}" class="ttl" text-anchor="${anchor||"start"}">${t}</text>`;
+function smooth(P){let d=`M${P[0][0].toFixed(1)} ${P[0][1].toFixed(1)}`;for(let i=0;i<P.length-1;i++){const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];d+=` C${(p1[0]+(p2[0]-p0[0])/6).toFixed(1)} ${(p1[1]+(p2[1]-p0[1])/6).toFixed(1)} ${(p2[0]-(p3[0]-p1[0])/6).toFixed(1)} ${(p2[1]-(p3[1]-p1[1])/6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`}return d}
+const nest=(svg,x,y,w,h)=>svg.replace("<svg ",`<svg x="${x}" y="${y}" width="${w}" height="${h}" `);
+const poly=(P,a)=>`<path d="M${P.map(q=>q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" L")}Z" ${a||""}/>`;
+const line=(P,a)=>`<path d="M${P.map(q=>q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" L")}" fill="none" ${a||""}/>`;
+function foil(x0,y0,c,alpha,n){n=n||40;const a=-alpha*PI/180,m=.06,p=.4,U=[],L=[];
+  for(let i=0;i<=n;i++){const x=(1-Math.cos(PI*i/n))/2;
+    const yt=.6*(.2969*Math.sqrt(x)-.126*x-.3516*x*x+.2843*x**3-.1015*x**4);
+    const yc=x<p?m/(p*p)*(2*p*x-x*x):m/((1-p)**2)*((1-2*p)+2*p*x-x*x);
+    const r=(X,Y)=>[x0+(X*Math.cos(a)-Y*Math.sin(a))*c,y0+(X*Math.sin(a)+Y*Math.cos(a))*c];
+    U.push(r(x,yc-yt));L.push(r(x,yc+yt))}
+  const loop=U.concat(L.slice(1,-1).reverse());
+  return {U,L,loop,path:"M"+loop.map(q=>q.map(v=>v.toFixed(1)).join(" ")).join(" L")+"Z"}}
+const foilFill=(f,stroke)=>`<path d="${f.path}" fill="#2d3c54" stroke="${stroke||K.s}" stroke-width="1.6"/>`;
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function inPoly(p,P){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const a=P[i],b=P[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+function segD(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;let t=l?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l:0;t=Math.max(0,Math.min(1,t));return [Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy),t]}
+function polyD(p,P){let best=1e9,bi=0,bt=0;for(let i=0;i<P.length;i++){const [d,t]=segD(p,P[i],P[(i+1)%P.length]);if(d<best){best=d;bi=i;bt=t}}return {d:best,i:bi,t:bt}}
+function delaunay(pts){const n=pts.length,P=pts.concat([[-5e3,-5e3],[5e3,-5e3],[0,5e3]]);
+  const cc=t=>{const a=P[t[0]],b=P[t[1]],c=P[t[2]];const d=2*(a[0]*(b[1]-c[1])+b[0]*(c[1]-a[1])+c[0]*(a[1]-b[1]));const A=a[0]*a[0]+a[1]*a[1],B=b[0]*b[0]+b[1]*b[1],C2=c[0]*c[0]+c[1]*c[1];const ux=(A*(b[1]-c[1])+B*(c[1]-a[1])+C2*(a[1]-b[1]))/d,uy=(A*(c[0]-b[0])+B*(a[0]-c[0])+C2*(b[0]-a[0]))/d;return [ux,uy,(a[0]-ux)**2+(a[1]-uy)**2]};
+  let T=[[n,n+1,n+2]],C=[cc(T[0])];
+  for(let i=0;i<n;i++){const p=P[i],keep=[],kc=[],edges=new Map();
+    T.forEach((t,k)=>{const c=C[k];if((p[0]-c[0])**2+(p[1]-c[1])**2<c[2]){[[t[0],t[1]],[t[1],t[2]],[t[2],t[0]]].forEach(e=>{const key=Math.min(e[0],e[1])+","+Math.max(e[0],e[1]);edges.set(key,edges.has(key)?null:e)})}else{keep.push(t);kc.push(c)}});
+    T=keep;C=kc;edges.forEach(e=>{if(e){const t=[e[0],e[1],i];T.push(t);C.push(cc(t))}})}
+  return T.filter(t=>t[0]<n&&t[1]<n&&t[2]<n)}
+function jet(t){t=Math.max(0,Math.min(1,t));const S=[[0,[30,60,200]],[.3,[40,170,255]],[.5,[60,220,150]],[.7,[240,225,70]],[.85,[255,150,50]],[1,[230,50,60]]];
+  for(let i=0;i<S.length-1;i++){if(t<=S[i+1][0]){const u=(t-S[i][0])/(S[i+1][0]-S[i][0]),a=S[i][1],b=S[i+1][1];return `rgb(${R(a[0]+(b[0]-a[0])*u)},${R(a[1]+(b[1]-a[1])*u)},${R(a[2]+(b[2]-a[2])*u)})`}}return "rgb(230,50,60)"}
+function seg(id,cb){const g=$(id);g.addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));cb(b)});}
+const fmt=(v,d)=>v.toLocaleString("en-GB",{minimumFractionDigits:d||0,maximumFractionDigits:d||0});
+
+/* generic step-through, same look as the Chapter 1 timeline */
+function stepper(yId,sId,list){const Y=$(yId),S=$(sId);let L=list,cur=0;
+  function show(i){cur=i;const e=L[i];
+    Y.querySelectorAll("button").forEach(b=>b.setAttribute("aria-selected",String(+b.dataset.i===i)));
+    const sel=Y.querySelector(`[data-i="${i}"]`);if(sel&&Y.scrollWidth>Y.clientWidth)Y.scrollTo({left:sel.offsetLeft-Y.clientWidth/2+sel.clientWidth/2,behavior:"smooth"});
+    S.innerHTML=`<div class="art">${typeof e.art==="function"?e.art():e.art}${e.cap?`<div class="caption">${e.cap}</div>`:""}</div>
+     <div style="display:grid;gap:12px;align-content:start;min-width:0">
+       <div><div class="yr">${e.n}</div>${e.tag?`<div class="tag"><span class="pill">${e.tag}</span></div>`:""}</div>
+       <h3>${e.t}</h3>${e.x.split("\n").map(p=>`<p style="margin:0">${p}</p>`).join("")}${e.k?`<div class="take">${e.k}</div>`:""}
+       <div class="nav"><button class="btn" data-d="-1">← Back</button><button class="btn" data-d="1">Next →</button><span class="mono muted" style="align-self:center;font-size:12px">${i+1} / ${L.length}</span></div>
+     </div>`;
+    const [pb,nb]=S.querySelectorAll(".nav .btn");pb.disabled=i<=0;nb.disabled=i>=L.length-1;
+    pb.onclick=()=>{if(i>0)show(i-1)};nb.onclick=()=>{if(i<L.length-1)show(i+1)}}
+  function set(l){L=l;Y.innerHTML=L.map((e,i)=>`<button role="tab" data-i="${i}" aria-selected="false">${e.y}</button>`).join("");show(0)}
+  Y.addEventListener("click",ev=>{const b=ev.target.closest("button");if(b)show(+b.dataset.i)});
+  set(list);return {set,show}}
+
+/* section nav */
+const nav=$("secnav3");
+document.querySelectorAll("#v-ch3 section[data-title]").forEach(s=>{const b=document.createElement("button");b.textContent=s.dataset.title;b.onclick=()=>s.scrollIntoView({behavior:"smooth",block:"start"});nav.appendChild(b)});
+
+/* ===== mesh around a car (quadtree refinement) ===== */
+function meshCar(maxD,o){o=o||{};const W=600,H=230;let s="";
+  const det=[[70,118,470,82,maxD-1],[30,160,110,40,maxD],[470,70,110,70,maxD],[150,180,380,22,maxD],[0,196,600,14,maxD-1]];
+  const need=(x,y,w,h)=>det.reduce((m,d)=>(x<d[0]+d[2]&&x+w>d[0]&&y<d[1]+d[3]&&y+h>d[1])?Math.max(m,d[4]):m,0);
+  const out=[];
+  for(let i=0;i<8;i++)for(let j=0;j<3;j++){(function q(x,y,w,h,d){if(d<need(x,y,w,h)&&d<maxD){const a=w/2,b=h/2;q(x,y,a,b,d+1);q(x+a,y,a,b,d+1);q(x,y+b,a,b,d+1);q(x+a,y+b,a,b,d+1)}else out.push([x,y,w,h,d])})(i*75,j*H/3,75,H/3,0)}
+  s+=`<g fill="none" stroke="${K.s}" stroke-width=".6">`+out.map(c=>`<rect x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" width="${c[2].toFixed(1)}" height="${c[3].toFixed(1)}" stroke-opacity="${(.18+c[4]*.07).toFixed(2)}"/>`).join("")+`</g>`;
+  s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:false,label:"car"}),0,0,600,230);
+  return {svg:`<svg viewBox="0 0 600 230" role="img" aria-label="${o.label||"Car inside a refined CFD mesh"}">${s}</svg>`,n:out.length}}
+$("c3Hero").innerHTML=meshCar(5,{label:"F1 car inside a CFD mesh that is finer near the car"}).svg;
+
+/* ===== 1 unknowns ===== */
+(function(){const U=[
+  {k:"Vx",c:"s",t:"Velocity, x",x:"Fore and aft speed of the air. Always solved for.",solve:true},
+  {k:"Vy",c:"s",t:"Velocity, y",x:"Side-to-side speed. Matters in yaw, round the wheels and at wing tips. Always solved for.",solve:true},
+  {k:"Vz",c:"s",t:"Velocity, z",x:"Up and down speed. This is what an inverted wing or a diffuser changes. Always solved for.",solve:true},
+  {k:"p",c:"p",t:"Pressure",x:"Follows from the velocity changes through Bernoulli's equation. The pressures on the surfaces add up to the aerodynamic forces.",solve:true},
+  {k:"ρ",c:"m",t:"Density",x:"Usually treated as constant for racing cars, because they are well below the speed where air compresses noticeably. It can matter in some cases.",solve:false},
+  {k:"T",c:"m",t:"Temperature",x:"Also usually treated as constant for external aero. It does matter for cooling flows, radiators and brakes.",solve:false}];
+  const pos=[[330,150],[180,215],[300,40],[232,168],[282,124],[182,124]];
+  function draw(sel){const P=(x,y,z)=>[230+(x-y)*.87*90,130+(x+y)*.5*90-z*90];const cub=[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]].map(v=>P(v[0]-.5,v[1]-.5,v[2]-.5));
+    let s="";[[4,5,6,7],[1,2,6,5],[2,3,7,6]].forEach(f=>s+=poly(f.map(i=>cub[i]),`fill="${K.s}" fill-opacity=".07" stroke="${K.edge}" stroke-width="1.4"`));
+    s+=`<g stroke="${K.edge}" stroke-dasharray="3 4" stroke-width="1" fill="none">`+[[0,1],[0,3],[0,4]].map(e=>line([cub[e[0]],cub[e[1]]])).join("")+`</g>`;
+    const ax=[[P(.5,0,0),P(1.25,0,0)],[P(0,.5,0),P(0,1.3,0)],[P(0,0,.5),P(0,0,1.1)]];
+    s+=vec(ax[0][0][0],ax[0][0][1],ax[0][1][0],ax[0][1][1],"s",3)+vec(ax[1][0][0],ax[1][0][1],ax[1][1][0],ax[1][1][1],"s",3)+vec(ax[2][0][0],ax[2][0][1],ax[2][1][0],ax[2][1][1],"s",3);
+    U.forEach((u,i)=>{const [x,y]=i<3?ax[i][1]:pos[i];const on=sel===i;const dx=i===0?22:i===1?-24:i===2?0:0,dy=i===2?-18:0;
+      s+=`<g class="hot${on?" on":""}" tabindex="0" role="button" data-i="${i}" aria-label="${u.t}"><circle class="ring" cx="${x+dx}" cy="${y+dy}" r="17"/><text x="${x+dx}" y="${y+dy+5}" text-anchor="middle">${u.k}</text></g>`});
+    s+=txt(20,24,"tap a quantity","");
+    $("c3Cell").innerHTML=mk("0 0 460 270",s,"A mesh cell with the six flow unknowns");
+    const u=U[sel];$("c3UnkCard").innerHTML=`<span class="pill ${u.solve?"live":""}">${u.solve?"Solved by the CFD":"Usually held constant"}</span><h3>${u.t} <span class="mono" style="color:${K[u.c]}">${u.k}</span></h3><p>${u.x}</p><p class="muted" style="font-size:14px">Six unknowns per cell, and a whole-car mesh can have hundreds of millions of cells. That's why CFD needs serious computers.</p>`;
+    $("c3Cell").querySelectorAll(".hot").forEach(g=>{const go=()=>draw(+g.dataset.i);g.addEventListener("click",go);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}})})}
+  draw(0)})();
+
+/* ===== 2 momentum plate ===== */
+(function(){const iv=$("c3mV"),ia=$("c3mA");
+  function upd(){const V=+iv.value,th=+ia.value*PI/180,md=1.225*V*.1;const down=md*V*Math.sin(th),drag=md*V*(1-Math.cos(th));
+    $("c3mVo").textContent=V+" m/s ("+R(V*3.6)+" km/h)";$("c3mAo").textContent=ia.value+"°";
+    $("c3mF").textContent=fmt(Math.hypot(down,drag));$("c3mD").textContent=fmt(down);$("c3mR").textContent=fmt(drag);
+    const cx=300,cy=130,PL=250,ux=Math.cos(th),uy=-Math.sin(th);const a=[cx-PL/2*ux,cy-PL/2*uy],b=[cx+PL/2*ux,cy+PL/2*uy];
+    let s="";const nx=-Math.sin(th),ny=-Math.cos(th);
+    if(th<.02){for(let k=0;k<7;k++){const y=cy-60+k*20;if(Math.abs(y-cy)<4)continue;s+=`<path class="flow" d="M10 ${y} H590" fill="none" stroke="${K.s}" stroke-opacity=".7" stroke-width="1.6"/>`}}
+    else{for(let k=0;k<6;k++){const y0=b[1]+6+k*((a[1]-b[1]-12)/5),xh=cx+(cy-y0)/Math.tan(th),d=4+(5-k)*0+k*3.5;
+        const P=[[10,y0],[xh-50,y0],[xh+12*ux+d*nx,y0+12*uy+d*ny],[b[0]+d*nx,b[1]+d*ny],[b[0]+d*nx+ux*90,b[1]+d*ny+uy*90]];
+        s+=`<path class="flow" d="${smooth(P)}" fill="none" stroke="${K.s}" stroke-opacity=".75" stroke-width="1.6"/>`}
+      for(let k=0;k<3;k++){const y0=b[1]-16-k*20,lift=(30-k*9)*Math.sin(th)*2;s+=`<path class="flow" d="${smooth([[10,y0],[cx-40,y0],[cx+120,y0-lift*.7],[590,y0-lift]])}" fill="none" stroke="${K.s}" stroke-opacity=".4" stroke-width="1.4"/>`}
+      for(let k=0;k<2;k++){const y0=a[1]+18+k*22;s+=`<path class="flow" d="M10 ${y0.toFixed(1)} H590" fill="none" stroke="${K.s}" stroke-opacity=".3" stroke-width="1.4"/>`}}
+    s+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${K.f}" stroke-width="6" stroke-linecap="round"/>`;
+    const fd=down>.5?Math.max(10,110*Math.sqrt(down/500)):0,fr=drag>.5?Math.max(8,110*Math.sqrt(drag/500)):0;
+    if(fd)s+=vec(cx,cy+8,cx,cy+8+fd,"s",4)+txt(cx-10,cy+8+fd+4,"downforce","s","end");
+    if(fr)s+=vec(cx+6,cy+8,cx+6+fr,cy+8,"p",4)+txt(cx+fr+14,cy+13,"drag","p");
+    s+=txt(16,22,"m₁V₁: level air in","")+txt(584,22,"m₂V₂: air turned upwards","","end")+txt(300,252,th<.02?"Air not turned, so no force":"The plate pushes the air up, so the air pushes the plate down",th<.02?"":"s","middle");
+    $("c3Plate").innerHTML=mk("0 0 600 262",s,"Air deflected upward by an inclined plate pushes the plate down")}
+  iv.oninput=ia.oninput=upd;upd()})();
+
+/* ===== 3 Virgin + history ===== */
+$("c3Virgin").innerHTML=car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,down:2,label:"2010 F1 car designed only with CFD"});
+function bigYear(y,inner){return `<svg viewBox="0 0 600 260" role="img" aria-label="Illustration for ${y}"><text x="590" y="250" text-anchor="end" font-family="Saira Condensed" font-weight="800" font-size="120" fill="#ffffff" fill-opacity=".04">${y}</text>${inner}</svg>`}
+const HIST=[
+ {y:"1800s",n:"1800s",t:"The equations arrive",tag:"Foundations",x:"The Navier-Stokes equations that describe fluid momentum, including viscosity, were derived in the early 1800s. Solving them for anything as complex as a car was impossible by hand.",k:"CFD still solves simplified forms of these 200-year-old equations.",
+  art:()=>bigYear("1800s",`<text x="300" y="110" text-anchor="middle" font-family="JetBrains Mono" font-size="19" fill="${K.f}">ρ(∂u/∂t + u·∇u) = −∇p + μ∇²u</text>${txt(300,150,"momentum change = pressure push + viscous drag","s","middle")}${txt(300,176,"(plus conservation of mass and energy)","","middle")}`)},
+ {y:"1970s",n:"1970s",t:"Computers make CFD possible",tag:"Foundations",x:"CFD has only really existed since the 1970s, because that's when enough computing power became available. Large problems took days to solve.",k:"The limiting factor has always been computing power.",
+  art:()=>bigYear("1970",[0,1,2].map(i=>`<rect x="${150+i*105}" y="50" width="90" height="170" rx="4" fill="#161d29" stroke="${K.edge}"/><g class="spin" style="animation-duration:${3+i}s"><circle cx="${175+i*105}" cy="85" r="14" fill="none" stroke="${K.s}" stroke-dasharray="6 4"/></g><g class="spin" style="animation-duration:${4+i}s"><circle cx="${215+i*105}" cy="85" r="14" fill="none" stroke="${K.s}" stroke-dasharray="6 4"/></g>${[0,1,2,3].map(k=>`<rect x="${165+i*105}" y="${125+k*20}" width="60" height="8" fill="${K.line}"/>`).join("")}`).join(""))},
+ {y:"Early 90s",n:"1990s",t:"A toehold in motorsport",tag:"Motorsport",x:"CFD began to get a toehold in motorsport in the early to mid 1990s, at first alongside the wind tunnel rather than instead of it.",k:"Racing teams adopted it once it could give useful answers in a race-weekend timescale.",
+  art:()=>meshCar(3,{label:"Early coarse CFD mesh around a car"}).svg},
+ {y:"1997",n:"1997",t:"Advantage CFD",tag:"Motorsport",x:"Advantage CFD was set up in 1997 as a UK service provider, originally part of the Reynard Motorsport group. It was later absorbed into the Honda F1 team, which became Brawn GP and then Mercedes.\nIts founder, Dr Rob Lewis, went on to found TotalSim. Projects for Racecar Engineering's 'Aerobytes' series produced many of the book's illustrations.",k:"Specialist CFD providers brought the method to teams that couldn't build their own.",
+  art:()=>bigYear("1997",`<rect x="190" y="30" width="220" height="200" rx="4" fill="#161d29" stroke="${K.edge}"/>${ttl(206,62,"AEROBYTES")}${txt(206,82,"CFD study: front wing","")}<rect x="206" y="96" width="188" height="86" fill="#0c1017"/>${[0,1,2,3,4,5].map(i=>`<ellipse cx="300" cy="${150-i}" rx="${80-i*12}" ry="${26-i*4}" fill="${jet(i/5)}" fill-opacity=".8"/>`).join("")}${[0,1,2].map(i=>`<rect x="206" y="${194+i*10}" width="${188-i*40}" height="4" fill="${K.line}"/>`).join("")}`)},
+ {y:"2004",n:"2004",t:"OpenFOAM goes free",tag:"Software",x:"OpenFOAM, open source CFD software, became available free of charge in 2004 (the book also gives 2005 for its first release). Within a few years service providers, car makers and F1 teams were using it.",k:"Free to download, but training costs in year one are about the same as a commercial licence.",
+  art:()=>bigYear("2004",`<rect x="110" y="34" width="380" height="190" rx="6" fill="#0b0f15" stroke="${K.edge}"/><circle cx="128" cy="50" r="4" fill="${K.l}"/><circle cx="142" cy="50" r="4" fill="${K.p}"/><circle cx="156" cy="50" r="4" fill="${K.g}"/>${["$ blockMesh","$ snappyHexMesh -overwrite","$ simpleFoam","Time = 1500","  Ux residual 8.2e-06","  p  residual 3.1e-05","SIMPLE solution converged"].map((l,i)=>`<text x="128" y="${82+i*20}" font-family="JetBrains Mono" font-size="14" fill="${i===6?K.g:i<3?K.f:K.m}">${l}</text>`).join("")}`)},
+ {y:"2007",n:"2007",t:"A billion cells",tag:"Scale",x:"The first commercial billion-cell simulation was run in 2007, on a field of 40 NASCAR stock cars.",k:"A single whole F1 car today might use hundreds of millions of cells.",
+  art:()=>bigYear("2007",Array.from({length:40},(_,i)=>{const x=40+(i%10)*54,y=40+Math.floor(i/10)*48;return `<path d="M${x} ${y+26} h40 v-8 q-6 -10 -16 -12 h-10 q-8 0 -14 8 z" fill="#2d3c54" stroke="${K.edge}" stroke-width=".8"/><circle cx="${x+9}" cy="${y+27}" r="4" fill="#0a0c10"/><circle cx="${x+32}" cy="${y+27}" r="4" fill="#0a0c10"/>`}).join("")+txt(300,246,"40 stock cars · 1,000,000,000 cells","s","middle"))},
+ {y:"2010",n:"2010",t:"Virgin: CFD only",tag:"Motorsport",x:"Wirth Research designed the Virgin F1 car's aerodynamics entirely in CFD with no wind tunnel. It was the quickest of that year's three new teams at first. The same year, Symscape's Caedium put a friendly interface on OpenFOAM at a fraction of the usual price.",k:"Proof that CFD alone could design a competitive Grand Prix car.",
+  art:()=>car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,underGlow:true,label:"2010 Virgin F1 car designed without a wind tunnel"}),cap:"Illustration: 0 hours of wind tunnel time"},
+ {y:"2015",n:"2015",t:"Clusters of PCs",tag:"Scale",x:"TotalSim ran several clusters built from high-end 'high street' PCs, with nearly 2,000 cores between them. A queuing system fed jobs to each cluster by size and priority.",k:"Many cheap computers working together beat one expensive one.",
+  art:()=>bigYear("2015",[0,1,2,3].map(i=>`<rect x="${90+i*110}" y="30" width="90" height="200" rx="4" fill="#161d29" stroke="${K.edge}"/>`+Array.from({length:9},(_,k)=>`<rect x="${98+i*110}" y="${40+k*21}" width="74" height="15" fill="#0c1017" stroke="${K.line}"/><circle cx="${160+i*110}" cy="${47+k*21}" r="2.5" fill="${(i+k)%3?K.g:K.s}"><animate attributeName="opacity" values="1;.2;1" dur="${1+((i*9+k)%5)*.3}s" repeatCount="indefinite"/></circle>`).join("")).join(""))}
+];
+stepper("c3HistY","c3HistS",HIST);
+
+/* ===== 4 limits ===== */
+(function(){const C=[
+  {t:"Streamlined wing",x:"Attached flow everywhere. Even simple methods predict this accurately.",h:12},
+  {t:"Whole car",x:"Mostly attached flow with pockets of separation. Modern CFD gets the forces to within a very few per cent.",h:40},
+  {t:"Bluff rear end",x:"A large separated wake. The steady average is OK, but the details depend heavily on the turbulence model.",h:70},
+  {t:"Rotating wheel",x:"Rotation, contact with the ground, and a chaotic, unsteady wake. One of the hardest things to model, and steady solvers may never converge.",h:95}];
+  const el=$("c3Lim");
+  function draw(){const i=+el.value,c=C[i];el.setAttribute("aria-valuetext",c.t);$("c3LimT").textContent=c.t;$("c3LimX").textContent=c.x;$("c3LimG").style.width=c.h+"%";
+    let s="";const r=rng(7+i);
+    if(i===0){const f=foil(170,120,260,-4);for(let k=0;k<7;k++){const y=50+k*24;const bump=(y<120?-1:1)*18*Math.exp(-Math.abs(y-125)/40);s+=`<path class="flow" d="${smooth([[10,y],[150,y],[300,y+bump],[450,y+bump*.4],[590,y]])}" fill="none" stroke="${K.s}" stroke-opacity=".7" stroke-width="1.5"/>`}s+=foilFill(f)}
+    if(i===1){s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:true,label:"car"}),0,15,600,230);for(let k=0;k<5;k++)s+=`<g class="spin" style="animation-duration:${2+k*.4}s"><circle cx="${560+(k%2)*14}" cy="${100+k*16}" r="${5+k%3*2}" fill="none" stroke="${K.p}" stroke-dasharray="4 3"/></g>`}
+    if(i===2){s+=`<path d="M60 200 V110 Q60 80 100 80 H330 V200 Z" fill="#2d3c54" stroke="${K.edge}"/>`;for(let k=0;k<6;k++){const y=40+k*14;s+=`<path class="flow" d="${smooth([[10,y+40],[60,y+25],[150,y],[330,y-5],[590,y-10]])}" fill="none" stroke="${K.s}" stroke-opacity=".6" stroke-width="1.4"/>`}
+      for(let k=0;k<14;k++){const x=345+r()*230,y=85+r()*110,rr=6+r()*16;s+=`<g class="spin" style="animation-duration:${1.5+r()*2}s;animation-direction:${k%2?"reverse":"normal"}"><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(0)}" fill="none" stroke="${k%3?K.p:K.l}" stroke-opacity=".75" stroke-dasharray="${(rr*.8).toFixed(0)} 5"/></g>`}s+=txt(350,230,"large separated wake","p")}
+    if(i===3){s+=`<g class="spin" style="animation-duration:1.2s"><circle cx="170" cy="140" r="70" fill="#0a0c10" stroke="${K.edge}" stroke-width="3"/>${[0,1,2,3,4,5].map(k=>`<line x1="170" y1="140" x2="${(170+60*Math.cos(k*PI/3)).toFixed(1)}" y2="${(140+60*Math.sin(k*PI/3)).toFixed(1)}" stroke="${K.edge}" stroke-width="2"/>`).join("")}</g>`;
+      for(let k=0;k<26;k++){const x=230+r()*350,y=60+r()*150,rr=3+r()*20;s+=`<g class="spin" style="animation-duration:${.8+r()*2}s;animation-direction:${k%2?"reverse":"normal"}"><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(0)}" fill="none" stroke="${[K.p,K.l,K.s][k%3]}" stroke-opacity=".75" stroke-dasharray="${(rr*.7+2).toFixed(0)} 4"/></g>`}s+=txt(260,250,"chaotic, unsteady wheel wake","l")}
+    s+=`<line x1="0" y1="${i===0?250:211}" x2="600" y2="${i===0?250:211}" stroke="${K.line}" stroke-width="2"/>`;
+    $("c3LimArt").innerHTML=mk("0 0 600 260",s,c.t)}
+  el.oninput=draw;draw()})();
+
+/* ===== 5 choose a method ===== */
+(function(){const M=[
+  {n:"2D panel method",x:30,y:30,t:"seconds",w:"No viscosity, attached flow only. Ideal for quickly ranking wing profiles."},
+  {n:"3D panel method",x:120,y:60,t:"minutes",w:"Adds 3D effects like tip vortices and induced drag, still without viscosity."},
+  {n:"2D RANS",x:200,y:110,t:"minutes",w:"Navier-Stokes with a turbulence model on a single plane. Captures boundary layers and stall trends."},
+  {n:"3D RANS",x:340,y:170,t:"hours",w:"The motorsport workhorse: the whole car, with viscosity, in 3D. Forces within a very few per cent."},
+  {n:"Transient RANS / DES",x:450,y:205,t:"a day or more",w:"Follows the flow in time and resolves the big wake eddies. For wheels and separated wakes."},
+  {n:"LES",x:540,y:225,t:"days, on a cluster",w:"Resolves most of the turbulence directly. Most realistic, and by far the most expensive."}];
+  const pick=[[0,2,2],[1,3,3],[3,3,4],[3,4,5]];
+  const why=[["Trends are all you need, and a profile is a 2D problem.","You need drag and stall behaviour, so viscosity must be in.","Fine 2D RANS on a careful mesh, then check in 3D."],
+    ["3D tip effects matter, but a quick look will do.","A real 3D wing needs viscosity for reliable numbers.","3D RANS with a fine hex mesh, then validate in the tunnel."],
+    ["A coarse tetrahedral mesh gives a ballpark answer quickly.","A hybrid mesh and a good turbulence model: the usual choice.","Big separated regions behind the car call for a time-resolved method."],
+    ["Expect a steady solver to struggle to converge.","The wake is unsteady, so solve it in time.","The wake is chaotic: resolve the eddies, and book the cluster."]];
+  let c=0,a=0;
+  function draw(){const k=pick[c][a],m=M[k];
+    $("c3ChOut").innerHTML=`<span class="pill live">Suggested</span><h3>${m.n}</h3><p>${why[c][a]}</p><p class="muted" style="font-size:14px">${m.w} Typical solve time: <b>${m.t}</b>.</p>`;
+    let s=`<line x1="50" y1="240" x2="590" y2="240" stroke="${K.edge}"/><line x1="50" y1="240" x2="50" y2="10" stroke="${K.edge}"/>`+txt(320,256,"computing time and cost →","","middle")+`<text x="18" y="125" class="lbl" transform="rotate(-90 18 125)" text-anchor="middle">realism →</text>`;
+    s+=`<path d="${smooth(M.map(q=>[50+q.x*.95,240-q.y*.95]))}" fill="none" stroke="${K.line}" stroke-width="2" stroke-dasharray="4 4"/>`;
+    M.forEach((q,i)=>{const x=50+q.x*.95,y=240-q.y*.95,on=i===k;s+=`<circle cx="${x}" cy="${y}" r="${on?9:5}" fill="${on?K.p:"#2d3c54"}" stroke="${on?K.f:K.edge}" stroke-width="1.5"/>`+txt(i>3?x-12:x+12,y+(i>3?-12:4),q.n,on?"p":"",i>3?"end":"start")});
+    $("c3ChArt").innerHTML=mk("0 0 600 262",s,"CFD methods placed by cost and realism")}
+  seg("c3ChCase",b=>{c=+b.dataset.v;draw()});seg("c3ChAcc",b=>{a=+b.dataset.v;draw()});draw()})();
+
+/* ===== 6 panel methods ===== */
+(function(){const el=$("c3Pn");
+  function draw(){const n=+el.value,h=Math.max(3,R(n/2));$("c3PnO").textContent=(2*h)+" panels";
+    const f=foil(130,120,360,6,h),P=f.U.concat(f.L.slice(0,-1).reverse());let s="";
+    for(let k=0;k<6;k++){const y=40+k*34,b=y<130?-1:1;s+=`<path class="flow" d="${smooth([[10,y],[110,y],[300,y+b*16*Math.exp(-Math.abs(y-135)/50)+ (y<130?-4:8)],[500,y-12],[590,y-18]])}" fill="none" stroke="${K.s}" stroke-opacity=".55" stroke-width="1.4"/>`}
+    s+=`<path d="${f.path}" fill="#1c2636"/>`;
+    for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;
+      const nx=dy/l,ny=-dx/l;s+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${i%2?K.p:K.f}" stroke-width="2.4"/>`;
+      if(n<=36)s+=`<line x1="${mx.toFixed(1)}" y1="${my.toFixed(1)}" x2="${(mx-nx*12).toFixed(1)}" y2="${(my-ny*12).toFixed(1)}" stroke="${K.g}" stroke-width="1"/><circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="2" fill="${K.g}"/>`;
+      s+=`<circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="1.8" fill="${K.f}"/>`}
+    s+=txt(16,250,"white/amber: panels · green: control point and normal (no flow through it)","");
+    $("c3PanelArt").innerHTML=mk("0 0 600 262",s,"Wing section split into flat panels")}
+  el.oninput=draw;draw();
+  const T=[
+   {n:"XFOIL",p:"2D · free",x:"Mark Drela's MIT code from the 1980s: a 2D panel method coupled with a boundary layer model. It gives pressure plots, lift and drag polars, and predicts transition. The standard tool for wing profiles."},
+   {n:"XFLR5",p:"2D + 3D · free",x:"A friendly front end that wraps XFOIL's 2D analysis and adds 3D wing methods, so you can go from profile to whole wing."},
+   {n:"APAME",p:"3D · free",x:"A 3D panel method program for whole wings and aircraft-like bodies. It computes pressure distributions and force coefficients on a surface mesh."},
+   {n:"Vortexje",p:"3D · open source",x:"An open source C++ library implementing a source-doublet panel method. It can handle moving bodies and unsteady cases, such as spinning blades."}];
+  $("c3PanelTools").innerHTML=T.map((t,i)=>`<article><svg viewBox="0 0 300 70" aria-hidden="true"><rect width="300" height="70" fill="#0c1017"/><path d="${foil(40,30,220,6,6+i*3).path}" fill="none" stroke="${[K.s,K.p,K.g,K.f][i]}" stroke-width="2"/>${foil(40,30,220,6,6+i*3).loop.map(q=>`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="1.6" fill="${K.f}"/>`).join("")}</svg><div><span class="pill">Beyond the book · ${t.p}</span><h3>${t.n}</h3><p>${t.x}</p></div></article>`).join("")})();
+
+/* ===== 7 turbulence ===== */
+(function(){const r=rng(3);let s=`<line x1="40" y1="200" x2="590" y2="200" stroke="${K.edge}"/><line x1="40" y1="200" x2="40" y2="20" stroke="${K.edge}"/>`+txt(315,230,"time →","","middle")+`<text x="18" y="110" class="lbl" transform="rotate(-90 18 110)" text-anchor="middle">velocity u</text>`;
+  const P=[];let v=0;for(let i=0;i<=220;i++){v=v*.75+(r()-.5)*30;P.push([40+i*2.5,110+v+12*Math.sin(i/9)])}
+  s+=line(P,`stroke="${K.s}" stroke-width="1.4"`)+`<line x1="40" y1="110" x2="590" y2="110" stroke="${K.p}" stroke-width="3"/>`+txt(560,100,"ū","p")+txt(120,40,"u′: the turbulent flicker","s");
+  $("c3Rans").innerHTML=mk("0 0 600 240",s,"Turbulent velocity fluctuating about its mean");
+  const TM=[
+   {n:"Spalart-Allmaras",e:"1",g:"Aerospace wings, attached boundary layers",b:"Massive separation and wakes",c:1,a:2,x:"One extra equation for a turbulent viscosity. Cheap and stable, built for aircraft wings, so it behaves well on attached flow."},
+   {n:"k-ε (k-epsilon)",e:"2",g:"Robust, general flows away from walls",b:"Adverse pressure gradients; tends to predict separation too late",c:2,a:2,x:"Solves for turbulent kinetic energy k and its dissipation rate ε. The classic industrial model, with wall functions near surfaces."},
+   {n:"k-ω SST",e:"2",g:"Boundary layers in adverse pressure gradients, separation onset",b:"More sensitive to mesh quality near walls",c:2,a:3,x:"Uses k-ω near the walls and switches to k-ε in the freestream. A very common default for racing-car external aero."}];
+  const sg=$("c3TmSeg");sg.innerHTML=TM.map((t,i)=>`<button class="chip" data-i="${i}" aria-pressed="${i===2}">${t.n}</button>`).join("");
+  const bar=(v,c)=>`<span class="mono" style="color:${c}">${"■".repeat(v)}${"□".repeat(4-v)}</span>`;
+  function show(i){const t=TM[i];$("c3TmCard").innerHTML=`<span class="pill">Beyond the book</span><h3>${t.n}</h3><p>${t.x}</p><div class="tblwrap"><table class="tbl"><tbody><tr><td>Extra equations</td><td>${t.e}</td></tr><tr><td>Good at</td><td>${t.g}</td></tr><tr><td>Weak at</td><td>${t.b}</td></tr><tr><td>Cost</td><td>${bar(t.c,K.p)}</td></tr><tr><td>Separation accuracy</td><td>${bar(t.a,K.g)}</td></tr></tbody></table></div>`}
+  seg("c3TmSeg",b=>show(+b.dataset.i));show(2)})();
+
+/* ===== 8 five steps ===== */
+function residualPath(x0,y0,w,h,n,seed,kind,off){off=off||0;const r=rng(seed);const P=[];for(let i=0;i<=n;i++){const t=i/n;let v;
+    if(kind==="wheel")v=-1.5*Math.min(1,t*2.2)+.25*Math.sin(t*40)+(r()-.5)*.25;
+    else if(kind==="car")v=-4*(1-Math.exp(-t*2.6))+.12*Math.sin(t*55)*(1-t)+(r()-.5)*.12;
+    else v=-5.2*t+(r()-.5)*.1;
+    v=v*(1-off*.12)-off*.35*Math.min(1,t*6);P.push([x0+t*w,y0+(-v/6)*h])}return P}
+const STEPS=[
+ {y:"1 · CAD",n:"01",t:"Draw the model in CAD",x:"First the part or the whole car is drawn on a computer: in 2D if only 2D CFD is planned, or in 3D for maximum realism. The result is a digital, 'virtual' model.\nCAD replaced drawing boards because drawings are easy to share between designers and can go straight to computer-aided manufacturing. For CFD, the point is that the CAD model can be imported and tested as a solid body.",k:"No CAD model, no CFD.",
+  art:()=>{let s=`<g stroke="${K.line}" stroke-width=".5">`+Array.from({length:31},(_,i)=>`<line x1="${i*20}" y1="0" x2="${i*20}" y2="230"/>`).join("")+Array.from({length:12},(_,i)=>`<line x1="0" y1="${i*20}" x2="600" y2="${i*20}"/>`).join("")+`</g>`;
+   s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:false,label:"CAD model"}),0,0,600,230).replace(/fill="url\(#bodyG\)"/g,'fill="none" stroke="#4cc3ff"');
+   s+=`<line x1="40" y1="222" x2="560" y2="222" stroke="${K.p}"/><line x1="40" y1="216" x2="40" y2="228" stroke="${K.p}"/><line x1="560" y1="216" x2="560" y2="228" stroke="${K.p}"/>`+txt(300,218,"5,600 mm","p","middle");
+   return `<svg viewBox="0 0 600 230" role="img" aria-label="CAD drawing of a car">${s}</svg>`}},
+ {y:"2 · Pre-process",n:"02",t:"Set up the domain",x:"The CAD model goes into a pre-processing package where the conditions are set up. One key job is putting limits round the domain, the volume of air the car sits in. It must be large enough that the air at its edges stays undisturbed by the car.",k:"Too small a box, and the walls start to affect the answer.",
+  art:()=>{let s=`<rect x="20" y="20" width="560" height="200" fill="none" stroke="${K.p}" stroke-dasharray="6 5"/>`;for(let k=0;k<5;k++)s+=vec(4,50+k*36,40,50+k*36,"s",2.5);
+   s+=nest(car({body:"modern",frontWing:true,rearWing:"big",flow:false,label:"car"}),170,128,200,77);s+=txt(48,40,"inlet","s")+txt(572,40,"outlet","","end")+txt(300,40,"domain: many car lengths long","p","middle")+txt(300,236,"ground","","middle");
+   return mk("0 0 600 245",s,"Car inside a large computational domain")}},
+ {y:"3 · Mesh",n:"03",t:"Mesh the volume",x:"Meshing fills the domain with a 3D grid of possibly millions of cells, the tiny volumes where the fluid calculations happen. Cells are packed tightly near important details and spread out elsewhere.",k:"Traditionally the most labour-intensive step, and the one that needs most judgement.",
+  art:()=>meshCar(5,{label:"Mesh refined around the car"}).svg},
+ {y:"4 · Solve",n:"04",t:"Run the solver",x:"With air density, viscosity, speed, the turbulence model and boundary conditions set, the solver goes to work. It passes information across all the cells and repeats, balancing the forces and mass flows in every cell until the whole domain agrees.\nThat's convergence. It can take minutes for a simple case or many hours for a complex one.",k:"Iterate, iterate, iterate.",
+  art:()=>{let s=`<line x1="60" y1="210" x2="580" y2="210" stroke="${K.edge}"/><line x1="60" y1="210" x2="60" y2="20" stroke="${K.edge}"/>`+txt(320,232,"iterations →","","middle")+txt(66,30,"residual (log scale)","");
+   [["s",1],["p",2],["g",3]].forEach(([c,sd])=>s+=`<path class="draw" d="${smooth(residualPath(60,30,520,180,120,sd,"wing",sd-1))}" fill="none" stroke="${K[c]}" stroke-width="1.8"/>`);
+   s+=`<line x1="60" y1="190" x2="580" y2="190" stroke="${K.g}" stroke-dasharray="4 4"/>`+txt(576,184,"converged","g","end");return mk("0 0 600 240",s,"Residuals falling as the solver iterates")}},
+ {y:"5 · Post-process",n:"05",t:"Post-process the results",x:"Post-processing turns the solver's mountain of data into forces, pressures and velocities on and around the body. Visualisation is one of CFD's key benefits: you can actually see the flow, the pressures and moving 3D images of 'virtual air'.",k:"Numbers for the engineers, pictures for understanding.",
+  art:()=>{let s="";for(let k=0;k<9;k++){const y=30+k*17,P=[[0,y]];for(let x=40;x<=600;x+=40){const over=Math.max(0,1-Math.abs(x-300)/260);P.push([x,y-over*(70-k*6)*(y<150?1:0)+(k>6?over*10:0)])}
+     s+=`<path d="${smooth(P)}" fill="none" stroke="${jet(.15+k/10)}" stroke-width="1.8" stroke-opacity=".9"/>`}
+   s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:false,down:2,drag:1,label:"car"}),0,0,600,230);
+   s+=`<rect x="12" y="12" width="132" height="54" rx="4" fill="#0b0f15" stroke="${K.line}"/>`+txt(22,34,"C<tspan baseline-shift='sub' font-size='9'>L</tspan> = −3.05","s")+txt(22,54,"C<tspan baseline-shift='sub' font-size='9'>D</tspan> = 1.02","p");
+   return `<svg viewBox="0 0 600 230" role="img" aria-label="Streamlines coloured by speed around a car, with force results">${s}</svg>`},cap:"Illustrative numbers"}];
+stepper("c3StepY","c3StepS",STEPS);
+
+/* ===== 9 cell shapes ===== */
+(function(){const P=(x,y,z)=>[150+(x-y)*.87*46,40+(x+y)*.5*46-z*46+20];
+  const shapes=[
+   {n:"Hexahedron",p:"6 faces",x:"Six-sided, like a cube. Numerically the most accurate, because its walls can line up with the flow. A mesh made only of these is a structured mesh.",v:[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,1],[1,0,1],[1,1,1],[0,1,1]],f:[[4,5,6,7],[1,2,6,5],[2,3,7,6]],e:[[0,1],[0,3],[0,4]]},
+   {n:"Tetrahedron",p:"4 triangular faces",x:"Fits round complex shapes easily and quickly, forming an unstructured mesh. More prone to numerical errors.",v:[[0,0,0],[1.2,0,0],[.3,1.2,0],[.5,.4,1.2]],f:[[0,1,3],[1,2,3]],e:[[0,2]]},
+   {n:"Prism",p:"5 faces",x:"A triangle stretched out. Thin prism layers are stacked against walls to capture the boundary layer.",v:[[0,0,0],[1.2,0,0],[.4,1,0],[0,0,1],[1.2,0,1],[.4,1,1]],f:[[3,4,5],[1,2,5,4],[0,1,4,3]],e:[[0,2]]},
+   {n:"Pyramid",p:"5 faces",x:"A square base with a point. Used to link a hexahedron's square face to tetrahedra in a hybrid mesh.",v:[[0,0,0],[1,0,0],[1,1,0],[0,1,0],[.5,.5,1.1]],f:[[1,2,4],[2,3,4],[0,1,4]],e:[[0,3]]}];
+  $("c3Cells").innerHTML=shapes.map((sh,i)=>{const V=sh.v.map(v=>P(v[0]-.5,v[1]-.5,v[2]-.5));let s=`<rect width="300" height="150" fill="#0c1017"/>`;
+    s+=`<g stroke="${K.edge}" stroke-dasharray="3 3" fill="none">`+sh.e.map(e=>line([V[e[0]],V[e[1]]])).join("")+`</g>`;
+    s+=sh.f.map(f=>poly(f.map(k=>V[k]),`fill="${[K.s,K.p,K.g,K.f][i]}" fill-opacity=".12" stroke="${[K.s,K.p,K.g,K.f][i]}" stroke-width="1.6"`)).join("");
+    return `<article><svg viewBox="0 0 300 150" aria-hidden="true">${s}</svg><div><span class="pill">${sh.p}</span><h3>${sh.n}</h3><p>${sh.x}</p></div></article>`}).join("")})();
+
+/* ===== 9 mesh types around a wing ===== */
+function oGrid(f,M,r1,g){const S=f.loop,n=S.length;let cx=0,cy=0;S.forEach(q=>{cx+=q[0]/n;cy+=q[1]/n});
+  const N=S.map((q,k)=>{const a=S[(k-1+n)%n],b=S[(k+1)%n];let tx=b[0]-a[0],ty=b[1]-a[1];const l=Math.hypot(tx,ty)||1;return [ty/l,-tx/l]});
+  const Rm=r1*(g**M-1)/(g-1);const rings=[];
+  for(let m=0;m<=M;m++){const r=m?r1*(g**m-1)/(g-1):0,w=Math.min(1,r/Rm)**.8;
+    rings.push(S.map((q,k)=>{const ph=Math.atan2(q[1]-cy,q[0]-cx),A=(S.reduce((mx,p)=>Math.max(mx,Math.abs(p[0]-cx)),0))+r*1.15,B=18+r;
+      const o=[q[0]+N[k][0]*r,q[1]+N[k][1]*r],e=[cx+A*Math.cos(ph),cy+B*Math.sin(ph)];return [o[0]*(1-w)+e[0]*w,o[1]*(1-w)+e[1]*w]}))}
+  return rings}
+function drawRings(rings,col,op,from,to){let s=`<g fill="none" stroke="${col}" stroke-width=".8" stroke-opacity="${op}">`;
+  for(let m=from;m<=to;m++)s+=`<path d="M${rings[m].map(q=>q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" L")}Z"/>`;
+  const n=rings[0].length;for(let k=0;k<n;k++)s+=line(rings.slice(from,to+1).map(r=>r[k]));return s+`</g>`}
+function triMesh(pts,keep,col,op){const T=delaunay(pts);let s=`<g fill="none" stroke="${col}" stroke-width=".7" stroke-opacity="${op}">`;
+  T.forEach(t=>{const a=pts[t[0]],b=pts[t[1]],c=pts[t[2]],m=[(a[0]+b[0]+c[0])/3,(a[1]+b[1]+c[1])/3];if(keep(m,a,b,c))s+=`<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}L${c[0].toFixed(1)} ${c[1].toFixed(1)}Z"/>`});return s+`</g>`}
+function scatter(seed,W,H,near,minD,count){const r=rng(seed),pts=[];let tries=0;
+  while(pts.length<count&&tries<count*60){tries++;const p=[r()*W,r()*H],d=near(p);if(d<minD)continue;const h=6+d*.22;
+    if(pts.some(q=>(q[0]-p[0])**2+(q[1]-p[1])**2<h*h))continue;pts.push(p)}
+  for(let x=0;x<=W;x+=40){pts.push([x,0]);pts.push([x,H])}for(let y=40;y<H;y+=40){pts.push([0,y]);pts.push([W,y])}return pts}
+(function(){const W=600,H=300,f=foil(150,135,300,6,24);
+  const M={hex:{c:"Structured mesh: every cell is a four-sided quad (a hexahedron in 3D), in rings that wrap the wing. Cells are thin near the surface and grow outwards.",
+      card:`<span class="pill live">Most accurate</span><h3>Structured, hexahedral</h3><p>Cell walls line up with the flow, so mass, momentum and energy balance most accurately. But fitting neat rings of cubes round a whole car, with its wheels, mirrors and winglets, is slow, skilled work.</p><p class="muted" style="font-size:14px;margin:0">Best when accuracy matters more than set-up time.</p>`},
+    tet:{c:"Unstructured mesh: triangles (tetrahedra in 3D) fill the space, small near the wing and larger far away.",
+      card:`<span class="pill">Quickest to build</span><h3>Unstructured, tetrahedral</h3><p>Tetrahedra fit any shape, so meshing is fast and can be automated. The cells are rarely aligned with the flow, which makes them more prone to numerical diffusion.</p><p class="muted" style="font-size:14px;margin:0">Good for a ballpark answer, quickly.</p>`},
+    hyb:{c:"Hybrid mesh: thin layers of structured cells hug the surface for the boundary layer, with triangles further out. In 3D, pyramid cells join the two types.",
+      card:`<span class="pill live">The usual compromise</span><h3>Hybrid</h3><p>Structured layers where the flow changes fastest, right at the surface, and flexible tetrahedra elsewhere. More than one cell type means a hybrid mesh.</p><p class="muted" style="font-size:14px;margin:0">Accurate where it matters, quick where it doesn't.</p>`}};
+  const cache={};
+  function build(m){if(cache[m])return cache[m];let s="";
+    if(m==="hex"){const rings=oGrid(f,16,1.2,1.24);s+=drawRings(rings,K.s,.55,0,16)}
+    if(m==="tet"){const pts=scatter(11,W,H,p=>inPoly(p,f.loop)?-1:polyD(p,f.loop).d,4,520).concat(f.loop);s+=triMesh(pts,c=>!inPoly(c,f.loop),K.p,.6)}
+    if(m==="hyb"){const rings=oGrid(f,5,1.6,1.35),out=rings[5];s+=drawRings(rings,K.s,.7,0,5);
+      const pts=scatter(12,W,H,p=>inPoly(p,out)?-1:polyD(p,out).d,4,480).concat(out);s+=triMesh(pts,c=>!inPoly(c,out),K.p,.6)}
+    s+=foilFill(f,K.f);return cache[m]=mk(`0 0 ${W} ${H}`,s,M[m].c)}
+  function show(m){$("c3MeshArt").innerHTML=build(m);$("c3MeshCap").textContent=M[m].c;$("c3MeshCard").innerHTML=M[m].card}
+  seg("c3MeshSeg",b=>show(b.dataset.m));show("hex")})();
+
+/* ===== 10 alignment ===== */
+(function(){const el=$("c3Al");
+  function draw(){const d=+el.value,t=d*PI/180,c=Math.cos(t),sn=Math.sin(t);$("c3AlO").textContent=d+"°";
+    const a=c/(c+sn),b=sn/(c+sn);$("c3AlA").textContent=R(a*100)+"%";$("c3AlB").textContent=R(b*100)+"%";$("c3AlC").textContent=d<5?"Low":d<20?"Medium":"High";
+    let s="";const x0=195,y0=25,S=70;for(let i=0;i<3;i++)for(let j=0;j<3;j++)s+=`<rect x="${x0+i*S}" y="${y0+j*S}" width="${S}" height="${S}" fill="${i===1&&j===1?"rgba(76,195,255,.10)":"none"}" stroke="${i===1&&j===1?K.s:K.edge}" stroke-width="${i===1&&j===1?2:1}"/>`;
+    for(let k=-6;k<=6;k++){const cx=300+k*28*sn,cy=130+k*28*c*-1;const L=330;s+=`<line class="flow" x1="${(cx-L*c).toFixed(1)}" y1="${(cy+L*sn).toFixed(1)}" x2="${(cx+L*c).toFixed(1)}" y2="${(cy-L*sn).toFixed(1)}" stroke="${K.s}" stroke-opacity=".25" stroke-width="1.2"/>`}
+    const L1=12+a*48,L2=12+b*48;
+    s+=vec(x0+S-L1*.6,y0+1.5*S,x0+S+L1*.4,y0+1.5*S,"g",2+a*5)+vec(x0+2*S-L1*.4,y0+1.5*S,x0+2*S+L1*.6,y0+1.5*S,"g",2+a*5);
+    if(b>.02)s+=vec(x0+1.5*S,y0+2*S+L2*.6,x0+1.5*S,y0+2*S-L2*.4,"p",2+b*5)+vec(x0+1.5*S,y0+S+L2*.4,x0+1.5*S,y0+S-L2*.6,"p",2+b*5);
+    s+=txt(20,250,"green: flow through front and back faces","g")+txt(380,250,"amber: across side faces","p");
+    $("c3AlArt").innerHTML=mk("0 0 600 262",s,"Flow passing through a mesh cell at an angle")}
+  el.oninput=draw;draw()})();
+
+/* ===== 11 numerical diffusion (real first-order upwind calculation) ===== */
+(function(){const ea=$("c3Nd"),er=$("c3NdR");
+  function draw(){const th=+ea.value*PI/180,N=+er.value,u=Math.cos(th),v=Math.sin(th),w=Math.max(1,R(N/20)),j0=R(N*.08);
+    $("c3NdO").textContent=ea.value+"°";$("c3NdRO").textContent=N+" × "+N;
+    const phi=Array.from({length:N},()=>new Float32Array(N));
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++){const W=i===0?(j>=j0&&j<j0+w?1:0):phi[i-1][j],S=j===0?0:phi[i][j-1];phi[i][j]=(u*W+v*S)/(u+v)}
+    const im=R(N*.85);let sum=0,mx=0;for(let j=0;j<N;j++){sum+=phi[im][j];mx=Math.max(mx,phi[im][j])}
+    $("c3NdW").textContent=fmt(sum/mx,1);$("c3NdP").textContent=R(mx*100)+"%";$("c3NdI").textContent=w;
+    const cs=400/N;let s="";for(let i=0;i<N;i++)for(let j=0;j<N;j++){const p=phi[i][j];if(p<.01)continue;s+=`<rect x="${(i*cs).toFixed(2)}" y="${(400-(j+1)*cs).toFixed(2)}" width="${(cs+.3).toFixed(2)}" height="${(cs+.3).toFixed(2)}" fill="rgb(${R(12+64*p)},${R(16+179*p)},${R(23+232*p)})"/>`}
+    if(N<=40){s+=`<g stroke="${K.line}" stroke-width=".6">`;for(let k=0;k<=N;k++)s+=`<line x1="${k*cs}" y1="0" x2="${k*cs}" y2="400"/><line x1="0" y1="${k*cs}" x2="400" y2="${k*cs}"/>`;s+=`</g>`}
+    [j0,j0+w].forEach(j=>{s+=`<line x1="0" y1="${400-j*cs}" x2="400" y2="${(400-j*cs-400*Math.tan(th)).toFixed(1)}" stroke="${K.p}" stroke-dasharray="5 4" stroke-width="1.4"/>`});
+    s+=`<line x1="${(im+.5)*cs}" y1="0" x2="${(im+.5)*cs}" y2="400" stroke="${K.f}" stroke-opacity=".35" stroke-dasharray="2 3"/>`;
+    s+=vec(14,30,14+40*u,30-40*v,"f",2.5)+txt(20,56,"flow","");
+    $("c3NdArt").innerHTML=mk("0 0 400 400",`<rect width="400" height="400" fill="#0c1017"/>`+s,"A smoke streak smeared by numerical diffusion")}
+  ea.oninput=er.oninput=draw;draw()})();
+
+/* ===== 12 hybrid car ===== */
+(function(){const W=600,H=250,boxes=[[20,168,130,46],[150,193,350,22],[465,70,125,90]];
+  const inBox=p=>boxes.some(b=>p[0]>b[0]&&p[0]<b[0]+b[2]&&p[1]>b[1]&&p[1]<b[1]+b[3]);
+  const carR=[60,110,470,95];const dCar=p=>{const dx=Math.max(carR[0]-p[0],0,p[0]-carR[0]-carR[2]),dy=Math.max(carR[1]-p[1],0,p[1]-carR[1]-carR[3]);return Math.hypot(dx,dy)};
+  const pts=scatter(21,W,H,p=>inBox(p)?-1:Math.min(dCar(p)+6,boxes.reduce((m,b)=>{const dx=Math.max(b[0]-p[0],0,p[0]-b[0]-b[2]),dy=Math.max(b[1]-p[1],0,p[1]-b[1]-b[3]);return Math.min(m,Math.hypot(dx,dy))},1e9)),3,420);
+  boxes.forEach(b=>{for(let x=b[0];x<=b[0]+b[2];x+=10){pts.push([x,b[1]]);pts.push([x,b[1]+b[3]])}for(let y=b[1]+10;y<b[1]+b[3];y+=10){pts.push([b[0],y]);pts.push([b[0]+b[2],y])}});
+  const body=[[40,215],[48,190],[110,172],[200,162],[260,152],[300,146],[350,152],[420,158],[470,166],[495,190],[500,215]];
+  body.forEach((q,i)=>{if(i)pts.push(q)});
+  let s=triMesh(pts,c=>!inBox(c)&&!inPoly(c,body),K.p,.45);
+  boxes.forEach(b=>{s+=`<g stroke="${K.s}" stroke-width=".6" stroke-opacity=".8">`;for(let x=b[0];x<=b[0]+b[2]+.1;x+=5)s+=`<line x1="${x}" y1="${b[1]}" x2="${x}" y2="${b[1]+b[3]}"/>`;for(let y=b[1];y<=b[1]+b[3]+.1;y+=5)s+=`<line x1="${b[0]}" y1="${y}" x2="${b[0]+b[2]}" y2="${y}"/>`;s+=`</g>`});
+  boxes.forEach(b=>{for(let x=b[0]+5;x<b[0]+b[2];x+=20)s+=`<path d="M${x-5} ${b[1]} L${x+5} ${b[1]} L${x} ${b[1]-7}Z" fill="${K.g}" fill-opacity=".8"/>`});
+  s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:false,label:"car"}),0,10,600,230);
+  const Z=[["far","Far field: tetrahedra",[0,0,600,250],"Away from the car the flow changes slowly, so large, quick-to-build tetrahedra are good enough."],
+    ["fw","Front wing: hexahedra",boxes[0],"The front wing has steep pressure gradients and works close to the ground. Fine hexahedral cells keep it accurate."],
+    ["ff","Underfloor and diffuser: hexahedra",boxes[1],"The underfloor makes much of the downforce. Aligned hex cells capture the fast flow between floor and ground."],
+    ["rw","Rear wing: hexahedra",boxes[2],"Another critical area: high loads and a strong tip vortex."],
+    ["body","Body surface: prism layers",[60,110,470,95],"Thin prism layers hug the bodywork to capture the boundary layer. They are too thin to see at this scale."],
+    ["pyr","Joins: pyramids",[150,150,30,20],"Green: where square hex faces meet tetrahedra, pyramid cells link the two. (Drawn as triangles here.)"]];
+  s+=Z.map((z,i)=>`<rect class="zone" data-i="${i}" tabindex="0" x="${z[2][0]}" y="${z[2][1]}" width="${z[2][2]}" height="${z[2][3]}" rx="4"><title>${z[1]}</title></rect>`).join("");
+  $("c3HybArt").innerHTML=mk(`0 0 ${W} ${H}`,s,"Hybrid mesh around a car");
+  const zs=$("c3HybArt").querySelectorAll(".zone");
+  const on=i=>{zs.forEach(z=>z.classList.toggle("on",+z.dataset.i===i));$("c3HybCap").innerHTML=`<b>${Z[i][1]}.</b> ${Z[i][3]}`};
+  zs.forEach(z=>{const i=+z.dataset.i;z.addEventListener("mouseenter",()=>on(i));z.addEventListener("click",ev=>{ev.stopPropagation();on(i)});z.addEventListener("focus",()=>on(i))})})();
+
+/* ===== 13 auto-meshing ===== */
+(function(){const W=600,H=250,f=foil(150,120,300,6,30);
+  const cells=[];(function(){for(let i=0;i<12;i++)for(let j=0;j<5;j++)(function q(x,y,w,d){const c=[x+w/2,y+w/2];const near=polyD(c,f.loop).d<w*1.1;if(near&&d<3){const h=w/2;q(x,y,h,d+1);q(x+h,y,h,d+1);q(x,y+h,h,d+1);q(x+h,y+h,h,d+1)}else cells.push([x,y,w,inPoly(c,f.loop)])})(i*50,j*50,50,0)})();
+  const rect=(c,col,op)=>`<rect x="${c[0]}" y="${c[1]}" width="${c[2]}" height="${c[2]}" fill="none" stroke="${col}" stroke-opacity="${op}" stroke-width=".8"/>`;
+  const out=f.loop.map(q=>`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="1.8" fill="${K.f}"/>`).join("");
+  const A=[
+   ()=>`<path d="${f.path}" fill="none" stroke="${K.f}" stroke-width="1.2"/>`+out,
+   ()=>{let s="";for(let i=0;i<12;i++)for(let j=0;j<5;j++)s+=rect([i*50,j*50,50],K.s,.5);return s+`<path d="${f.path}" fill="none" stroke="${K.f}" stroke-dasharray="4 3"/>`},
+   ()=>cells.map(c=>rect(c,K.s,.55)).join("")+`<path d="${f.path}" fill="none" stroke="${K.f}" stroke-dasharray="4 3"/>`,
+   ()=>cells.filter(c=>!c[3]).map(c=>rect(c,K.s,.55)).join("")+`<path d="${f.path}" fill="none" stroke="${K.p}" stroke-dasharray="4 3"/>`,
+   ()=>{let s=cells.filter(c=>!c[3]).map(c=>rect(c,K.s,.55)).join("")+foilFill(f,K.f);const sn=cells.filter(c=>!c[3]&&c[2]<10&&polyD([c[0]+c[2]/2,c[1]+c[2]/2],f.loop).d<c[2]);
+     sn.filter((c,i)=>i%5===0).forEach(c=>{const p=[c[0]+c[2]/2,c[1]+c[2]/2],q=polyD(p,f.loop),a=f.loop[q.i],b=f.loop[(q.i+1)%f.loop.length],t=[a[0]+(b[0]-a[0])*q.t,a[1]+(b[1]-a[1])*q.t];s+=`<line x1="${p[0]}" y1="${p[1]}" x2="${t[0].toFixed(1)}" y2="${t[1].toFixed(1)}" stroke="${K.p}" stroke-width="1.6"/><circle cx="${t[0].toFixed(1)}" cy="${t[1].toFixed(1)}" r="2" fill="${K.p}"/>`});return s},
+   ()=>{const rings=oGrid(f,4,1.4,1.3);return cells.filter(c=>!c[3]&&polyD([c[0]+c[2]/2,c[1]+c[2]/2],f.loop).d>8).map(c=>rect(c,K.s,.4)).join("")+drawRings(rings,K.p,.9,0,4)+foilFill(f,K.f)},
+   ()=>{const r=rng(5);const bad=cells.filter(c=>!c[3]&&c[2]<10).filter(()=>r()<.04);return cells.filter(c=>!c[3]).map(c=>rect(c,K.s,.35)).join("")+bad.map(c=>`<rect x="${c[0]}" y="${c[1]}" width="${c[2]}" height="${c[2]}" fill="${K.l}" fill-opacity=".7"/>`).join("")+foilFill(f,K.f)}];
+  const art=i=>()=>mk(`0 0 ${W} ${H}`,`<rect width="${W}" height="${H}" fill="#0c1017"/>`+A[i](),"Auto-meshing step "+(i+1));
+  stepper("c3AutoY","c3AutoS",[
+   {y:"1 · Surface",n:"01",t:"Import a watertight surface",x:"The CAD model arrives as a triangulated surface, often an STL file. It must be 'watertight', with no gaps, or the mesher can't tell inside from outside.",k:"Cleaning up CAD is often the slowest part of auto-meshing.",art:art(0)},
+   {y:"2 · Background",n:"02",t:"Lay a coarse background mesh",x:"A block of large hexahedral cells fills the whole domain. In OpenFOAM this is done by blockMesh.",k:"Big, perfectly aligned cells everywhere to start with.",art:art(1)},
+   {y:"3 · Refine",n:"03",t:"Split cells near the surface",x:"Each cell near the surface is split into smaller cells, again and again, down to the size set for that region. Users add refinement boxes round critical areas.",k:"Fine where the shape changes, coarse elsewhere.",art:art(2)},
+   {y:"4 · Castellate",n:"04",t:"Remove cells inside the body",x:"Cells inside the solid are deleted, leaving a stair-stepped hole roughly the shape of the body. That jagged edge is why this step is called castellation.",k:"Close, but stair steps aren't aerodynamic.",art:art(3)},
+   {y:"5 · Snap",n:"05",t:"Snap to the true surface",x:"Points on the stair-stepped boundary are pulled onto the real surface, so the mesh now follows the body. Cells next to the wall get distorted in the process.",k:"The mesh now matches the shape.",art:art(4)},
+   {y:"6 · Layers",n:"06",t:"Add boundary layer cells",x:"Thin prism layers are grown out from the wall to capture the boundary layer, where velocity changes fastest.",k:"Thin cells for steep gradients.",art:art(5)},
+   {y:"7 · Check",n:"07",t:"Check mesh quality",x:"The mesher checks every cell for skewness, non-orthogonality and stretching. Bad cells (red) cause numerical diffusion or stop the solver converging, so they're fixed or the settings are changed and the mesh rebuilt.",k:"An automatic mesh still needs an expert eye.",art:art(6)}])})();
+
+/* ===== 14 boundary conditions ===== */
+(function(){const B=[
+  {p:[22,110],t:"Inlet",k:"Velocity inlet",x:"Air enters here at the car's speed, for example 50 m/s, with a set level of turbulence. In CFD, as in a wind tunnel, the car stays still and the air moves."},
+  {p:[578,110],t:"Outlet",k:"Pressure outlet",x:"Air leaves at ambient pressure. It sits far enough behind the car that the wake has room to develop before it gets here."},
+  {p:[110,208],t:"Ground",k:"Moving wall",x:"The road moves backwards at the same speed as the inlet air, just as it does relative to a real car. Making it stationary would grow a false boundary layer on the ground, which matters a lot for underbody flow."},
+  {p:[300,150],t:"Car body",k:"No-slip wall",x:"The air right at the surface sticks to it and has zero velocity, which is where the boundary layer starts. The forces are worked out by adding up the pressure and friction on these surfaces."},
+  {p:[236,193],t:"Wheels",k:"Rotating wall",x:"The tyres spin at road speed. That rotation changes the wheel wakes a lot, and these are among the hardest flows to model."},
+  {p:[300,22],t:"Top and sides",k:"Slip or symmetry",x:"Far from the car, these walls let air slide along them with no friction. They are far enough away not to squeeze the flow. Often only half the car is simulated, with a symmetry plane down the middle."}];
+  function draw(sel){let s=`<rect x="22" y="22" width="556" height="186" fill="rgba(76,195,255,.04)" stroke="${K.edge}" stroke-dasharray="5 4"/>`;
+    for(let k=0;k<5;k++)s+=vec(2,50+k*34,30,50+k*34,"s",2.5);for(let k=0;k<5;k++)s+=vec(562,50+k*34,596,50+k*34,"s",2);
+    s+=`<line x1="22" y1="208" x2="578" y2="208" stroke="${K.p}" stroke-width="3"/>`;for(let x=60;x<560;x+=60)s+=vec(x+20,216,x,216,"p",1.5);
+    s+=nest(car({body:"modern",frontWing:true,rearWing:"big",diffuser:true,flow:false,label:"car"}),180,128,240,92);
+    s+=`<g class="spin"><circle cx="236" cy="193" r="18" fill="none" stroke="${K.g}" stroke-width="1.5" stroke-dasharray="6 5"/></g>`;
+    B.forEach((b,i)=>{s+=`<g class="hot${i===sel?" on":""}" tabindex="0" role="button" data-i="${i}" aria-label="${b.t}"><circle class="ring" cx="${b.p[0]}" cy="${b.p[1]}" r="13"/><text x="${b.p[0]}" y="${b.p[1]+5}" text-anchor="middle">${i+1}</text></g>`});
+    $("c3BcArt").innerHTML=mk("0 0 600 232",s,"Computational domain with boundary conditions");
+    const b=B[sel];$("c3BcCard").innerHTML=`<span class="pill">${sel+1} of 6</span><h3>${b.t}</h3><p class="mono" style="color:${K.p};font-size:13px;margin:0">${b.k}</p><p>${b.x}</p>`;
+    $("c3BcArt").querySelectorAll(".hot").forEach(g=>{const go=()=>draw(+g.dataset.i);g.addEventListener("click",go);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}})})}
+  draw(0);
+  const el=$("c3Dom");function dom(){const L=+el.value;$("c3DomO").textContent=L.toFixed(1);
+    const u=Math.min(560/(3*L+1),220/(L+.6)),cx=20+L*u,gy=240;let s="";
+    const lev=[[.4,.9],[.8,.6],[1.4,.4],[2.2,.22]];
+    lev.slice().reverse().forEach(([r,o])=>{const rf=r*u,rb=r*u*2.4,ry=r*u*.8;s+=`<path d="M${cx+u/2-rf} ${gy} A${rf} ${ry} 0 0 1 ${cx+u/2} ${gy-ry} A${rb} ${ry} 0 0 1 ${cx+u/2+rb} ${gy}Z" fill="${K.p}" fill-opacity="${o*.35}"/>`});
+    s+=`<rect x="20" y="${gy-L*u}" width="${3*L*u+u}" height="${L*u}" fill="none" stroke="${K.s}" stroke-width="2"/>`;
+    s+=nest(car({body:"modern",frontWing:true,rearWing:"big",flow:false,label:"car"}),cx,gy-u*.38,u,u*.38);
+    s+=`<line x1="0" y1="${gy}" x2="600" y2="${gy}" stroke="${K.line}" stroke-width="2"/>`+txt(cx+u/2,gy-u*.38-8,"car","","middle");
+    const tight=L<2.5,huge=L>=8;$("c3DomT").textContent=tight?"Too small":huge?"Larger than needed":"About right";$("c3DomT").style.color=tight?K.l:huge?K.p:K.g;
+    $("c3DomX").textContent=tight?"The disturbance (amber) reaches the domain walls, so the walls squeeze the flow and the forces come out wrong.":huge?"Accurate, but every extra cube of air needs cells, and cells cost solve time.":"The edges see undisturbed air. Typical practice is a few car lengths ahead and above, and more behind for the wake (beyond the book).";
+    $("c3DomArt").innerHTML=mk("0 0 600 250",s,"Domain box around a car with its disturbance zone")}
+  el.oninput=dom;dom()})();
+
+/* ===== 15 convergence + mesh independence ===== */
+(function(){const X={wing:"An attached wing converges quickly and cleanly: residuals drop steadily and the downforce settles within a few hundred iterations.",
+   car:"A whole car takes longer. Residuals fall more slowly with some wobble, but the force settles to a steady value.",
+   wheel:"A steady solver on a rotating wheel's unsteady wake: residuals stall and the force keeps oscillating. The flow is genuinely unsteady, so a steady answer may never converge. That's the cue for a transient method (Part 21)."};
+  function draw(k){let s=`<line x1="50" y1="200" x2="590" y2="200" stroke="${K.edge}"/><line x1="50" y1="200" x2="50" y2="15" stroke="${K.edge}"/>`+txt(320,224,"iterations →","","middle");
+    ["10⁰","10⁻²","10⁻⁴","10⁻⁶"].forEach((l,i)=>s+=txt(44,24+i*58,l,"","end")+`<line x1="50" y1="${20+i*58}" x2="590" y2="${20+i*58}" stroke="${K.line}" stroke-dasharray="2 4"/>`);
+    [["s",4],["p",5],["g",6]].forEach(([c,sd])=>s+=`<path class="draw" d="${smooth(residualPath(50,20,540,174,140,sd+(k==="car"?10:k==="wheel"?20:0),k,sd-4))}" fill="none" stroke="${K[c]}" stroke-width="1.7"/>`);
+    s+=txt(560,40,"continuity","s","end")+txt(560,56,"momentum","p","end")+txt(560,72,"turbulence","g","end");
+    $("c3CvArt").innerHTML=mk("0 0 600 232",s,"Residuals against iterations");
+    const r=rng(9),P=[];for(let i=0;i<=140;i++){const t=i/140;let v;if(k==="wing")v=-2.1*(1-Math.exp(-t*9))+.3*Math.exp(-t*9)*Math.sin(t*60);else if(k==="car")v=-3*(1-Math.exp(-t*4))+.25*Math.exp(-t*3)*Math.sin(t*45);else v=-.45*(1-Math.exp(-t*8))+.16*Math.sin(t*38)+(r()-.5)*.1;P.push([50+t*540,30+(-v/3.4)*160])}
+    let f=`<line x1="50" y1="200" x2="590" y2="200" stroke="${K.edge}"/><line x1="50" y1="200" x2="50" y2="15" stroke="${K.edge}"/>`+txt(320,224,"iterations →","","middle")+txt(56,24,"−C<tspan baseline-shift='sub' font-size='9'>L</tspan>","");
+    f+=`<path class="draw" d="${smooth(P)}" fill="none" stroke="${K.s}" stroke-width="2"/>`;const fin=P[P.length-1][1];
+    f+=k==="wheel"?txt(580,fin-30,"never settles","l","end"):`<line x1="380" y1="${fin}" x2="590" y2="${fin}" stroke="${K.g}" stroke-dasharray="4 4"/>`+txt(580,fin-8,"settled","g","end");
+    $("c3CvF").innerHTML=mk("0 0 600 232",f,"Downforce coefficient against iterations");$("c3CvX").textContent=X[k]}
+  seg("c3CvSeg",b=>draw(b.dataset.c));draw("wing");
+  const D=[["2M",2,2.35,.5],["5M",5,2.71,1.2],["10M",10,2.86,2.5],["20M",20,2.93,5],["40M",40,2.955,10],["80M",80,2.962,21]];let n=2;
+  function mi(){const lx=v=>70+Math.log2(v/2)/Math.log2(40)*500,ly=v=>200-(v-2.2)/.9*170;
+    let s=`<line x1="60" y1="210" x2="590" y2="210" stroke="${K.edge}"/><line x1="60" y1="210" x2="60" y2="15" stroke="${K.edge}"/>`+txt(320,236,"cells in the mesh (log scale) →","","middle");
+    [2.4,2.6,2.8,3].forEach(v=>s+=txt(54,ly(v)+4,v.toFixed(1),"","end")+`<line x1="60" y1="${ly(v)}" x2="590" y2="${ly(v)}" stroke="${K.line}" stroke-dasharray="2 4"/>`);
+    s+=line(D.slice(0,n).map(d=>[lx(d[1]),ly(d[2])]),`stroke="${K.s}" stroke-width="2"`);
+    D.forEach((d,i)=>{const on=i<n;s+=`<g class="hot" tabindex="0" role="button" data-i="${i}" aria-label="Run ${d[0]} cell mesh"><circle cx="${lx(d[1])}" cy="${on?ly(d[2]):200}" r="${on?7:6}" fill="${on?K.s:"#0c1017"}" stroke="${on?K.f:K.edge}" stroke-width="1.5" ${on?"":'stroke-dasharray="3 2"'}/></g>`+txt(lx(d[1]),226,d[0],"","middle")});
+    $("c3MiArt").innerHTML=mk("0 0 600 245",s,"Mesh independence study");
+    $("c3MiArt").querySelectorAll(".hot").forEach(g=>{const go=()=>{n=Math.max(2,+g.dataset.i+1);mi()};g.addEventListener("click",go);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}})});
+    const rows=D.slice(0,n).map((d,i)=>{const ch=i?((d[2]-D[i-1][2])/D[i-1][2]*100):null;return `<tr><td>${d[0]}</td><td>${d[2].toFixed(3)}</td><td>${ch==null?"–":"+"+ch.toFixed(1)+"%"}</td><td>${d[3]} h</td></tr>`}).join("");
+    const last=n>1?(D[n-1][2]-D[n-2][2])/D[n-2][2]*100:99;
+    $("c3MiCard").innerHTML=`<span class="pill ${last<1?"live":""}">${last<1?"Mesh independent":"Still changing"}</span><div class="tblwrap"><table class="tbl"><thead><tr><th>Mesh</th><th>−C<sub>L</sub></th><th>Change</th><th>Solve</th></tr></thead><tbody>${rows}</tbody></table></div><p style="font-size:14.5px">${last<1?`Doubling the mesh now changes the answer by under 1% but ${n<6?"would double":"doubled"} the solve time. Use the ${D[Math.max(0,n-2)][0]} mesh for development runs.`:"Refining still changes the answer noticeably. Tap the next dashed circle to run a finer mesh."}</p>`}
+  mi()})();
+
+/* ===== 16 oilflow ===== */
+(function(){const M=[70,300],F=[315,450],Y0=20,Y1=228;
+  const onWing=(x,y)=>y>Y0&&y<Y1&&((x>M[0]&&x<M[1])||(x>F[0]&&x<F[1]));
+  function dir(x,y){let dx=1,dy=-.65*Math.exp(-(Y1-y)/26)*Math.min(1,(x-60)/250);const fx=425,fy=200,rx=x-fx,ry=y-fy,r=Math.hypot(rx,ry)||1,w=1.3*Math.exp(-r/22);dx+=-ry/r*w;dy+=rx/r*w;
+    if(x>F[0]&&x<F[1]&&y<120)dy+=.04;const l=Math.hypot(dx,dy);return [dx/l,dy/l]}
+  const CAP={paint:"Real oilflow: dyed paraffin streaks left on the underside of a front wing after a run. Near the endplate (bottom) the streaks turn inwards and swirl on the flap: the 'areas of interest' the book points to.",
+    cfd:"CFD surface streamlines on the same wing, coloured by speed. They show the same patterns, with no paint to clean up afterwards.",
+    stream:"Streamlines off the surface, coloured by speed. At the wing tip they roll up into a vortex that trails downstream. Link it to the swirl in the oilflow plot."};
+  function draw(m){let s=`<rect width="600" height="250" fill="#0c1017"/>`;
+    if(m!=="stream"){s+=`<rect x="${M[0]}" y="${Y0}" width="${M[1]-M[0]}" height="${Y1-Y0}" fill="${m==="paint"?"#3a404b":"#1c2636"}"/><rect x="${F[0]}" y="${Y0}" width="${F[1]-F[0]}" height="${Y1-Y0}" fill="${m==="paint"?"#3a404b":"#1c2636"}"/>`;
+      s+=`<rect x="60" y="${Y1}" width="400" height="8" fill="${K.edge}"/>`+txt(470,Y1+8,"endplate","")+txt(70,14,"centreline side","")+vec(500,40,560,40,"s",2.5)+txt(500,62,"flow","s");
+      if(m==="paint"){const r=rng(4);for(let x=M[0]+6;x<F[1];x+=11)for(let y=Y0+6;y<Y1-2;y+=11){const px=x+(r()-.5)*6,py=y+(r()-.5)*6;if(!onWing(px,py))continue;const P=[[px,py]];let q=[px,py];for(let k=0;k<5;k++){const d=dir(q[0],q[1]);q=[q[0]+d[0]*3.2,q[1]+d[1]*3.2];if(!onWing(q[0],q[1]))break;P.push(q)}
+          s+=line(P,`stroke="#f3e7b8" stroke-opacity=".85" stroke-width="1.6" stroke-linecap="round"`)+`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="1.9" fill="#ffd36a"/>`}}
+      else{for(let y=Y0+5;y<Y1;y+=8){[M[0]+1,F[0]+1].forEach(x0=>{let q=[x0,y];const P=[q];for(let k=0;k<200;k++){const d=dir(q[0],q[1]);q=[q[0]+d[0]*2,q[1]+d[1]*2];if(!onWing(q[0],q[1]))break;P.push(q)}
+          if(P.length>2)s+=line(P,`stroke="${jet(.35+.5*(y-Y0)/(Y1-Y0)*.6+(x0>300?.15:0))}" stroke-width="1.2" stroke-opacity=".95"`)})}}}
+    else{const sk=(x,y,z)=>[x+z*.5,y-z*.55];
+      [[70,300,0],[315,450,-14]].forEach(([a,b,h],j)=>{s+=poly([sk(a,170+h,0),sk(b,170+h-(j?12:0),0),sk(b,170+h-(j?12:0),260),sk(a,170+h,260)],`fill="#2d3c54" stroke="${K.edge}"`)});
+      s+=poly([sk(60,182,0),sk(460,182,0),sk(460,140,0),sk(60,150,0)],`fill="#1c2636" stroke="${K.edge}"`);
+      for(let k=0;k<9;k++){const z=40+k*26,P=[];for(let x=10;x<=600;x+=15){const yy=150-12*Math.exp(-(((x-200)/120)**2))-(x>300?(x-300)*.08:0);P.push(sk(x,yy-6,z))}s+=line(P,`stroke="${jet(.3+k*.04)}" stroke-width="1.3" stroke-opacity=".85"`)}
+      for(let j=0;j<6;j++){const P=[];for(let t=0;t<=1.0001;t+=.01){const x=420+t*190,r=4+t*22+j*1.5,ph=t*5*PI+j;P.push([x,178-t*30+r*Math.sin(ph),])}s+=line(P,`stroke="${jet(.95-j*.08-.1)}" stroke-width="1.4"`)}
+      s+=txt(590,236,"tip vortex rolling up","l","end")+txt(20,236,"streamlines leaving the wing","s")}
+    $("c3OilArt").innerHTML=mk("0 0 600 250",s,CAP[m]);$("c3OilCap").textContent=CAP[m]}
+  seg("c3OilSeg",b=>draw(b.dataset.o));draw("paint")})();
+
+/* ===== 17 Cp plots ===== */
+(function(){const NX=100,NY=40,W=600,H=240,cs=6,GY=236;
+  function geo(h){const Ym=110+(100-h)*.55;return [{f:foil(90,Ym,280,4,30),c:280,a:-4*PI/180,x0:90,y0:Ym,Sb:g=>1.5+1.7*g,sb:28,Pa:.9,sa:30},
+                                                  {f:foil(360,Ym-12,125,26,24),c:125,a:-26*PI/180,x0:360,y0:Ym-12,Sb:g=>1.3-.55*g,sb:20,Pa:.6,sa:22}]}
+  function local(E,p){const ex=Math.cos(E.a),ey=Math.sin(E.a),nx=-ey,ny=ex,dx=p[0]-E.x0,dy=p[1]-E.y0;return [(dx*ex+dy*ey)/E.c,dx*nx+dy*ny]}
+  function cp(p,G,g){let v=0;for(const E of G){const [xi,eta]=local(E,p),xr=Math.max(0,Math.min(1,xi)),d=polyD(p,E.f.loop).d,ext=Math.exp(-Math.abs(xi-xr)*E.c/40);
+      const wb=1/(1+Math.exp(-(eta-.03*E.c)/5));v+=-wb*E.Sb(g)*Math.exp(-(((xr-.3)/.4)**2))*Math.exp(-d/E.sb)*ext+(1-wb)*E.Pa*(.35+.65*Math.exp(-(((xr-.05)/.2)**2)))*Math.exp(-d/E.sa)*ext}return Math.max(-3.5,Math.min(1,v))}
+  function loss(p,G,g){let L=0;for(const E of G){const [xi,eta]=local(E,p);const d=polyD(p,E.f.loop).d;
+      if(xi>-.02&&xi<=1){const xr=Math.max(0,xi),dl=(2+5*xr)*(eta>.03*E.c?1.4:1)*(1+.5*g);L+=Math.exp(-((d/dl)**2))*(.6+.4*xr)}
+      else if(xi>1){const te=E.f.U[E.f.U.length-1];const ex=1,ey=0;const dx=p[0]-te[0],dy=p[1]-te[1];const along=dx*ex+dy*ey,perp=Math.abs(-dx*ey+dy*ex),dw=5+along*.07;L+=(.8+.4*g)*Math.exp(-along/500)*Math.sqrt(7/dw)*Math.exp(-((perp/dw)**2))}}return Math.min(1,L)}
+  const cache={},G0=geo(100);function grid(h,kind){const key=h+kind;if(cache[key])return cache[key];const G=geo(h),g=1-h/100,a=[];
+    for(let i=0;i<NX;i++)for(let j=0;j<NY;j++){const p=[i*cs+3,j*cs+3];if(p[1]>GY||G.some(E=>inPoly(p,E.f.loop))){a.push(null);continue}a.push(kind==="tot"?1-loss(p,G,g):kind==="dl"?cp(p,G,g)-cp([p[0],p[1]-(100-h)*.55],G0,0):cp(p,G,g))}return cache[key]=a}
+  const div=v=>{v=Math.max(-1.5,Math.min(1.5,v))/1.5;const b=[12,16,23],c=v<0?[40,120,255]:[255,70,80],t=Math.abs(v);return `rgb(${R(b[0]+(c[0]-b[0])*t)},${R(b[1]+(c[1]-b[1])*t)},${R(b[2]+(c[2]-b[2])*t)})`};
+  let mode="st";const el=$("c3CpH");
+  const TXT={st:["Cp_static","Static pressure coefficient in a slice at mid-span. Blue and green are low pressure, yellow and red high. Low pressure under the wing and high pressure above it make the downforce. Lower the wing and compare, though the differences are hard to spot by eye.","Cp = (p − p∞) / ½ρV²","blue/green: low pressure · yellow/red: high pressure"],
+   dl:["ΔCp_static","How static pressure changed between the original ride height and the one on the slider. Blue: pressure dropped under the main element, so more downforce. Red under the flap: the pressure there is still low, but not as low as before. That was invisible in the plain Cp_static plot.","ΔCp = Cp(new) − Cp(original)","blue: pressure fell · red: pressure rose · dark: no change"],
+   tot:["Cp_total","Total pressure: static plus dynamic. Red means no energy lost. The bands along the surfaces are the boundary layers, where viscosity has used up energy. They merge at the main element's trailing edge into its wake. Lower the wing and the losses grow, a sign of 'tired' air that may separate.","Cp_total = (p + ½ρv² − p∞) / ½ρV²  (1 = no loss)","red: no loss (1) · blue: energy lost (0)"]};
+  function draw(){const h=+el.value;$("c3CpHO").textContent=h===100?"original":h+"% of original";const G=geo(h);let s="",A=grid(h,mode);
+    for(let i=0;i<NX;i++)for(let j=0;j<NY;j++){const v=A[i*NY+j];if(v==null)continue;const col=mode==="st"?jet((v+3)/4):mode==="tot"?jet(v):div(v);s+=`<rect x="${i*cs}" y="${j*cs}" width="6.4" height="6.4" fill="${col}"/>`}
+    s+=`<rect x="0" y="${GY}" width="600" height="4" fill="${K.edge}"/>`+G.map(E=>`<path d="${E.f.path}" fill="#1f2a3b" stroke="#e7ebf2" stroke-width="1.2"/>`).join("");
+    if(mode==="dl"&&h===100)s+=`<rect x="150" y="100" width="300" height="34" rx="4" fill="#0b0f15" fill-opacity=".85"/>`+txt(300,122,"lower the wing to see a difference","","middle");
+    $("c3CpArt").innerHTML=mk(`0 0 ${W} ${H}`,s,TXT[mode][0]+" plot around a two-element front wing");
+    $("c3CpT").textContent=TXT[mode][0];$("c3CpX").textContent=TXT[mode][1];$("c3CpEq").textContent=TXT[mode][2];$("c3CpKey").textContent="Sketch, not a solved flow · "+TXT[mode][3]}
+  let tm;el.oninput=()=>{clearTimeout(tm);tm=setTimeout(draw,30)};seg("c3CpSeg",b=>{mode=b.dataset.p;draw()});draw();
+
+  /* 2D chordwise Cp by a real panel method (Hess-Smith) */
+  function naca(m,p,t,n){const pts=[];for(let i=0;i<=n;i++){const x=(1-Math.cos(PI*i/n))/2,yt=5*t*(.2969*Math.sqrt(x)-.126*x-.3516*x*x+.2843*x**3-.1036*x**4),yc=x<p?m/(p*p)*(2*p*x-x*x):m/((1-p)**2)*((1-2*p)+2*p*x-x*x);pts.push([x,yc,yt])}
+    return pts.slice().reverse().map(([x,yc,yt])=>[x,yc-yt]).concat(pts.slice(1).map(([x,yc,yt])=>[x,yc+yt]))}
+  function hs(nd,al){const N=nd.length-1,a=al*PI/180,xc=[],yc=[],th=[],L=[];for(let i=0;i<N;i++){const[x1,y1]=nd[i],[x2,y2]=nd[i+1];xc.push((x1+x2)/2);yc.push((y1+y2)/2);th.push(Math.atan2(y2-y1,x2-x1));L.push(Math.hypot(x2-x1,y2-y1))}
+    const An=[],At=[];for(let i=0;i<N;i++){An.push([]);At.push([]);for(let j=0;j<N;j++){if(i===j){An[i].push([.5,0]);At[i].push([0,.5]);continue}
+      const[xj,yj]=nd[j],[xk,yk]=nd[j+1],r1=Math.hypot(xc[i]-xj,yc[i]-yj),r2=Math.hypot(xc[i]-xk,yc[i]-yk),b=Math.atan2((yc[i]-yk)*(xc[i]-xj)-(xc[i]-xk)*(yc[i]-yj),(xc[i]-xk)*(xc[i]-xj)+(yc[i]-yk)*(yc[i]-yj)),s=Math.sin(th[i]-th[j]),c=Math.cos(th[i]-th[j]),lg=Math.log(r2/r1),k=1/(2*PI);
+      An[i].push([k*(s*lg+c*b),k*(c*lg-s*b)]);At[i].push([k*(s*b-c*lg),k*(s*lg+c*b)])}}
+    const M=[];for(let i=0;i<N;i++){const row=An[i].map(v=>v[0]);row.push(An[i].reduce((q,v)=>q+v[1],0));row.push(Math.sin(th[i]-a));M.push(row)}
+    const kr=[];for(let j=0;j<N;j++)kr.push(At[0][j][0]+At[N-1][j][0]);kr.push(At[0].reduce((q,v)=>q+v[1],0)+At[N-1].reduce((q,v)=>q+v[1],0));kr.push(-Math.cos(th[0]-a)-Math.cos(th[N-1]-a));M.push(kr);
+    const n=N+1;for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];for(let r=0;r<n;r++){if(r===c)continue;const f=M[r][c]/M[c][c];for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k]}}
+    const q=M.map((r,i)=>r[n]/r[i]),g=q[N],Cp=[];for(let i=0;i<N;i++){let v=Math.cos(th[i]-a);for(let j=0;j<N;j++)v+=q[j]*At[i][j][0]+g*At[i][j][1];Cp.push(1-v*v)}
+    return {xc,Cp,cl:2*g*L.reduce((s,v)=>s+v,0),N}}
+  const nd=naca(.06,.4,.12,40),RES={};for(let a=0;a<=10;a++)RES[a]=hs(nd,a);
+  const ea=$("c3Af");function plot(){const al=-(+ea.value),r=RES[al],n=r.N/2;$("c3AfO").textContent=ea.value+"°";$("c3AfCl").textContent="−"+r.cl.toFixed(2);$("c3AfMin").textContent=Math.min(...r.Cp).toFixed(2);
+    const X=x=>60+x*520,Y=c=>22+(c+4.5)/5.5*180;let s=`<line x1="60" y1="${Y(0)}" x2="580" y2="${Y(0)}" stroke="${K.edge}"/><line x1="60" y1="${Y(-4.5)}" x2="60" y2="${Y(1)}" stroke="${K.edge}"/>`;
+    [-4,-3,-2,-1,0,1].forEach(c=>s+=txt(54,Y(c)+4,c,"","end"));s+=txt(64,16,"C<tspan baseline-shift='sub' font-size='9'>p</tspan> (negative up)","")+txt(60,236,"leading edge","")+txt(580,236,"trailing edge","","end");
+    const side=(R2,a,b)=>R2.xc.slice(a,b).map((x,i)=>[X(x),Y(R2.Cp[a+i])]);
+    for(let k=0;k<=10;k++){if(k===al)continue;const o=RES[k];s+=line(side(o,n,o.N),`stroke="${K.s}" stroke-opacity=".14"`)+line(side(o,0,n),`stroke="${K.p}" stroke-opacity=".14"`)}
+    s+=line(side(r,n,r.N),`stroke="${K.s}" stroke-width="2.2"`)+line(side(r,0,n),`stroke="${K.p}" stroke-width="2.2"`);
+    s+=txt(330,Y(-3.9),"underside (suction surface)","s")+txt(330,Y(.75),"top (pressure surface)","p");
+    $("c3AfArt").innerHTML=mk("0 0 600 244",s,"Pressure coefficient along the chord of an inverted wing")}
+  ea.oninput=plot;plot()})();
+
+/* ===== 19 mesh deformation ===== */
+(function(){const el=$("c3Mo"),pv=[330,150],ref=10,C=170;
+  const d2seg=(p,a)=>{const e=[pv[0]+C*Math.cos(-a*PI/180),pv[1]+C*Math.sin(-a*PI/180)];return segD(p,pv,e)[0]};
+  function draw(){const ang=+el.value,da=(ang-ref)*PI/180;$("c3MoO").textContent=ang+"°";
+    const mv=p=>{const w=Math.exp(-((d2seg(p,ref)/75)**2)),t=-da*w,dx=p[0]-pv[0],dy=p[1]-pv[1];return [pv[0]+dx*Math.cos(t)-dy*Math.sin(t),pv[1]+dx*Math.sin(t)+dy*Math.cos(t)]};
+    let s=`<g fill="none" stroke="${K.s}" stroke-opacity=".5" stroke-width=".8">`;
+    for(let i=0;i<=34;i++){const P=[];for(let j=0;j<=24;j++)P.push(mv([240+i*10,20+j*9]));s+=line(P)}
+    for(let j=0;j<=24;j++){const P=[];for(let i=0;i<=34;i++)P.push(mv([240+i*10,20+j*9]));s+=line(P)}s+=`</g>`;
+    s+=foilFill(foil(30,170,280,4,24),K.f)+foilFill(foil(pv[0],pv[1],C,ang,24),K.p);
+    s+=txt(30,240,"main element: fixed","")+txt(400,240,"flap: moved, mesh follows","p");
+    $("c3MoArt").innerHTML=mk("0 0 600 250",s,"Mesh deforming as the flap angle changes")}
+  el.oninput=draw;draw();
+  function loopArt(nodes,act,slow,back){const n=nodes.length,cx=300,cy=128,rx=215,ry=88;let s="";const P=nodes.map((_,i)=>{const a=-PI/2+i*2*PI/n;return [cx+rx*Math.cos(a),cy+ry*Math.sin(a)]});
+    const arr=(p,q,bend,dash)=>{const dx=q[0]-p[0],dy=q[1]-p[1],l=Math.hypot(dx,dy),tr=Math.min(.42,62/l*.9);const s0=[p[0]+dx*tr,p[1]+dy*tr],e0=[q[0]-dx*tr,q[1]-dy*tr];const mx=(s0[0]+e0[0])/2+(-dy/l)*bend,my=(s0[1]+e0[1])/2+(dx/l)*bend;
+      return `<path d="M${s0[0].toFixed(1)} ${s0[1].toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${e0[0].toFixed(1)} ${e0[1].toFixed(1)}" fill="none" stroke="${dash?K.p:K.m}" stroke-width="2" ${dash?'stroke-dasharray="5 4"':""} marker-end="url(#AH-${dash?"p":"m"})"/>`};
+    for(let i=0;i<n-1;i++)s+=arr(P[i],P[i+1],-14,false);
+    if(back){s+=arr(P[back[0]],P[back[1]],-40,true);const m=[(P[back[0]][0]+P[back[1]][0])/2,(P[back[0]][1]+P[back[1]][1])/2];s+=txt((m[0]*.6+cx*.4).toFixed(0),(m[1]*.6+cy*.4+4).toFixed(0),"repeat","p","middle")}
+    P.forEach((p,i)=>{const on=i===act,sl=slow.includes(i);s+=`<rect x="${p[0]-62}" y="${p[1]-17}" width="124" height="34" rx="17" fill="${on?(sl?K.l:K.p):"#161d29"}" stroke="${sl?K.l:on?K.p:K.edge}"/><text x="${p[0]}" y="${p[1]+5}" text-anchor="middle" font-family="Barlow" font-size="13" font-weight="600" fill="${on?"#0b0e13":K.f}">${nodes[i]}</text>`});
+    return mk("0 0 600 256",s,"Optimisation loop")}
+  const OLD=["Base case","Edit CAD","Re-mesh","Run CFD","Compare"];
+  const NEW=["Constraints","Base case","Pick a change","Morph mesh","Run CFD","Assess trend","Best design"];
+  const L={old:[
+     {y:"Base",n:"01",t:"Run a base case",x:"Mesh and solve the starting design, to have something to compare against."},
+     {y:"Edit CAD",n:"02",t:"Change the CAD model",x:"An engineer redraws the part with a modification that looks promising."},
+     {y:"Re-mesh",n:"03",t:"Re-mesh from scratch",x:"The new shape needs a whole new mesh. This was the most time-consuming stage of the loop.",k:"The bottleneck: hours of meshing for every idea."},
+     {y:"Solve",n:"04",t:"Run the CFD",x:"Solve the new case to convergence."},
+     {y:"Compare",n:"05",t:"Compare and repeat",x:"Compare with the base case, then go back to step 2 with the next idea, until the best case that can be found is reached.",k:"Slow, manual, and limited by how many ideas fit in the time."}],
+   new:[
+     {y:"Limits",n:"01",t:"Set the constraints",x:"The user defines which shapes may change and by how much, such as the flap angle range and the rule-book limits."},
+     {y:"Base",n:"02",t:"Run the base case",x:"One mesh is made, once, and solved."},
+     {y:"Pick",n:"03",t:"The optimiser picks a change",x:"Optimisation methods choose the next geometry change to try, based on the trends so far."},
+     {y:"Morph",n:"04",t:"Deform the mesh",x:"The existing mesh is bent to fit the new shape, as in the slider above. No re-meshing.",k:"Seconds instead of hours."},
+     {y:"Solve",n:"05",t:"Run the CFD",x:"Solve the deformed case."},
+     {y:"Assess",n:"06",t:"Assess the trend",x:"The software mathematically assesses the result and selects the most promising direction, then loops back to step 3 automatically."},
+     {y:"Best",n:"07",t:"The best design",x:"Many more options get explored in the same time. The winner still goes to the wind tunnel or track for validation.",k:"Massively more efficient optimisation."}]};
+  const map={old:[0,1,2,3,4],new:[0,1,2,3,4,5,6]};let cur="old";
+  const st=stepper("c3LoopY","c3LoopS",L.old.map((e,i)=>Object.assign({},e,{art:()=>loopArt(OLD,i,[2],[4,1])})));
+  seg("c3LoopSeg",b=>{cur=b.dataset.l;const nodes=cur==="old"?OLD:NEW,sl=cur==="old"?[2]:[],bk=cur==="old"?[4,1]:[5,2];st.set(L[cur].map((e,i)=>Object.assign({},e,{art:()=>loopArt(nodes,map[cur][i],sl,bk)})))})})();
+
+/* ===== 20 LES / DES ===== */
+(function(){const I={
+   rans:{t:"RANS",p:"Everything modelled",x:"Reynolds-Averaged Navier-Stokes solves only the average flow. A turbulence model stands in for every eddy, large and small. Fast and reliable for attached flow, the motorsport workhorse.",c:1,u:"Most development runs"},
+   les:{t:"Large Eddy Simulation",p:"Big eddies calculated",x:"LES calculates the large, energy-carrying eddies directly and models only the small ones, which behave in a more universal way. It must be run in time, on a fine mesh. Near walls the eddies get tiny, so the mesh there gets enormous.",c:4,u:"Research, detailed wake studies"},
+   des:{t:"Detached Eddy Simulation",p:"Hybrid",x:"DES uses RANS in the attached boundary layers next to walls, and switches to LES in the separated, 'detached' regions such as wakes. Much of LES's realism at a fraction of its cost, which suits wheels and wakes.",c:3,u:"Wheels, wakes, following-car studies"},
+   dns:{t:"Direct Numerical Simulation",p:"Nothing modelled",x:"DNS resolves every eddy down to the smallest, with no turbulence model at all. The cost explodes with Reynolds number, so it's only possible for small, slow, simple flows. A whole car is far out of reach.",c:5,u:"Turbulence research only",b:true}};
+  function draw(m){const r=rng(17);let s=`<rect width="600" height="250" fill="#0c1017"/>`;
+    if(m==="rans"||m==="des")s+=`<ellipse cx="380" cy="128" rx="230" ry="${m==="rans"?75:30}" fill="${K.m}" fill-opacity="${m==="rans"?.22:0}"/>`;
+    for(let k=0;k<7;k++){const y=30+k*32;s+=`<path d="${smooth([[0,y],[100,y+(y<128?-1:1)*12*Math.exp(-Math.abs(y-128)/60)],[220,y+(y<128?-1:1)*20*Math.exp(-Math.abs(y-128)/60)],[600,y]])}" fill="none" stroke="${K.s}" stroke-opacity=".35"/>`}
+    const sw=(n,rmin,rmax)=>{let o="";for(let k=0;k<n;k++){const x=225+r()*360,y=128+(r()-.5)*(80+(x-220)*.35),rr=rmin+r()*(rmax-rmin);o+=`<g class="spin" style="animation-duration:${(.6+rr/12).toFixed(2)}s;animation-direction:${k%2?"reverse":"normal"}"><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(1)}" fill="none" stroke="${[K.s,K.p,K.g][k%3]}" stroke-width="${rr>6?1.6:1}" stroke-dasharray="${(rr*.9+1).toFixed(1)} ${Math.max(2,rr*.3).toFixed(1)}"/></g>`}return o};
+    if(m==="les")s+=sw(22,8,26)+sw(30,3,7)+`<ellipse cx="400" cy="128" rx="200" ry="70" fill="${K.m}" fill-opacity=".08"/>`;
+    if(m==="des")s+=sw(22,8,26)+sw(16,3,7);
+    if(m==="dns")s+=sw(22,8,26)+sw(40,3,7)+sw(70,1,2.5);
+    s+=`<circle cx="150" cy="128" r="62" fill="#0a0c10" stroke="${K.edge}" stroke-width="3"/>`;
+    if(m==="des")s+=`<circle cx="150" cy="128" r="71" fill="none" stroke="${K.m}" stroke-opacity=".55" stroke-width="16"/>`+txt(150,40,"RANS near the wall","","middle")+txt(470,236,"LES in the wake","p","middle");
+    if(m==="rans")s+=txt(470,236,"whole wake modelled","","middle");
+    if(m==="les")s+=txt(470,236,"big eddies resolved, small ones modelled","p","middle");
+    if(m==="dns")s+=txt(470,236,"every eddy resolved","g","middle");
+    $("c3LesArt").innerHTML=mk("0 0 600 250",s,I[m].t+" of a wheel wake");
+    const t=I[m];$("c3LesCard").innerHTML=`<span class="pill">${t.b?"Beyond the book · ":""}${t.p}</span><h3>${t.t}</h3><p>${t.x}</p><p class="mono" style="margin:0;font-size:13px">Cost <span style="color:${K.p}">${"■".repeat(t.c)}${"□".repeat(5-t.c)}</span></p><p class="muted" style="font-size:14px;margin:0">Used for: ${t.u}</p>`}
+  seg("c3LesSeg",b=>draw(b.dataset.e));draw("rans")})();
+
+/* ===== 21 steady vs transient ===== */
+(function(){const CAP={steady:"Steady state: one time-averaged picture of the wake. Smooth, and quicker to get, but it hides the shedding.",trans:"Transient: the solver steps through time and captures vortices shedding from alternate sides of the wheel."};
+  function draw(m){let s=`<rect width="600" height="230" fill="#0c1017"/>`;
+    if(m==="steady"){s+=`<defs><linearGradient id="c3wk" x1="0" x2="1"><stop offset="0" stop-color="${K.p}" stop-opacity=".55"/><stop offset="1" stop-color="${K.p}" stop-opacity="0"/></linearGradient></defs><path d="M150 70 C300 80 420 95 600 100 V160 C420 165 300 180 150 190Z" fill="url(#c3wk)"/>`;
+      for(let k=0;k<7;k++){const y=25+k*30;s+=`<path d="${smooth([[0,y],[150,y+(y<115?-1:1)*30*Math.exp(-Math.abs(y-115)/60)],[300,y+(y<115?-1:1)*12*Math.exp(-Math.abs(y-115)/60)],[600,y]])}" fill="none" stroke="${K.s}" stroke-opacity=".45"/>`}}
+    else{for(let k=0;k<7;k++){const y=25+k*30;s+=`<path class="flow" d="${smooth([[0,y],[150,y+(y<115?-1:1)*30*Math.exp(-Math.abs(y-115)/60)],[600,y]])}" fill="none" stroke="${K.s}" stroke-opacity=".3"/>`}
+      for(let k=0;k<8;k++){const up=k%2===0,y=up?92:138;s+=`<g class="c3drift" style="animation-delay:-${(k*.5).toFixed(1)}s"><g class="spin" style="animation-direction:${up?"normal":"reverse"};animation-duration:1.4s"><circle cx="230" cy="${y}" r="18" fill="none" stroke="${up?K.p:K.l}" stroke-width="2" stroke-dasharray="14 6"/></g></g>`}}
+    s+=`<circle cx="120" cy="115" r="55" fill="#0a0c10" stroke="${K.edge}" stroke-width="3"/>`;
+    $("c3TsArt").innerHTML=mk("0 0 600 230",s,CAP[m]);$("c3TsCap").textContent=CAP[m];
+    const r=rng(2),P=[];for(let i=0;i<=200;i++){const t=i/200;P.push([50+t*540,115-40*Math.sin(t*PI*12)-(r()-.5)*24])}
+    let f=`<line x1="50" y1="200" x2="590" y2="200" stroke="${K.edge}"/><line x1="50" y1="200" x2="50" y2="20" stroke="${K.edge}"/>`+txt(320,222,"time →","","middle")+txt(56,30,"lift on wheel","");
+    f+=line(P,m==="trans"?`stroke="${K.s}" stroke-width="1.6"`:`stroke="${K.m}" stroke-opacity=".35" stroke-dasharray="3 3"`)+`<line x1="50" y1="115" x2="590" y2="115" stroke="${K.p}" stroke-width="3"/>`+txt(585,108,"time-averaged","p","end");
+    if(m==="steady")f+=txt(585,180,"real fluctuations, not captured","","end");
+    $("c3TsPlot").innerHTML=mk("0 0 600 230",f,"Lift on the wheel over time")}
+  seg("c3TsSeg",b=>draw(b.dataset.t));draw("steady")})();
+
+/* ===== 22 software ===== */
+(function(){const S=[
+  {n:"OpenFOAM",p:"Free · open source",b:0,c:K.g,x:"Free under the GPL licence since 2004/5. Powerful, used by service providers, car makers and F1 teams, but not point-and-click: it usually runs on Linux and needs serious training. First-year set-up and training cost about the same as a commercial licence; after that it's free."},
+  {n:"Caedium",p:"Low cost",b:0,c:K.s,x:"Symscape's friendly graphical interface on a custom version of OpenFOAM, for Windows, Linux and Mac. It includes CAD import and creation, automated meshing, a RANS solver and post-processing, using wxWidgets, OpenCascade and VTK."},
+  {n:"Ansys",p:"Commercial",b:0,c:K.p,x:"One of the main commercial simulation vendors. Its fluid flow software, such as Fluent and CFX, produced many of the book's illustrations. Licences typically run to a few thousand per processor per year."},
+  {n:"STAR-CCM+",p:"Commercial",b:1,c:K.l,x:"Siemens' Simcenter STAR-CCM+, an all-in-one meshing, solving and post-processing package widely used in F1 and motorsport."},
+  {n:"SimScale",p:"Cloud",b:1,c:K.s,x:"CFD in a web browser, running on remote servers, with OpenFOAM among its solvers. No powerful PC needed."},
+  {n:"ParaView",p:"Free · post-processing",b:1,c:K.g,x:"Open source visualisation software for looking at CFD results: slices, streamlines, iso-surfaces. It's the usual way to view OpenFOAM results."}];
+  $("c3Soft").innerHTML=S.map(t=>`<article><svg viewBox="0 0 300 70" aria-hidden="true"><rect width="300" height="70" fill="#0c1017"/>${[0,1,2,3,4,5].map(k=>`<path d="${smooth([[0,14+k*9],[120,14+k*9+(k<3?-6:6)],[300,14+k*9]])}" fill="none" stroke="${t.c}" stroke-opacity="${.25+k*.08}"/>`).join("")}<text x="150" y="44" text-anchor="middle" font-family="Saira Condensed" font-weight="800" font-size="26" fill="${K.f}">${t.n}</text></svg><div><span class="pill">${t.b?"Beyond the book · ":"In the book · "}${t.p}</span><h3>${t.n}</h3><p>${t.x}</p></div></article>`).join("")})();
+
+/* ===== 23 clusters ===== */
+function hpcArt(n,stage){const hue=i=>`hsl(${(i*360/n+190)%360} 70% 60%)`;let s="";const on=k=>stage==null||stage===k;
+  s+=`<rect x="14" y="16" width="110" height="40" rx="5" fill="#161d29" stroke="${stage===0?K.p:K.edge}" stroke-width="${stage===0?2.5:1}"/>`+txt(69,41,"Queue","","middle");
+  s+=`<rect x="170" y="16" width="120" height="40" rx="5" fill="#161d29" stroke="${stage===1?K.p:K.edge}" stroke-width="${stage===1?2.5:1}"/>`+txt(230,41,"Master node","","middle")+vec(126,36,166,36,"m",2);
+  const bw=Math.min(36,(290-6*(n-1))/n);for(let i=0;i<n;i++){const x=310+i*(bw+6);s+=`<rect x="${x}" y="22" width="${bw}" height="28" rx="3" fill="${hue(i)}" fill-opacity="${on(3)||on(2)?.55:.25}" stroke="${hue(i)}"/>`}
+  s+=`<path d="M290 36 H306" stroke="${K.m}" stroke-width="2"/>`+txt(310,70,n+" slave node"+(n>1?"s":""),"");
+  const cols=Math.ceil(Math.sqrt(n*2.6)),rows=Math.ceil(n/cols),x0=20,y0=86,Wd=560,Hd=140;let idx=0;
+  for(let r2=0;r2<rows;r2++){const inRow=Math.min(cols,n-r2*cols),cw=Wd/inRow;for(let c=0;c<inRow;c++){s+=`<rect x="${x0+c*cw}" y="${y0+r2*Hd/rows}" width="${cw}" height="${Hd/rows}" fill="${hue(idx)}" fill-opacity="${stage==null||stage>=2?.22:.05}" stroke="${hue(idx)}" stroke-opacity=".6"/>`;idx++}}
+  s+=nest(car({body:"modern",frontWing:true,rearWing:"big",flow:false,label:"car"}),170,130,260,100);
+  if(stage===3){for(let r2=0;r2<rows;r2++){const inRow=Math.min(cols,n-r2*cols),cw=Wd/inRow;for(let c=1;c<inRow;c++){const x=x0+c*cw,y=y0+(r2+.5)*Hd/rows;s+=`<path d="M${x-12} ${y} H${x+12}" stroke="${K.f}" stroke-width="2" marker-end="url(#AH-f)" marker-start="url(#AH-f)"/>`}}}
+  if(stage===4)s+=`<rect x="440" y="90" width="136" height="44" rx="4" fill="#0b0f15" stroke="${K.line}"/><path d="${smooth(residualPath(448,96,120,32,40,3,"car"))}" fill="none" stroke="${K.g}"/>`+txt(448,150,"global error falling","g");
+  if(stage===5)s+=vec(300,150,300,200,"s",4)+txt(310,196,"forces + pictures","s");
+  return mk("0 0 600 240",s,"Cluster with a queue, a master node and slave nodes, each solving a region around the car")}
+(function(){const el=$("c3Nodes");function upd(){const n=+el.value,T=20/n+.12*(n-1);$("c3NodesO").textContent=n;$("c3HpT").textContent=T.toFixed(1);$("c3HpS").textContent=(20/T).toFixed(1)+"×";$("c3HpE").textContent=R(20/T/n*100)+"%";$("c3HpArt").innerHTML=hpcArt(n)}el.oninput=upd;upd();
+  stepper("c3JobY","c3JobS",[
+   {y:"Queue",n:"01",t:"Jobs wait in a queue",x:"A single workstation runs a queuing system that holds jobs and sends them to the various clusters, scheduled by size and priority.",art:()=>hpcArt(6,0)},
+   {y:"Master",n:"02",t:"The master node takes the job",x:"Within each cluster, a master node receives the work and hands it out to the other nodes, the 'slaves'.",art:()=>hpcArt(6,1)},
+   {y:"Split",n:"03",t:"Space is divided up",x:"The CFD job is split so each node solves the flow in its own region of space around the car.",art:()=>hpcArt(6,2)},
+   {y:"Swap",n:"04",t:"Neighbours share results",x:"Each node passes the results at its edges to the nodes working on the neighbouring space, so the regions fit together.",k:"This communication is why adding nodes gives diminishing returns.",art:()=>hpcArt(6,3)},
+   {y:"Iterate",n:"05",t:"Iterate until converged",x:"The whole process repeats, working to minimise the global error in the flow solution, until it reaches a satisfactory level of convergence, which we can think of as solution accuracy.",art:()=>hpcArt(6,4)},
+   {y:"Extract",n:"06",t:"Extract results, next job",x:"The cluster pulls out forces and flow visualisation data, then moves on to the next job in the queue.",art:()=>hpcArt(6,5)}])})();
+
+/* ===== quiz ===== */
+const QZ3=[
+ {q:"Which of these unknowns is usually treated as constant in racing-car CFD?",o:["Velocity in x","Pressure","Density"],a:2,w:"Density and temperature are normally held constant, so CFD mainly solves for the velocity changes, and pressure follows."},
+ {q:"F = (m₂V₂ − m₁V₁) / t is a statement of the conservation of…",o:["Mass","Energy","Momentum"],a:2,w:"It's Newton's second law: force equals the rate of change of momentum."},
+ {q:"The first F1 car designed using only CFD, in 2010, was built by…",o:["Virgin, designed by Wirth Research","Lotus, designed in a scale wind tunnel","HRT, designed by Advantage CFD"],a:0,w:"Wirth Research's Virgin used no wind tunnel. Lotus and HRT used scale wind tunnel models at least in part."},
+ {q:"Panel methods are fast mainly because they…",o:["Run on clusters","Ignore viscosity","Use only hexahedral cells"],a:1,w:"No viscosity means no friction or separation in the answer, but a quick solution for attached flows."},
+ {q:"What's the right order of the five CFD steps?",o:["Meshing, CAD, solving, pre-processing, post-processing","CAD, pre-processing, meshing, solving, post-processing","CAD, solving, meshing, post-processing, pre-processing"],a:1,w:"Draw it, set up the domain, mesh it, solve to convergence, then analyse."},
+ {q:"Why are hexahedral cells the most accurate?",o:["Their walls can line up with the main flow","They fit complex shapes most easily","They have the fewest faces"],a:0,w:"Mass, momentum and energy balance most accurately across cell walls aligned with the flow."},
+ {q:"Small errors from skewed cells building up into a larger loss of accuracy are called…",o:["Flow separation","Numerical diffusion","Convergence"],a:1,w:"Numerical diffusion smears sharp features, as if the air were more viscous than it is."},
+ {q:"A Delta_Cp_Static plot shows…",o:["How static pressure changed between two configurations","Where total pressure has been lost","The surface flow direction"],a:0,w:"Δ means change. It made the higher pressure under the flap at lower ride height obvious."},
+ {q:"What does mesh deformation save during auto-optimisation?",o:["Building the CAD model","Choosing a turbulence model","Re-meshing every new shape"],a:2,w:"The existing mesh bends with the geometry, which removes the slowest step of each loop."},
+ {q:"In TotalSim's clusters, each slave node…",o:["Solved a complete copy of the car","Solved one region of space and swapped results with its neighbours","Only handled the job queue"],a:1,w:"The domain was split up. Nodes exchanged edge results and iterated to minimise the global error."}];
+const quiz=$("quiz3");let got=0,done=0;
+QZ3.forEach((z,qi)=>{const d=document.createElement("div");d.className="q";
+  d.innerHTML=`<p>${qi+1}. ${z.q}</p><div class="opts">${z.o.map((o,i)=>`<button data-i="${i}">${o}</button>`).join("")}</div><div class="why" hidden></div>`;
+  d.querySelector(".opts").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b||d.dataset.done)return;d.dataset.done=1;done++;
+    const i=+b.dataset.i;d.querySelectorAll(".opts button").forEach((x,j)=>{if(j===z.a)x.classList.add("right");else if(j===i)x.classList.add("wrong");x.disabled=true});
+    if(i===z.a)got++;const w=d.querySelector(".why");w.hidden=false;w.textContent=(i===z.a?"Correct. ":"Not quite. ")+z.w;
+    $("score3").textContent=`Score: ${got} of ${done} answered`+(done===QZ3.length?(got===QZ3.length?" · Full marks.":" · Scroll back up to the parts you missed."):"")});
+  quiz.appendChild(d)});
+}
+if(location.hash==="#ch3")initCh3();
+window.addEventListener("hashchange",()=>{if(location.hash==="#ch3")initCh3()});
+
 /* ---------- Router ---------- */
 function route(){
   let h=(location.hash||"#home").slice(1);
-  const views={home:"v-home",ch1:"v-ch1",ch2:"v-ch2",glossary:"v-glossary"};
+  const views={home:"v-home",ch1:"v-ch1",ch2:"v-ch2",ch3:"v-ch3",glossary:"v-glossary"};
   let id=views[h];
   if(!id){const m=h.match(/^ch(\d+)$/);if(m&&CH[m[1]-1]){id="v-stub";const c=CH[m[1]-1];
     document.getElementById("stubEye").textContent="Chapter "+c[0]+" · not read yet";document.getElementById("stubTitle").textContent=c[1];document.getElementById("stubText").textContent=c[2];}
